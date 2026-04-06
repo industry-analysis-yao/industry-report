@@ -203,7 +203,7 @@
 <header>
   <div class="header-left">
     <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="メニュー">☰</button>
-    <div class="header-logo">大王製紙 社内限定</div>
+   <div class="header-logo">For Internal Use Only - Technology Development Dept.</div>
     <div>
       <div class="header-title">家庭紙・衛生用品 業界インテリジェンスダッシュボード</div>
       <div class="header-subtitle">自動収集・AI要約 ／ 毎日更新</div>
