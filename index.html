@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -34,50 +35,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', 'Yu Gothic', sans-serif; background: var(--bg); color: var(--text); }
 
-<!-- HEADER -->
-<header>
-  <div class="header-left">
-    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="メニュー">☰</button>
-    <div class="header-logo">For Internal Use Only - Technology Development Dept.</div>
-    <div>
-      <div class="header-title">家庭紙・衛生用品 業界インテリジェンスダッシュボード</div>
-      <div class="header-subtitle" id="header-subtitle"></div>
-    </div>
-  </div>
-  <div class="header-right">
-    <div id="current-date"></div>
-    <div>最終更新: 05:09 JST</div>
-  </div>
-</header>
-
-<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
-
-<!-- 页面内容省略，与原代码一致 -->
-
-<script>
-// 自动更新页面的日期和更新周期
-function updateDateTime() {
-  const today = new Date();
-  const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
-  const formattedDate = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日（${dayNames[today.getDay()]}）`;
-
-  // 更新日期
-  document.getElementById('current-date').textContent = formattedDate;
-
-  // 更新更新周期
-  document.getElementById('header-subtitle').textContent = '自動収集・AI要約 ／ 3日間ごとに更新';
-}
-
-// 调用初始化函数
-(function init() {
-  updateDateTime();
-
-  // （其余初始化逻辑省略，与原本代码一致）
-})();
-</script>
-
-</body>
-</html>
   /* HEADER */
   header {
     position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
@@ -246,10 +203,10 @@ function updateDateTime() {
 <header>
   <div class="header-left">
     <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="メニュー">☰</button>
-   <div class="header-logo">For Internal Use Only - Technology Development Dept.</div>
+    <div class="header-logo">大王製紙 社内限定</div>
     <div>
       <div class="header-title">家庭紙・衛生用品 業界インテリジェンスダッシュボード</div>
-      <div class="header-subtitle">自動収集・AI要約 ／ 3日間ごとに更新</div>
+      <div class="header-subtitle">自動収集・AI要約 ／ 毎日更新</div>
     </div>
   </div>
   <div class="header-right">
@@ -764,6 +721,5 @@ function updateFilterCount(id, n) {
   if (el) el.textContent = n + '件表示';
 }
 </script>
-<script src="https://www.genspark.ai/sandbox_inspect.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-</body>
+<script src="https://www.genspark.ai/sandbox_inspect.js"></script></body>
 </html>
