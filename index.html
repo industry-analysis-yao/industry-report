@@ -260,7 +260,7 @@
   <div class="section active" id="s-overview">
     <div class="section-header">
       <div class="section-title">🏠 総合ダッシュボード</div>
-      <div class="section-desc">全カテゴリーの最新業界情報を集約表示 ― 2026年4月7日（火曜日）</div>
+      <div class="section-desc" id="todayDate">全カテゴリーの最新業界情報を集約表示</div>
     </div>
 
     <!-- STAT CARDS -->
@@ -635,9 +635,31 @@ function closeMobileMenu() {
 }
 
 // ============================================================
+// SET TODAY DATE
+// ============================================================
+function setTodayDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const date = today.getDate();
+  
+  // 曜日を取得
+  const days = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
+  const dayName = days[today.getDay()];
+  
+  // 日付を設定
+  const dateStr = `${year}年${month}月${date}日（${dayName}）`;
+  const el = document.getElementById('todayDate');
+  if (el) {
+    el.textContent = `全カテゴリーの最新業界情報を集約表示 ― ${dateStr}`;
+  }
+}
+
+// ============================================================
 // INIT
 // ============================================================
 (function init() {
+  setTodayDate();  // ← 最初に日付を設定
   // Overview: all sorted by date desc
   populateGrid('grid-overview', DATA);
   updateFilterCount('fc-overview', DATA.length);
