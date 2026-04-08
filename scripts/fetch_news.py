@@ -1,49 +1,183 @@
-import feedparser
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 import os
 
-# 配置新闻源
-NEWS_SOURCES = {
-    '日用品企业': [
-        'https://news.yahoo.co.jp/rss/topics/business.xml',
-    ],
-    '制造业': [
-        'https://www.nikkan.co.jp/feed',
-    ],
-    '环保规制': [
-        'https://www.meti.go.jp/rss',
-    ]
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+# Search queries for the industry
+SEARCH_QUERIES = [
+    'ユニ・チャーム 新製品 OR 投資 OR 決算',
+    '花王 新製品 OR 投資 OR 研究開発',
+    'P&G Japan 新製品 OR 投資',
+    'ライオン 新製品 OR 投資',
+    '大王製紙 OR 王子ホールディングス OR 日本製紙 業界',
+    '瑞光 Zuiko 加工機 OR 設備',
+    'GDM Fameccanica 吸収体 加工機',
+    'OPTIMA packaging 包装機',
+    'ファナック FANUC ロボット 包装 OR パレタイザー',
+    'Essity Kimberly-Clark 衛生用品',
+    'ウェットティッシュ Winner Medical 稳健医療',
+    '家庭紙 トイレットペーパー 業界 規制 OR 値上げ',
+]
+
+CATEGORY_KEYWORDS = {
+    '①': ['ユニ・チャーム', '花王', 'P&G', 'ライオン', 'キンバリー', 'Kimberly', 'Essity', '衛生用品', 'おむつ'],
+    '②': ['製紙', 'パルプ', '王子', '日本製紙', 'Essity', '大王製紙'],
+    '③': ['瑞光', 'Zuiko', 'GDM', 'Fameccanica', '加工機', '不織布', '吸収体'],
+    '④': ['OPTIMA', 'ファナック', 'FANUC', '包装機', 'パレタイ', 'ロボット'],
+    '⑤': ['ウェット', 'Winner Medical', '稳健'],
+    '⑥': ['ティシュー', 'ティッシュ', 'トイレット', '家庭紙', '衛生用紙'],
 }
 
+CATEGORY_NAMES = {
+    '①': '日用品・衛生用品メーカー',
+    '②': '製紙・パルプメーカー',
+    '③': '不織布・吸収体加工機メーカー',
+    '④': '包装機・パレタイジング設備メーカー',
+    '⑤': 'ウェットティッシュ製造メーカー',
+    '⑥': 'ティッシュペーパー・家庭紙専業メーカー',
+}
+
+KNOWN_COMPANIES = [
+    'ユニ・チャーム', '花王', 'P&G Japan', 'P&G', 'ライオン', 'キンバリー・クラーク',
+    'Kimberly-Clark', '大王製紙', '王子ホールディングス', '日本製紙', 'Essity',
+    '株式会社瑞光（Zuiko）', '瑞光', 'GDM', 'Fameccanica', 'OPTIMA Packaging', 'ファナック',
+    'Winner Medical（稳健医疗）', '丸富製紙', 'カミ商事',
+]
+
+
+def map_category(text):
+    for cat_id, keywords in CATEGORY_KEYWORDS.items():
+        for kw in keywords:
+            if kw.lower() in text.lower():
+                return cat_id, CATEGORY_NAMES[cat_id]
+    return '⑥', CATEGORY_NAMES['⑥']
+
+
+def extract_company(text):
+    for company in KNOWN_COMPANIES:
+        if company.lower() in text.lower():
+            return company
+    return '不明'
+
+
+def determine_info_type(text):
+    if any(k in text for k in ['投資', '買収', '出資', 'M&A', '資金', 'acquisition', '決算', '株価']):
+        return '投資'
+    if any(k in text for k in ['特許', 'patent', '知的']):
+        return '特許'
+    if any(k in text for k in ['研究', '論文', '学会', '技術開発', 'research', 'development', 'NEDO']):
+        return '研究開発'
+    if any(k in text for k in ['加工機', 'マシン', '設備', 'machine']):
+        return '加工機技術'
+    if any(k in text for k in ['包装機', 'パッケージ', '充填', 'packaging']):
+        return '包装機技術'
+    if any(k in text for k in ['新製品', '新商品', '新発売', 'new product', 'launch', 'リニューアル']):
+        return '新製品'
+    if any(k in text for k in ['環境', 'エコ', 'サステナ', 'sustainability', 'eco', 'carbon', 'CDP']):
+        return '環境'
+    if any(k in text for k in ['規制', 'law', '法律', 'regulation', '値上げ', '施行']):
+        return '規制'
+    return '其他'
+
+
+def fetch_from_google_cse(query, api_key, cse_id, num=10):
+    url = 'https://www.googleapis.com/customsearch/v1'
+    params = {
+        'key': api_key,
+        'cx': cse_id,
+        'q': query,
+        'num': num,
+        'lr': 'lang_ja',
+    }
+    try:
+        resp = requests.get(url, params=params, timeout=15)
+        resp.raise_for_status()
+        return resp.json().get('items', [])
+    except Exception as e:
+        print(f"  Error fetching query '{query}': {e}")
+        return []
+
+
 def fetch_news():
-    """从RSS和网络API采集新闻"""
-    all_news = []
-    
-    for category, urls in NEWS_SOURCES.items():
-        for url in urls:
-            try:
-                feed = feedparser.parse(url)
-                for entry in feed.entries[:5]:  # 每个源取前5条
-                    all_news.append({
-                        'title': entry.title if hasattr(entry, 'title') else 'No title',
-                        'link': entry.link if hasattr(entry, 'link') else '',
-                        'date': entry.published if hasattr(entry, 'published') else datetime.now().isoformat(),
-                        'category': category,
-                        'summary': entry.summary[:200] if hasattr(entry, 'summary') else '',
-                        'source': url.split('/')[2]  # 提取域名作为源
-                    })
-            except Exception as e:
-                print(f"Error fetching {url}: {e}")
-    
-    return all_news
+    api_key = os.environ.get('GOOGLE_API_KEY', '')
+    cse_id = os.environ.get('GOOGLE_CSE_ID', '')
+
+    if not api_key or not cse_id:
+        print('WARNING: GOOGLE_API_KEY or GOOGLE_CSE_ID not set. Skipping fetch.')
+        return []
+
+    today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    results = []
+
+    for query in SEARCH_QUERIES:
+        print(f'  Searching: {query}')
+        items = fetch_from_google_cse(query, api_key, cse_id)
+        for item in items:
+            title = item.get('title', '')
+            url = item.get('link', '')
+            snippet = item.get('snippet', '')
+            source_name = item.get('displayLink', '')
+
+            full_text = title + ' ' + snippet
+            category_id, category_name = map_category(full_text)
+            company = extract_company(full_text)
+            info_type = determine_info_type(full_text)
+
+            results.append({
+                'title': title,
+                'summary': snippet,
+                'company': company,
+                'date': today,
+                'category_id': category_id,
+                'category_name': category_name,
+                'info_type': info_type,
+                'url': url,
+                'source_name': source_name,
+                'confidence': '高' if company != '不明' else '中',
+            })
+
+    return results
+
+
+def load_existing(path):
+    if os.path.exists(path):
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return []
+
+
+def save_data(path, data):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
 
 if __name__ == '__main__':
-    # 创建data目录
-    os.makedirs('data', exist_ok=True)
-    
-    news = fetch_news()
-    with open('data/news_raw.json', 'w', encoding='utf-8') as f:
-        json.dump(news, f, ensure_ascii=False, indent=2)
-    print(f"Fetched {len(news)} news items")
+    data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'news_data.json')
+    data_path = os.path.normpath(data_path)
+
+    existing = load_existing(data_path)
+    existing_urls = {item['url'] for item in existing}
+
+    print(f'Existing items: {len(existing)}')
+    print('Fetching new items via Google Custom Search API...')
+
+    new_items = fetch_news()
+    appended = 0
+    for item in new_items:
+        if item['url'] and item['url'] not in existing_urls:
+            existing.append(item)
+            existing_urls.add(item['url'])
+            appended += 1
+
+    # Sort newest first
+    existing.sort(key=lambda x: x.get('date', ''), reverse=True)
+
+    save_data(data_path, existing)
+    print(f'Appended {appended} new items. Total: {len(existing)} items saved to {data_path}')
