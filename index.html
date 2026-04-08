@@ -704,10 +704,9 @@ function deleteOldItems() {
       alert(removed + '件の古いデータを非表示にしました。');
     }
 
-    // 永続的に削除するには、GitHub Actions で「Update Dashboard Data」ワークフローを手動実行し「cleanup」オプションを有効にしてください。
+    // 永続的に削除するには、GitHub Actions...
     initGrids();
-  }
-}
+} // 这里只保留一个花括号，用来结束 deleteOldItems 函数
 
 // ============================================================
 // INIT GRIDS
