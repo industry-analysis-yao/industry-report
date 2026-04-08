@@ -194,6 +194,19 @@
   aside::-webkit-scrollbar { width: 4px; }
   aside::-webkit-scrollbar-track { background: transparent; }
   aside::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+
+  /* PAGINATION */
+  .pagination { margin-top: 20px; margin-bottom: 8px; }
+  .pagination-controls { display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .pg-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; transition: all 0.15s; }
+  .pg-btn:hover:not(:disabled) { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .pg-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 700; }
+  .pg-btn:disabled { opacity: 0.4; cursor: default; }
+  .pg-ellipsis { color: var(--text-muted); font-size: 13px; }
+
+  /* CLEANUP BUTTON */
+  .btn-cleanup { background: #ef4444; color: #fff; border: none; border-radius: 6px; padding: 5px 10px; font-size: 11px; cursor: pointer; white-space: nowrap; font-weight: 600; }
+  .btn-cleanup:hover { background: #dc2626; }
 </style>
 </head>
 <body>
@@ -210,7 +223,10 @@
   </div>
   <div class="header-right">
     <div class="header-date">2026年4月6日（月）</div>
-    <div>最終更新: 05:09 JST</div>
+    <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;">
+      <div>最終更新: 05:09 JST</div>
+      <button id="delete-old-btn" class="btn-cleanup" onclick="deleteOldItems()">3ヶ月以上のデータを削除</button>
+    </div>
   </div>
 </header>
 
@@ -480,48 +496,9 @@
 
 <script>
 // ============================================================
-// DATA
+// DATA (loaded from data/news_data.json)
 // ============================================================
-const DATA = [
-  {"title":"ユニ・チャーム、自己株式の取得状況および取得終了に関するお知らせ（584,800株・約5.5億円）","summary":"ユニ・チャームは2026年4月1日〜3日にかけて普通株式584,800株を取得価額総額約5.5億円で取得し、2月12日の取締役会決議に基づく自己株式取得を完了した。","company":"ユニ・チャーム","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"投資","date":"2026-04-03","url":"https://www.unicharm.co.jp/ja/ir/news/2026.html","source_name":"ユニ・チャーム IR公式","confidence":"確認済み"},
-  {"title":"ユニ・チャーム、「CDP2025」で2年連続トリプルAスコアを獲得","summary":"ユニ・チャームは「気候変動」「フォレスト」「水セキュリティ」の3分野でCDPの最高評価「Aリスト」に2年連続選定され、国際的なサステナビリティ先進企業として認定された。","company":"ユニ・チャーム","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"環境","date":"2026-04-03","url":"https://www.unicharm.co.jp/ja/company/news/2026/0403-02.html","source_name":"ユニ・チャーム ニュースリリース","confidence":"確認済み"},
-  {"title":"ユニ・チャーム、『ムーニーおしりふき しあわせのベビーシトラスの香り』を新発売（4月7日）","summary":"ユニ・チャームは2026年4月7日より、赤ちゃんに安心な成分を使用した『ムーニーおしりふき しあわせのベビーシトラスの香り』（50枚×2個・オープンプライス）を全国で発売する。","company":"ユニ・チャーム","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"新製品","date":"2026-04-03","url":"https://www.unicharm.co.jp/ja/company/news/2026/0403-01.html","source_name":"ユニ・チャーム ニュースリリース","confidence":"確認済み"},
-  {"title":"瑞光（Zuiko）、2025年度（2026年2月期）決算説明資料を公開－受注残高15,848百万円","summary":"瑞光の2025年度（2026年2月期）決算説明資料によると、期末受注残高は158億4,800万円（スパンレース事業除く）、2025年度の受注高は222億4,600万円に達し、2023年度をボトムに回復基調にある。","company":"株式会社瑞光（Zuiko）","category_id":"③","category_name":"不織布・吸収体加工機メーカー","info_type":"投資","date":"2026-04-03","url":"https://www.nikkei.com/markets/ir/irftp/data/tdnr/tdnetg3/20260403/fuwi9w/140120260402597796.pdf","source_name":"日経 適時開示・瑞光 決算説明資料","confidence":"確認済み"},
-  {"title":"ホルムズ海峡封鎖危機：家庭紙業界への影響分析（2026年4月3日更新）","summary":"2026年4月3日時点のホルムズ海峡封鎖継続（34日経過）に伴い、原油価格高騰・物流コスト上昇が懸念されるが、日本家庭紙工業会は国内生産比率約97%を根拠に供給安定を表明している。","company":"カミ商事","category_id":"⑥","category_name":"ティッシュペーパー・家庭紙専業メーカー","info_type":"規制","date":"2026-04-03","url":"https://global-scm.com/blog/?p=5716","source_name":"Global SCM Blog","confidence":"確認済み"},
-  {"title":"P&Gジャパン、「アリエール ジェルボール プロ」をリニューアル－2粒で洗濯機まるごと消臭","summary":"P&Gジャパンは2026年4月2日、「アリエール ジェルボール プロ」をリニューアルし4月中旬より新発売すると発表。2粒使用で洗濯槽・フィルター・排水口まで丸ごと消臭できる新技術を採用した。","company":"P&G Japan","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"新製品","date":"2026-04-02","url":"https://jp.pg.com/newsroom/ariel-ASUD-260402/","source_name":"P&Gジャパン ニュースルーム","confidence":"確認済み"},
-  {"title":"ライオン、『キレイキレイ薬用ハンドコンディショニングソープ こころやわらぐ ゆず&ホワイトティーの香り』新発売","summary":"ライオンは2026年4月2日、『キレイキレイ薬用ハンドコンディショニングソープ こころやわらぐ ゆず&ホワイトティーの香り』を2026年4月20日（月）より全国一部店舗で新発売すると発表した。","company":"ライオン","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"新製品","date":"2026-04-02","url":"https://www.lion.co.jp/ja/newsroom/news/2026/5102","source_name":"ライオン株式会社 ニュースルーム","confidence":"確認済み"},
-  {"title":"Kimberly-Clark、2026年第1四半期決算発表日を4月28日に設定（IR情報）","summary":"Kimberly-Clark（NASDAQ: KMB）は2026年4月2日、第1四半期2026年の決算発表を4月28日（火）に実施すると公表した。","company":"Kimberly-Clark","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"投資","date":"2026-04-02","url":"https://www.investor.kimberly-clark.com/news-releases/news-release-details/kimberly-clark-announce-first-quarter-2026-results-april-28-2026","source_name":"Kimberly-Clark Investor Relations","confidence":"確認済み"},
-  {"title":"P&Gジャパン、7年ぶり男性向け新ブランドを4月創設（単身男性向け身だしなみ・衛生ケア）","summary":"P&Gジャパンは2026年3月11日に発表し、4月に男性向けの新ブランドを立ち上げる。清潔感への意識が高い単身男性の身だしなみや衛生ケア分野を対象とし、7年ぶりの新ブランド創設となる。","company":"P&G Japan","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"新製品","date":"2026-04-01","url":"https://www.nikkei.com/article/DGXZQOUF0935J0Z00C26A3000000/","source_name":"日本経済新聞","confidence":"確認済み"},
-  {"title":"王子HD株が約30年ぶり高値－家庭紙値上げで来期V字回復期待","summary":"王子ホールディングスの株価は、トイレ紙など家庭紙や段ボール原紙の値上げが進む中で約30年ぶりの高値圏で推移しており、2027年3月期のV字回復期待が高まっている。","company":"王子ホールディングス","category_id":"②","category_name":"製紙・パルプメーカー","info_type":"投資","date":"2026-04-01","url":"https://www.nikkei.com/article/DGXZQOUB30ACP0Q6A130C2000000/","source_name":"日本経済新聞","confidence":"確認済み"},
-  {"title":"日本製紙、液体用紙容器「フジパック」を2026年4月から4%以上値上げ","summary":"日本製紙は液体用紙容器「フジパック」全品について2026年4月1日納入分から4%以上の価格修正を実施した。パルプ・原材料コストや物流費の上昇を背景とする対応。","company":"日本製紙","category_id":"②","category_name":"製紙・パルプメーカー","info_type":"規制","date":"2026-04-01","url":"https://www.nikkei.com/article/DGXZQOUC091CE0Z01C25A2000000/","source_name":"日本経済新聞","confidence":"確認済み"},
-  {"title":"日本製紙グループ、砂糖用ポリ袋製造設備の取得・製造販売事業を新規開始（日本製袋）","summary":"日本製紙グループの日本製袋株式会社は2026年4月1日付で砂糖用ポリ袋製造設備を取得し、砂糖用ポリ袋の製造販売事業を新たに開始すると発表した。","company":"日本製紙","category_id":"②","category_name":"製紙・パルプメーカー","info_type":"投資","date":"2026-04-01","url":"https://www.nipponpapergroup.com/news/year/2026/","source_name":"日本製紙グループ ニュースリリース","confidence":"確認済み"},
-  {"title":"山東晨鳴紙業グループ、湛江工場を再稼働－アジア市場へのパルプ・紙供給能力が急回復","summary":"財務悪化で停止していた山東晨鳴紙業の湛江工場が2026年3月に相次いで再稼働し、LBKP（95万トン）・APMP（18万トン）・上質紙・コートアイボリー等の供給能力が急速に回復している。アジア市場への供給増加が懸念されている。","company":"玖龍紙業（Nine Dragons Paper）","category_id":"②","category_name":"製紙・パルプメーカー","info_type":"投資","date":"2026-04-01","url":"https://www.kpps.jp/papermall/knowledge/page/KAIGAI/KNP0013382","source_name":"紙類海外動向レポート2026年第13号","confidence":"確認済み"},
-  {"title":"インドネシア政府、豪雨被害を受けパルプ林業企業22社の森林コンセッションを追加取り消し","summary":"インドネシア政府はスマトラ島での豪雨被害拡大の原因として過度な森林伐採を特定し、新たに22社（計33社以上）の林業企業の森林コンセッションを取り消した。約100万ヘクタールのアカシア・ユーカリ植林地が利用制限を受け、パルプ供給に影響が出ている。","company":"APP（Asia Pulp & Paper）","category_id":"②","category_name":"製紙・パルプメーカー","info_type":"規制","date":"2026-04-01","url":"https://www.kpps.jp/papermall/knowledge/page/KAIGAI/KNP0013382","source_name":"紙類海外動向レポート2026年第13号","confidence":"確認済み"},
-  {"title":"ファナック、米ミシガン州新施設の建設計画を発表（JETRO報告）－225人雇用・2027年後半完成予定","summary":"JETROの2026年4月付けビジネス短信によると、ファナックの米ミシガン州新施設の建設計画が発表された。この投資により同社のエンジニアリング能力と先端製造技術が強化されるとともに、北米での自動化ソリューション拡充が図られる。","company":"ファナック","category_id":"④","category_name":"包装機・パレタイジング設備メーカー","info_type":"包装機技術","date":"2026-04-01","url":"https://www.jetro.go.jp/biznews/2026/04/469fab146e233a13.html","source_name":"JETRO ビジネス短信","confidence":"確認済み"},
-  {"title":"トイレットペーパー2026年4月値上げ：丸富製紙は15%以上、大王製紙は10%以上（王子ネピア・日本製紙は2025年値上げ済み）","summary":"2026年4月のトイレットペーパー値上げは、大王製紙（エリエール）が10%以上・丸富製紙が15%以上を実施する一方、王子ネピア・日本製紙クレシア・丸富製紙は2025年に既値上げ済みであることが確認されている。","company":"丸富製紙","category_id":"⑥","category_name":"ティッシュペーパー・家庭紙専業メーカー","info_type":"規制","date":"2026-04-01","url":"https://www.pricey.jp/web/articles/2294","source_name":"Pricey（価格情報サイト）","confidence":"確認済み"},
-  {"title":"改正資源有効利用促進法、2026年4月1日施行－容器包装への再生プラスチック利用義務化（業界対応必須）","summary":"改正資源有効利用促進法が2026年4月1日に施行され、容器包装を含む指定製品への再生プラスチック利用が義務化された。製造・輸入量が一定規模以上の企業は計画提出・定期報告が必要となり、衛生用品・家庭紙業界への影響が大きい。","company":"カミ商事","category_id":"⑥","category_name":"ティッシュペーパー・家庭紙専業メーカー","info_type":"規制","date":"2026-04-01","url":"https://www.fp-trading.jp/useful/environment/a27","source_name":"経済産業省・環境省","confidence":"確認済み"},
-  {"title":"エコマーク認定基準、2026年4月1日付でマスバランス方式対応の部分改定を実施","summary":"日本環境協会エコマーク事務局は2026年4月1日付で複数の商品類型のエコマーク認定基準をマスバランス方式対応に改定した。衛生用紙（類型No.108）を含む複数カテゴリーが対象となり、衛生用品・家庭紙メーカーの認定申請手続きへの影響が見込まれる。","company":"丸富製紙","category_id":"⑥","category_name":"ティッシュペーパー・家庭紙専業メーカー","info_type":"規制","date":"2026-04-01","url":"https://www.ecomark.jp/info/new/post_111.html","source_name":"日本環境協会 エコマーク事務局","confidence":"確認済み"},
-  {"title":"製紙業界の古紙利用率目標が2026年3月末期限で改定（日本製紙連合会）","summary":"日本製紙連合会は2026年3月末で終了する古紙利用率目標を改定し、次期目標をパルプ・古紙部会での審議を経て新たに設定した。衛生用紙を含む製紙業界の環境政策に直接影響する。","company":"王子ホールディングス","category_id":"②","category_name":"製紙・パルプメーカー","info_type":"規制","date":"2026-03-31","url":"https://www.jpa.gr.jp/file/topics/1774230638_vDN01A_%E5%8F%A4%E7%B4%99%E5%88%A9%E7%94%A8%E7%8E%87%E7%9B%AE%E6%A8%99%E6%94%B9%E5%AE%9A%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.pdf","source_name":"日本製紙連合会（JPA）","confidence":"確認済み"},
-  {"title":"花王、衣料用洗剤「アタック ZERO」シリーズを改良新発売（洗濯槽のバイオフィルム除菌を実現）","summary":"花王は2026年3月28日、「アタック ZERO」シリーズを改良新発売した。新洗浄技術により洗濯槽のバイオフィルム内の菌に対して除菌効果を発揮し、洗濯槽のメンテナンスフリーを実現する画期的な製品である。","company":"花王","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"新製品","date":"2026-03-28","url":"https://www.kao.com/jp/newsroom/news/release/2026/20260311-001/","source_name":"花王 ニュースリリース","confidence":"確認済み"},
-  {"title":"ファナック、米ミシガン州に9,000万ドル（約143億円）の新施設建設計画を発表","summary":"ファナックは2026年3月24日、米国ミシガン州でロボット生産を視野に入れた新工場・物流センターに9,000万ドル（約143億円）を投資すると発表した。延べ床面積約7.8万m²、225人の新規雇用、2027年後半の完成を予定し、フィジカルAI対応の自動化需要に対応する。","company":"ファナック","category_id":"④","category_name":"包装機・パレタイジング設備メーカー","info_type":"投資","date":"2026-03-24","url":"https://www.fanuc.co.jp/ja/profile/pr/newsrelease/2026/news20260324.html","source_name":"ファナック 株式会社 プレスリリース","confidence":"確認済み"},
-  {"title":"Essity、2026年3月の自社株買い実施（SEK30億の自社株買いプログラムの一環）","summary":"Essityは2026年3月16日〜19日の週（第12週）にEssity Bクラス株を406,220株買い戻した。2025年4月23日に発表したSEK30億の自社株買いプログラム（2025年4月〜2026年秋）の継続実施。","company":"Essity","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"投資","date":"2026-03-20","url":"https://www.essityusa.com/media/","source_name":"Essity USA Press Center","confidence":"確認済み"},
-  {"title":"王子ホールディングス、2026年春入社以降の退職一時金を廃止・基本給に上乗せ（人的投資再設計）","summary":"王子ホールディングスは2026年春入社以降の社員の退職一時金を廃止し、原資を基本給に上乗せすることで初任給引き上げを実現する人的投資の抜本的再設計を実施した。","company":"王子ホールディングス","category_id":"②","category_name":"製紙・パルプメーカー","info_type":"投資","date":"2026-03-18","url":"https://www.asahi.com/articles/DA3S16425697.html","source_name":"朝日新聞","confidence":"確認済み"},
-  {"title":"日本家庭紙工業会、「トイレットペーパーはホルムズ海峡封鎖による影響はない」と消費者向け声明を発表","summary":"日本家庭紙工業会は2026年3月18日、ホルムズ海峡の事実上の封鎖に対し、トイレットペーパーの約97%は国内生産のため供給に影響はないとの公式声明を発表し、パニック買い防止を呼びかけた。","company":"カミ商事","category_id":"⑥","category_name":"ティッシュペーパー・家庭紙専業メーカー","info_type":"規制","date":"2026-03-18","url":"https://www.jpa.gr.jp/file/release/1773730050_%E6%97%A5%E6%9C%AC%E5%AE%B6%E5%BA%AD%E7%B4%99%E5%B7%A5%E6%A5%AD%E4%BC%9A%E3%81%8B%E3%82%89%E3%81%AE%E3%81%8A%E7%9F%A5%E3%82%89%E3%81%9B.pdf","source_name":"日本家庭紙工業会（JPA）","confidence":"確認済み"},
-  {"title":"ユニ・チャーム、「脱製造業」戦略で新興国開拓・4000億円投資計画（時価総額4兆円目標）","summary":"ユニ・チャームは「脱製造業」戦略のもとペットケアとウェルネスケア（大人用紙おむつ等）を成長軸として新興国市場を開拓し、約4000億円の投資計画と時価総額2倍超の4兆円達成を目標に掲げている。","company":"ユニ・チャーム","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"投資","date":"2026-03-05","url":"https://www.nikkei.com/article/DGXZQOUC057U50V00C26A3000000/","source_name":"日本経済新聞","confidence":"確認済み"},
-  {"title":"Kimberly-Clark、米国内製造に20億ドル超の投資計画を発表（オハイオ州・サウスカロライナ州）","summary":"Kimberly-Clarkは今後5年間で米国製造拠点（オハイオ州・サウスカロライナ州の2拠点）に20億ドル超を投資し、北米事業で過去最大規模の製造拡張を行うと発表した。","company":"Kimberly-Clark","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"投資","date":"2026-03-01","url":"https://www.credaily.com/briefs/kimberly-clark-to-invest-2b-in-us-manufacturing-expansion/","source_name":"Credaily / TAPPI","confidence":"確認済み"},
-  {"title":"瑞光（Zuiko）、スパンレース不織布事業のWEBページを公開・新事業として展開開始","summary":"瑞光は子会社COTEX Corporationを通じてユニチカからスパンレース不織布事業を取得し、吸収体加工機メーカーから不織布素材製造へと事業を垂直統合する新たな戦略展開を開始した。","company":"株式会社瑞光（Zuiko）","category_id":"③","category_name":"不織布・吸収体加工機メーカー","info_type":"投資","date":"2026-03-01","url":"https://www.zuiko.co.jp/news/%E3%82%B9%E3%83%91%E3%83%B3%E3%83%AC%E3%83%BC%E3%82%B9%E4%B8%8D%E7%B9%94%E5%B8%83%E4%BA%8B%E6%A5%AD%E3%81%AEweb%E3%83%9A%E3%83%BC%E3%82%B8%E3%82%92%E5%85%AC%E9%96%8B/","source_name":"ZUIKO Corporation News","confidence":"確認済み"},
-  {"title":"OPTIMA Packaging、Interpack 2026でデジタル技術を活用した充填・包装機の革新的ソリューションを展示予定","summary":"OPTIMAはInterpack 2026（2026年開催）で、デジタル技術の最大活用を核とした充填・包装機の革新ソリューションを展示する予定であり、消費財・医薬品向けの先進的なターンキー生産ライン提案を強化する。","company":"OPTIMA Packaging","category_id":"④","category_name":"包装機・パレタイジング設備メーカー","info_type":"包装機技術","date":"2026-03-01","url":"https://www.optima-packaging.com/en/newsroom/shows-and-events/interpack-2026/consumer-goods","source_name":"OPTIMA Packaging公式サイト","confidence":"確認済み"},
-  {"title":"Winner Medical（稳健医療）、直近12ヶ月売上高15億ドル規模・2024年通期売上3.07億ドルEV","summary":"Winner Medicalの2025年9月期までの直近12ヶ月売上高は約15億ドル規模（EV約30.7億ドル）と報告されており、中国国内・海外110カ国以上に医療・消費者向けウェットケア製品を供給する主要メーカーとして存在感を維持している。","company":"Winner Medical（稳健医疗）","category_id":"⑤","category_name":"ウェットティッシュ製造メーカー","info_type":"投資","date":"2026-03-01","url":"https://pitchbook.com/profiles/company/42019-57","source_name":"PitchBook / Investing.com","confidence":"要確認"},
-  {"title":"GDM、新型吸収体パッド向けソリューションを発表（吸収性衛生用品業界向け）","summary":"GDMは吸収体パッド向けの新たな機械ソリューションを発表し、衛生用品製造ラインの高速化・柔軟性向上を実現する技術革新を打ち出している。","company":"GDM","category_id":"③","category_name":"不織布・吸収体加工機メーカー","info_type":"加工機技術","date":"2026-03-01","url":"https://www.fibre2fashion.com/news/technical-textiles/gdm-comes-up-with-new-solution-for-absorbent-pads-176453","source_name":"Fibre2Fashion","confidence":"要確認"},
-  {"title":"Fameccanica、成人用失禁パンツおむつ向け新型機「FIX B2X」を発表（中容量タイプ）","summary":"Fameccanicaは成人用失禁パンツおむつ向けの新型中容量機「FIX B2X」を発表した。成長するアダルトインコンチネンス市場向けに最適化された機械ラインとして注目される。","company":"Fameccanica","category_id":"③","category_name":"不織布・吸収体加工機メーカー","info_type":"加工機技術","date":"2026-03-01","url":"https://www.nonwovens-industry.com/equipment-review-hygiene-machinery-783821/","source_name":"Nonwovens Industry","confidence":"要確認"},
-  {"title":"瑞光（Zuiko）、スパンレース不織布事業（UNITIKA譲受）の特別利益計上と業績予想修正を発表","summary":"瑞光はユニチカからスパンレース不織布事業（譲渡額22億円）の取得が完了し、2026年2月期連結決算で8億円の特別利益（バーゲン・パーチェス）を計上するとともに業績予想を修正すると2026年2月19日に開示した。","company":"株式会社瑞光（Zuiko）","category_id":"③","category_name":"不織布・吸収体加工機メーカー","info_type":"投資","date":"2026-02-19","url":"https://www.zuiko.co.jp/news/notice-of-recognition-about-extraodinary-gain-on-bargain-purchase-and-revision-of-consolidated-earnings-forecast-for-fiscal-year-ending-feb-2026/","source_name":"ZUIKO Corporation IR","confidence":"確認済み"},
-  {"title":"花王、NEDO「バイオものづくり革命推進事業」に採択－非可食バイオマス由来の糖化酵素供給基盤構築へ","summary":"花王は2026年2月16日、NEDOの「バイオものづくり革命推進事業」に採択されたと発表した。非可食バイオマス由来のバイオエタノールやSAF（持続可能な航空燃料）製造を支える糖化酵素の供給基盤を構築することを目的としている。","company":"花王","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"研究開発","date":"2026-02-16","url":"https://www.nikkei.com/nkd/company/article/?DisplayType=11&ng=DGXZRSP703124_W6A210C2000000&scode=4452","source_name":"日本経済新聞（花王プレスリリース）","confidence":"確認済み"},
-  {"title":"Essity、Edgewellのフェミニンケア事業（Carefree・Stayfree・Playtex等）を3.4億ドルで買収完了","summary":"EssityはEdgewell Personal CareのNorth America向けフェミニンケア事業（Carefree・Stayfree・o.b.・Playtex）を3.4億ドルで買収し、2026年2月2日付けで連結に取り込んだ。米国ハイジーン市場でのシェアを大幅に拡大する戦略的M&Aとなった。","company":"Essity","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"投資","date":"2026-02-02","url":"https://www.essity.com/media/press-release/essity-completes-the-acquisition-of-edgewell-s-feminine-care-business/1e5711f0c39ae458/","source_name":"Essity Press Release","confidence":"確認済み"},
-  {"title":"OPTIMA Packagingグループ、オランダのTPS Group（PLC/SCADA/OTセキュリティ）を買収","summary":"OPTIMAパッケージンググループは2026年1月28日、オランダOldenzaal拠点のTotal Plant Solution Group B.V.（TPS）を買収し、Benelux諸国に初の現地拠点を設立するとともにOTセキュリティ・自動化技術を強化した。","company":"OPTIMA Packaging","category_id":"④","category_name":"包装機・パレタイジング設備メーカー","info_type":"投資","date":"2026-01-28","url":"https://www.optima-packaging.com/en/newsroom/press/press-releases/strategic-expansion-of-the-optima-packaging-group-in-the-netherlands","source_name":"OPTIMA Packaging Press Release","confidence":"確認済み"},
-  {"title":"ファナック、「FANUC ROBOSHOT SC」シリーズが日刊工業新聞社「十大新製品賞」を受賞","summary":"ファナックの射出成形機「FANUC ROBOSHOT SCシリーズ」が日刊工業新聞社の第68回十大新製品賞を受賞した。トグル機構部の最適設計による高速型開閉・省エネ性向上が評価された。","company":"ファナック","category_id":"④","category_name":"包装機・パレタイジング設備メーカー","info_type":"加工機技術","date":"2026-01-28","url":"https://www.fanuc.co.jp/ja/profile/pr/newsrelease/2026/news20260128.html","source_name":"ファナック株式会社 プレスリリース","confidence":"確認済み"},
-  {"title":"日本製紙、八代工場に約310億円投資・家庭紙（輸出向け含む）生産ラインを導入（2028年稼働）","summary":"日本製紙は熊本県八代工場の新聞用紙設備を撤去し、約310億円を投じてトイレットペーパー・ペーパータオルなど家庭紙の生産ライン（輸出向け主体）を導入する。2028年2月稼働予定でフル稼働後は年4万トン規模の生産を見込む。","company":"日本製紙","category_id":"②","category_name":"製紙・パルプメーカー","info_type":"投資","date":"2026-01-07","url":"https://www.nikkan.co.jp/articles/view/00771821","source_name":"日刊工業新聞","confidence":"確認済み"},
-  {"title":"Essity、2026年より事業領域を新体制に再編（Health & Medical、Personal Care、Consumer Tissue、Professional）","summary":"Essityは2026年1月1日付で事業領域を4部門（Health & Medical、Personal Care、Consumer Tissue、Professional）に再編し、デジタルプラットフォームとAI活用をさらに強化する方針を打ち出した。","company":"Essity","category_id":"①","category_name":"日用品・衛生用品メーカー","info_type":"投資","date":"2026-01-01","url":"https://www.essity.com/media/press-release/proforma-reporting-of-essity-s-new-business-areas/8c5690f48a22d866/","source_name":"Essity Press Release","confidence":"確認済み"}
-];
+let DATA = [];
 
 // ============================================================
 // BADGE MAPPING
@@ -568,7 +545,7 @@ function buildCard(item, idx) {
       </div>
       <div class="card-body">
         <div class="card-title">${item.title}</div>
-        <div class="card-source">📰 ソース: <a href="${item.url}" target="_blank" rel="noopener">${item.source_name}</a></div>
+        <div class="card-source">�� ソース: <a href="${item.url}" target="_blank" rel="noopener">${item.source_name}</a></div>
         <div class="card-summary-label">🤖 AI要約</div>
         <div class="card-summary">${item.summary}</div>
         <div class="card-memo-label">📝 編集者メモ</div>
@@ -579,7 +556,7 @@ function buildCard(item, idx) {
 }
 
 // ============================================================
-// POPULATE GRIDS
+// POPULATE GRID (renders a slice of items)
 // ============================================================
 function populateGrid(gridId, items) {
   const el = document.getElementById(gridId);
@@ -592,23 +569,83 @@ function populateGrid(gridId, items) {
 }
 
 // ============================================================
-// FILTER
+// PAGINATION
+// ============================================================
+const PAGE_STATE = {};
+const PAGE_SIZE = 20;
+
+function paginateGrid(gridId, items) {
+  PAGE_STATE[gridId] = { allItems: items, items: items, page: 0 };
+  renderPage(gridId);
+  updateFilterCount('fc-' + gridId.replace('grid-', ''), items.length);
+}
+
+function renderPage(gridId) {
+  const state = PAGE_STATE[gridId];
+  if (!state) return;
+  const { items, page } = state;
+  const start = page * PAGE_SIZE;
+  populateGrid(gridId, items.slice(start, start + PAGE_SIZE));
+  renderPagination(gridId);
+}
+
+function renderPagination(gridId) {
+  const state = PAGE_STATE[gridId];
+  if (!state) return;
+  const { items, page } = state;
+  const totalPages = Math.ceil(items.length / PAGE_SIZE);
+  const pgId = 'pg-' + gridId;
+  let pgEl = document.getElementById(pgId);
+  if (!pgEl) {
+    pgEl = document.createElement('div');
+    pgEl.id = pgId;
+    pgEl.className = 'pagination';
+    const gridEl = document.getElementById(gridId);
+    if (gridEl) gridEl.parentNode.insertBefore(pgEl, gridEl.nextSibling);
+  }
+  if (totalPages <= 1) { pgEl.innerHTML = ''; return; }
+  let html = '<div class="pagination-controls">';
+  html += '<button class="pg-btn"' + (page === 0 ? ' disabled' : '') + ' onclick="goPage(\'' + gridId + '\',' + (page - 1) + ')">◀ 前へ</button>';
+  const maxBtns = 7;
+  let startPg = Math.max(0, page - 3);
+  let endPg = Math.min(totalPages - 1, startPg + maxBtns - 1);
+  if (endPg - startPg < maxBtns - 1) startPg = Math.max(0, endPg - maxBtns + 1);
+  if (startPg > 0) html += '<button class="pg-btn" onclick="goPage(\'' + gridId + '\',0)">1</button><span class="pg-ellipsis">…</span>';
+  for (let i = startPg; i <= endPg; i++) {
+    html += '<button class="pg-btn' + (i === page ? ' active' : '') + '" onclick="goPage(\'' + gridId + '\',' + i + ')">' + (i + 1) + '</button>';
+  }
+  if (endPg < totalPages - 1) html += '<span class="pg-ellipsis">…</span><button class="pg-btn" onclick="goPage(\'' + gridId + '\',' + (totalPages - 1) + ')">' + totalPages + '</button>';
+  html += '<button class="pg-btn"' + (page === totalPages - 1 ? ' disabled' : '') + ' onclick="goPage(\'' + gridId + '\',' + (page + 1) + ')">次へ ▶</button>';
+  html += '</div>';
+  pgEl.innerHTML = html;
+}
+
+function goPage(gridId, page) {
+  if (!PAGE_STATE[gridId]) return;
+  PAGE_STATE[gridId].page = page;
+  renderPage(gridId);
+  const gridEl = document.getElementById(gridId);
+  if (gridEl) gridEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ============================================================
+// FILTER (data-driven, works with pagination)
 // ============================================================
 function filterCards(gridId, kw, cat, type) {
-  const grid = document.getElementById(gridId);
-  if (!grid) return;
-  const cards = grid.querySelectorAll('.news-card');
-  let visible = 0;
+  const state = PAGE_STATE[gridId];
+  if (!state) return;
   const kwLower = (kw || '').toLowerCase();
-  cards.forEach(card => {
-    const matchKw = !kwLower || card.dataset.title.toLowerCase().includes(kwLower) || card.dataset.company.toLowerCase().includes(kwLower);
-    const matchCat = !cat || card.dataset.cat === cat;
-    const matchType = !type || card.dataset.type === type;
-    if (matchKw && matchCat && matchType) { card.classList.remove('hidden'); visible++; }
-    else { card.classList.add('hidden'); }
+  const filtered = state.allItems.filter(item => {
+    const matchKw = !kwLower || (item.title || '').toLowerCase().includes(kwLower) || (item.company || '').toLowerCase().includes(kwLower);
+    const matchCat = !cat || item.category_id === cat;
+    const matchType = !type || item.info_type === type;
+    return matchKw && matchCat && matchType;
   });
-  const fc = document.getElementById('fc-' + gridId.replace('grid-',''));
-  if (fc) fc.textContent = `${visible}件表示`;
+  state.items = filtered;
+  state.page = 0;
+  renderPage(gridId);
+  const fc = document.getElementById('fc-' + gridId.replace('grid-', ''));
+  if (fc) fc.textContent = filtered.length + '件表示';
 }
 
 // ============================================================
@@ -642,100 +679,127 @@ function setTodayDate() {
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
   const date = today.getDate();
-  
-  // 曜日を取得
   const days = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
   const dayName = days[today.getDay()];
-  
-  // 日付を設定
-  const dateStr = `${year}年${month}月${date}日（${dayName}）`;
+  const dateStr = year + '年' + month + '月' + date + '日（' + dayName + '）';
   const el = document.getElementById('todayDate');
   if (el) {
-    el.textContent = `全カテゴリーの最新業界情報を集約表示 ― ${dateStr}`;
+    el.textContent = '全カテゴリーの最新業界情報を集約表示 ― ' + dateStr;
   }
 }
 
 // ============================================================
-// INIT
+// DELETE OLD ITEMS (UI filter, 90 days)
 // ============================================================
-(function init() {
-  setTodayDate();  // ← 最初に日付を設定
-  // Overview: all sorted by date desc
-  populateGrid('grid-overview', DATA);
-  updateFilterCount('fc-overview', DATA.length);
+function deleteOldItems() {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 90);
+  const cutoffStr = cutoff.toISOString().slice(0, 10);
+  const before = DATA.length;
+  DATA = DATA.filter(function(item) { return (item.date || '9999-99-99') >= cutoffStr; });
+  const removed = before - DATA.length;
+  if (removed === 0) {
+    alert('90日以内のデータのみです。削除対象はありません。');
+  } else {
+    alert(removed + '件の古いデータを非表示にしました。
 
-  // Rivals: cat① and ②
-  const rivals = DATA.filter(d => d.category_id === '①' || d.category_id === '②');
-  populateGrid('grid-rivals', rivals);
+永続的に削除するには、GitHub Actions で「Update Dashboard Data」ワークフローを手動実行し「cleanup」オプションを有効にしてください。');
+    initGrids();
+  }
+}
+
+// ============================================================
+// INIT GRIDS
+// ============================================================
+function initGrids() {
+  paginateGrid('grid-overview', DATA);
+  const totalNumEl = document.querySelector('.stat-card .stat-num');
+  if (totalNumEl) totalNumEl.textContent = DATA.length;
+
+  const rivals = DATA.filter(function(d) { return d.category_id === '①' || d.category_id === '②'; });
+  paginateGrid('grid-rivals', rivals);
   document.getElementById('cnt-rivals').textContent = rivals.length;
-  updateFilterCount('fc-rivals', rivals.length);
 
-  // Machine: cat③
-  const machine = DATA.filter(d => d.category_id === '③');
-  populateGrid('grid-machine', machine);
+  const machine = DATA.filter(function(d) { return d.category_id === '③'; });
+  paginateGrid('grid-machine', machine);
   document.getElementById('cnt-machine').textContent = machine.length;
-  updateFilterCount('fc-machine', machine.length);
 
-  // Packaging: cat④, packaging keywords
   const packagingKw = ['包装', 'パッケージ', 'フィル', 'OPTIMA', 'optima', '充填', '袋', 'ライン'];
-  const packaging = DATA.filter(d => d.category_id === '④' && (d.info_type === '包装機技術' || packagingKw.some(k => d.title.includes(k) || d.summary.includes(k))));
-  populateGrid('grid-packaging', packaging);
+  const packaging = DATA.filter(function(d) {
+    return d.category_id === '④' && (d.info_type === '包装機技術' || packagingKw.some(function(k) { return d.title.includes(k) || d.summary.includes(k); }));
+  });
+  paginateGrid('grid-packaging', packaging);
   document.getElementById('cnt-packaging').textContent = packaging.length;
-  updateFilterCount('fc-packaging', packaging.length);
 
-  // Palletizer: cat④, palletizer/robot/fanuc
   const palletizerKw = ['パレタイ', 'ロボット', 'robot', 'ファナック', 'FANUC', '自動化', 'automation'];
-  const palletizer = DATA.filter(d => d.category_id === '④' && (palletizerKw.some(k => d.title.toLowerCase().includes(k.toLowerCase()) || d.summary.toLowerCase().includes(k.toLowerCase())) || d.company === 'ファナック'));
-  populateGrid('grid-palletizer', palletizer);
+  const palletizer = DATA.filter(function(d) {
+    return d.category_id === '④' && (palletizerKw.some(function(k) { return d.title.toLowerCase().includes(k.toLowerCase()) || d.summary.toLowerCase().includes(k.toLowerCase()); }) || d.company === 'ファナック');
+  });
+  paginateGrid('grid-palletizer', palletizer);
   document.getElementById('cnt-palletizer').textContent = palletizer.length;
-  updateFilterCount('fc-palletizer', palletizer.length);
 
-  // Tissue: cat⑥
-  const tissue = DATA.filter(d => d.category_id === '⑥');
-  populateGrid('grid-tissue', tissue);
+  const tissue = DATA.filter(function(d) { return d.category_id === '⑥'; });
+  paginateGrid('grid-tissue', tissue);
   document.getElementById('cnt-tissue').textContent = tissue.length;
-  updateFilterCount('fc-tissue', tissue.length);
 
-  // Wet tissue: cat⑤
-  const wet = DATA.filter(d => d.category_id === '⑤');
-  populateGrid('grid-wet', wet);
+  const wet = DATA.filter(function(d) { return d.category_id === '⑤'; });
+  paginateGrid('grid-wet', wet);
   document.getElementById('cnt-wet').textContent = wet.length;
-  updateFilterCount('fc-wet', wet.length);
 
-  // Toilet: toilet-related across all cats
   const toiletKw = ['トイレット', 'トイレ', '家庭紙', 'ティシュ', 'ティッシュ', 'tissue', 'Tissue', '家庭紙工業', '衛生用紙'];
-  const toilet = DATA.filter(d => toiletKw.some(k => d.title.includes(k) || d.summary.includes(k) || d.category_name.includes(k)));
-  populateGrid('grid-toilet', toilet);
+  const toilet = DATA.filter(function(d) {
+    return toiletKw.some(function(k) { return d.title.includes(k) || d.summary.includes(k) || d.category_name.includes(k); });
+  });
+  paginateGrid('grid-toilet', toilet);
   document.getElementById('cnt-toilet').textContent = toilet.length;
-  updateFilterCount('fc-toilet', toilet.length);
 
-  // Patent: info_type=特許
-  const patent = DATA.filter(d => d.info_type === '特許');
+  const patent = DATA.filter(function(d) { return d.info_type === '特許'; });
   if (patent.length === 0) {
     document.getElementById('empty-patent').style.display = 'block';
     document.getElementById('grid-patent').innerHTML = '';
   } else {
-    populateGrid('grid-patent', patent);
+    paginateGrid('grid-patent', patent);
   }
   document.getElementById('cnt-patent').textContent = patent.length || '0';
   updateFilterCount('fc-patent', patent.length);
 
-  // Research: info_type=研究開発
-  const research = DATA.filter(d => d.info_type === '研究開発');
+  const research = DATA.filter(function(d) { return d.info_type === '研究開発'; });
   if (research.length === 0) {
     document.getElementById('empty-research').style.display = 'block';
     document.getElementById('grid-research').innerHTML = '';
   } else {
-    populateGrid('grid-research', research);
+    paginateGrid('grid-research', research);
     document.getElementById('empty-research').style.display = 'none';
   }
   document.getElementById('cnt-research').textContent = research.length || '0';
   updateFilterCount('fc-research', research.length);
 
-  // Patent count in stat card
-  const patentRd = DATA.filter(d => d.info_type === '特許' || d.info_type === '研究開発');
+  const patentRd = DATA.filter(function(d) { return d.info_type === '特許' || d.info_type === '研究開発'; });
   document.getElementById('patent-count').textContent = patentRd.length;
-})();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  setTodayDate();
+  fetch('data/news_data.json')
+    .then(function(resp) {
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      return resp.json();
+    })
+    .then(function(json) {
+      DATA = json;
+      DATA.sort(function(a, b) { return (b.date || '').localeCompare(a.date || ''); });
+      initGrids();
+    })
+    .catch(function(e) {
+      console.error('Error loading data/news_data.json:', e);
+      DATA = [];
+      initGrids();
+    });
+}
+init();
 
 function updateFilterCount(id, n) {
   const el = document.getElementById(id);
