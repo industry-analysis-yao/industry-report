@@ -32,7 +32,7 @@ def ai_summarize(title, snippet, company, api_key):
         return True, None
     # Skip paywall-only articles: snippet is essentially empty or just repeats the title
     clean_snippet = (snippet or '').strip()
-    if len(clean_snippet) < 30 or clean_snippet.strip() == title.strip():
+    if len(clean_snippet) < 30 or clean_snippet == title.strip():
         print(f'  [SKIP paywall/no-body] {title[:60]}')
         return False, None
     try:
@@ -64,7 +64,7 @@ def ai_summarize(title, snippet, company, api_key):
             contents=prompt,
         )
         text = response.text.strip()
-        if text.upper().startswith('IRRELEVANT'):
+        if text.strip().upper() == 'IRRELEVANT':
             print(f'  [AI-IRRELEVANT] {title[:60]}')
             return False, None
         return True, text[:300]

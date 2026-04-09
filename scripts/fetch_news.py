@@ -64,7 +64,7 @@ def is_industry_relevant(title, snippet):
     """Return True only if the article is relevant to the tissue/hygiene/paper industry."""
     text = (title + ' ' + snippet).lower()
     has_core = any(term.lower() in text for term in TISSUE_CORE_TERMS)
-    has_company = any(name in text for name in TISSUE_INDUSTRY_COMPANIES)
+    has_company = any(name.lower() in text for name in TISSUE_INDUSTRY_COMPANIES)
     has_offtopic = any(term.lower() in text for term in OFFTOPIC_TERMS)
     # Explicitly off-topic articles without any tissue/hygiene signal are rejected
     if has_offtopic and not has_core:
