@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from datetime import datetime
 
 try:
@@ -15,18 +16,28 @@ except ImportError:
     GENAI_AVAILABLE = False
 
 
+def strip_html(text):
+    """Remove HTML tags from a string."""
+    return re.sub(r'<[^>]+>', '', text or '').strip()
+
+
 def ai_summarize(title, snippet, company, api_key):
-    """Generate a Japanese summary using Gemini API."""
+    """Generate a Japanese analytical summary using Gemini API."""
     if not GENAI_AVAILABLE or not api_key:
         return None
     try:
         client = google_genai.Client(api_key=api_key)
         prompt = (
-            f'以下のニュースについて、業界アナリストとして日本語で150字以内の要約を作成してください。\n'
+            f'あなたは家庭紙・衛生用品業界の上級アナリストです。'
+            f'以下のニュースを読み、大王製紙の技術開発部向けに、'
+            f'業界動向・競合への影響・大王製紙へのビジネスインパクトの観点から'
+            f'日本語で150字以内の洞察コメントを作成してください。'
+            f'タイトルや本文をそのまま繰り返すのではなく、'
+            f'戦略的な意義や示唆を簡潔に述べてください。\n'
             f'会社名: {company}\n'
             f'タイトル: {title}\n'
             f'内容: {snippet}\n'
-            f'要約（日本語のみ、150字以内）:'
+            f'洞察コメント（日本語のみ、150字以内）:'
         )
         response = client.models.generate_content(
             model='gemini-2.0-flash',
@@ -41,13 +52,20 @@ def ai_summarize(title, snippet, company, api_key):
 def load_data(path):
     if os.path.exists(path):
         with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return []
+            raw = json.load(f)
+        if isinstance(raw, list):
+            return raw, None
+        return raw.get('items', []), raw.get('last_updated')
+    return [], None
 
 
-def save_data(path, data):
+def save_data(path, items, last_updated=None):
+    payload = {
+        'last_updated': last_updated or datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'items': items,
+    }
     with open(path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        json.dump(payload, f, ensure_ascii=False, indent=2)
 
 
 def main():
@@ -58,16 +76,21 @@ def main():
     if not api_key:
         print('WARNING: GEMINI_API_KEY not set. Summaries will not be updated.')
 
-    data = load_data(data_path)
+    data, last_updated = load_data(data_path)
     if not data:
         print('No data found. Run fetch_news.py first.')
         return
 
     updated = 0
     for item in data:
-        summary = item.get('summary', '')
-        if len(summary) >= 80:
-            continue  # Already has a good summary
+        summary = strip_html(item.get('summary', ''))
+        # Strip HTML from existing summary if it contains tags
+        if item.get('summary', '') != summary:
+            item['summary'] = summary
+
+        # Skip if already has a quality AI-generated summary (plain text, >=80 chars)
+        if len(summary) >= 80 and '<' not in summary:
+            continue
 
         title = item.get('title', '')
         company = item.get('company', '不明')
