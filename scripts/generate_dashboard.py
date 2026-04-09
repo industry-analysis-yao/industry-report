@@ -1,7 +1,7 @@
 import json
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 
 try:
     from dotenv import load_dotenv
@@ -22,22 +22,26 @@ def strip_html(text):
 
 
 def ai_summarize(title, snippet, company, api_key):
-    """Generate a Japanese analytical summary using Gemini API."""
+    """Generate a Japanese factual news summary using Gemini API."""
     if not GENAI_AVAILABLE or not api_key:
         return None
     try:
         client = google_genai.Client(api_key=api_key)
         prompt = (
-            f'あなたは家庭紙・衛生用品業界の上級アナリストです。'
-            f'以下のニュースを読み、大王製紙の技術開発部向けに、'
-            f'業界動向・競合への影響・大王製紙へのビジネスインパクトの観点から'
-            f'日本語で150字以内の洞察コメントを作成してください。'
-            f'タイトルや本文をそのまま繰り返すのではなく、'
-            f'戦略的な意義や示唆を簡潔に述べてください。\n'
+            f'あなたは家庭紙・衛生用品業界の専門記者です。\n'
+            f'以下のニュース記事について、タイトルに含まれる数値・日付・固有名詞・金額を正確に活用し、'
+            f'「誰が・いつ・何を・どのように」が明確に伝わる、業界関係者向けの日本語ニュースサマリーを'
+            f'80〜150字で作成してください。\n'
+            f'タイトルをそのまま言い換えるだけでなく、具体的な数字・背景・意義を補足した文章にしてください。\n'
+            f'【出力例】\n'
+            f'「ユニ・チャームは2026年4月1〜3日に普通株式584,800株を取得価額約5.5億円で取得し、'
+            f'2月12日決議の自己株式取得を完了した。」\n'
+            f'「日本製紙は熊本県八代工場に約310億円を投じ、トイレットペーパー等家庭紙生産ラインを導入。'
+            f'2028年2月稼働・年4万トン規模を計画している。」\n\n'
             f'会社名: {company}\n'
             f'タイトル: {title}\n'
-            f'内容: {snippet}\n'
-            f'洞察コメント（日本語のみ、150字以内）:'
+            f'スニペット: {snippet}\n\n'
+            f'サマリー（日本語のみ、80〜150字）:'
         )
         response = client.models.generate_content(
             model='gemini-2.0-flash',
@@ -61,7 +65,7 @@ def load_data(path):
 
 def save_data(path, items, last_updated=None):
     payload = {
-        'last_updated': last_updated or datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'last_updated': last_updated or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
         'items': items,
     }
     with open(path, 'w', encoding='utf-8') as f:
