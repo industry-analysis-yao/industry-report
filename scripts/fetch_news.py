@@ -99,6 +99,15 @@ def fetch_from_google_cse(query, api_key, cse_id, num=10):
         resp = requests.get(url, params=params, timeout=15)
         resp.raise_for_status()
         return resp.json().get('items', [])
+    except requests.exceptions.HTTPError as e:
+        print(f"  Error fetching query '{query}': {e}")
+        try:
+            body = e.response.json()
+            err = body.get('error', {})
+            print(f"  Google API error {err.get('code')}: {err.get('message')} (reason: {err.get('errors', [{}])[0].get('reason')})")
+        except Exception:
+            pass
+        return []
     except Exception as e:
         print(f"  Error fetching query '{query}': {e}")
         return []

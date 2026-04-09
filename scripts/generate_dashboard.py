@@ -9,7 +9,7 @@ except ImportError:
     pass
 
 try:
-    import google.generativeai as genai
+    from google import genai as google_genai
     GENAI_AVAILABLE = True
 except ImportError:
     GENAI_AVAILABLE = False
@@ -20,8 +20,7 @@ def ai_summarize(title, snippet, company, api_key):
     if not GENAI_AVAILABLE or not api_key:
         return None
     try:
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        client = google_genai.Client(api_key=api_key)
         prompt = (
             f'以下のニュースについて、業界アナリストとして日本語で150字以内の要約を作成してください。\n'
             f'会社名: {company}\n'
@@ -29,7 +28,10 @@ def ai_summarize(title, snippet, company, api_key):
             f'内容: {snippet}\n'
             f'要約（日本語のみ、150字以内）:'
         )
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=prompt,
+        )
         return response.text.strip()[:300]
     except Exception as e:
         print(f'  Gemini error for "{title[:40]}...": {e}')
