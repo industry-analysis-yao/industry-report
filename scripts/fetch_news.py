@@ -16,21 +16,41 @@ try:
 except ImportError:
     pass
 
-# Search queries for the industry — scoped tightly to tissue/hygiene sector
+# Search queries for the industry — full coverage across all five product segments
 SEARCH_QUERIES = [
-    'ユニ・チャーム ティシュー OR おむつ OR 衛生用品 OR 決算 OR 投資',
-    '花王 ティシュー OR 家庭紙 OR 衛生用品 OR 研究開発 OR 投資',
-    'P&G Japan ティシュー OR おむつ OR 衛生用品',
+    # Competitor / Market Intelligence — Segment A
+    'ユニ・チャーム ティシュー OR おむつ OR 衛生用品 OR ナプキン OR 決算 OR 投資',
+    '花王 ティシュー OR 家庭紙 OR 衛生用品 OR おむつ OR 研究開発 OR 投資',
+    'P&G Japan おむつ OR ナプキン OR ティシュー OR 衛生用品',
     'ライオン トイレット OR 衛生用品 OR 新製品 OR 投資',
     '大王製紙 OR 王子ホールディングス OR 日本製紙 家庭紙 OR トイレット OR 業界',
+    'Essity Kimberly-Clark ティシュー OR 衛生用品 OR おむつ',
+    '丸富製紙 OR カミ商事 家庭紙 OR ティシュー',
+    '家庭紙 トイレットペーパー 業界 規制 OR 値上げ',
+    # Diaper segment
+    'おむつ 新製品 OR 技術 OR 素材 OR 吸収 OR ユニ・チャーム OR 花王',
+    'オムツ 不織布 OR 吸収体 OR 研究開発 OR 製造',
+    # Sanitary napkin segment
+    'ナプキン 生理用品 新製品 OR 素材 OR 技術 OR 市場',
+    '生理用品 衛生用品 業界 OR 環境 OR サステナ',
+    # Wet tissue segment
+    'ウェットティッシュ Winner Medical 稳健医療 OR 新製品 OR 技術',
+    'ウェットティシュ 市場 OR 素材 OR 不織布 OR 製造',
+    # Chinese manufacturers
+    'Vinda 维达 ティシュー OR 家庭紙 OR 衛生用品',
+    'Hengan 恒安 ティシュー OR おむつ OR ナプキン OR 衛生用品',
+    '中顺洁柔 C&S Paper 家庭紙 OR 製紙',
+    # Machine / Production R&D — Segment B
     '瑞光 Zuiko 加工機 OR 設備 不織布',
     'GDM Fameccanica 吸収体 加工機',
     'OPTIMA packaging 包装機 衛生',
     'ファナック FANUC パレタイザー 衛生 OR 包装',
-    'Essity Kimberly-Clark ティシュー OR 衛生用品',
-    'ウェットティッシュ Winner Medical 稳健医療',
-    '家庭紙 トイレットペーパー 業界 規制 OR 値上げ',
-    '丸富製紙 OR カミ商事 家庭紙 OR ティシュー',
+    # Academic & Patent searches
+    # Note: Google Custom Search Engine supports site: operators in queries;
+    # the RSS fallback will pass them through to Google News search as well.
+    'site:jstage.jst.go.jp ティッシュ OR 不織布 OR 吸収体 OR おむつ OR 衛生用品',
+    'site:patents.google.com 不織布 吸収体 おむつ OR ティシュー OR 衛生用品',
+    'scholar.google.com 不織布 OR 吸収体 OR おむつ 技術 OR 研究 OR 開発',
 ]
 
 # Core tissue/hygiene terms — at least one must appear in title+snippet
@@ -41,19 +61,6 @@ TISSUE_CORE_TERMS = [
     '抽紙', '衛生紙',
 ]
 
-# Terms that directly indicate household/tissue paper (NOT sanitary/diaper products).
-# Used as a guard: articles about sanitary pads or non-R&D diapers must also contain one of these.
-HOUSEHOLD_PAPER_DIRECT_TERMS = [
-    '家庭紙', 'ティシュー', 'ティッシュ', 'トイレット', 'ちり紙', 'キッチンペーパー',
-    '衛生用紙', '抽紙', '衛生紙',
-]
-
-# R&D context signals — diaper articles are allowed when one of these is present
-RD_SIGNAL_TERMS = [
-    '研究', '開発', '技術', '特許', '論文', 'R&D', '素材', '設計', '試験', '実験',
-    '加工機', '設備', '製造', '生産技術', 'イノベーション',
-]
-
 # Industry-specific companies (presence alone qualifies the article)
 TISSUE_INDUSTRY_COMPANIES = [
     'ユニ・チャーム', 'unicharm',
@@ -61,6 +68,8 @@ TISSUE_INDUSTRY_COMPANIES = [
     '瑞光', 'zuiko', 'gdm', 'fameccanica',
     'winner medical', '稳健', 'essity', 'kimberly-clark', 'kimberly clark',
     'キンバリー', 'カミ商事',
+    # Chinese manufacturers
+    'vinda', '维达', 'hengan', '恒安', '中顺洁柔', 'c&s paper',
 ]
 
 # Off-topic product terms — if any appear WITHOUT core tissue terms, reject the article
@@ -76,44 +85,29 @@ OFFTOPIC_TERMS = [
 def is_industry_relevant(title, snippet):
     """Return True only if the article is relevant to the tissue/hygiene/paper industry.
 
-    Strict guards:
-    - Sanitary pad articles (生理用品/ナプキン) are rejected unless the article also
-      contains a direct household-paper term (家庭紙, ティッシュ, トイレット, etc.).
-    - Diaper articles (おむつ/オムツ) are rejected unless there is a household-paper
-      signal OR an explicit R&D/technology context.
-    - Detergent / off-topic FMCG articles are rejected unless core tissue terms appear.
+    All five product segments (Tissue, Toilet Paper, Diapers, Sanitary Napkins, Wet Tissues)
+    are treated with equal priority.  Only purely off-topic FMCG articles are rejected.
     """
     text = (title + ' ' + snippet).lower()
     has_core = any(term.lower() in text for term in TISSUE_CORE_TERMS)
     has_company = any(name.lower() in text for name in TISSUE_INDUSTRY_COMPANIES)
     has_offtopic = any(term.lower() in text for term in OFFTOPIC_TERMS)
-    has_household_paper = any(term.lower() in text for term in HOUSEHOLD_PAPER_DIRECT_TERMS)
 
     # Explicitly off-topic articles without any tissue/hygiene signal are rejected
     if has_offtopic and not has_core:
         return False
 
-    # Sanitary pad guard: require direct household paper signal
-    has_sanitary = any(term.lower() in text for term in ['生理用', 'ナプキン', '生理ナプキン'])
-    if has_sanitary and not has_household_paper:
-        return False
-
-    # Diaper guard: require household paper signal OR R&D context
-    has_diaper = any(term.lower() in text for term in ['おむつ', 'オムツ'])
-    if has_diaper and not has_household_paper:
-        has_rd = any(term.lower() in text for term in RD_SIGNAL_TERMS)
-        if not has_rd:
-            return False
-
     return has_core or has_company
 
 CATEGORY_KEYWORDS = {
-    '①': ['ユニ・チャーム', '花王', 'P&G', 'ライオン', 'キンバリー', 'Kimberly', 'Essity', '衛生用品', 'おむつ'],
+    '①': ['ユニ・チャーム', '花王', 'P&G', 'ライオン', 'キンバリー', 'Kimberly', 'Essity',
+           '衛生用品', 'おむつ', 'オムツ', 'ナプキン', '生理用', 'Vinda', '维达', 'Hengan', '恒安', '中顺洁柔'],
     '②': ['製紙', 'パルプ', '王子', '日本製紙', 'Essity', '大王製紙'],
     '③': ['瑞光', 'Zuiko', 'GDM', 'Fameccanica', '加工機', '不織布', '吸収体'],
     '④': ['OPTIMA', 'ファナック', 'FANUC', '包装機', 'パレタイ', 'ロボット'],
     '⑤': ['ウェット', 'Winner Medical', '稳健'],
     '⑥': ['ティシュー', 'ティッシュ', 'トイレット', '家庭紙', '衛生用紙'],
+    '⑦': ['jstage', 'patents.google', 'scholar.google', '特許', '論文', '学会', 'jst.go.jp'],
 }
 
 CATEGORY_NAMES = {
@@ -123,6 +117,7 @@ CATEGORY_NAMES = {
     '④': '包装機・パレタイジング設備メーカー',
     '⑤': 'ウェットティッシュ製造メーカー',
     '⑥': 'ティッシュペーパー・家庭紙専業メーカー',
+    '⑦': '学術論文・特許情報',
 }
 
 KNOWN_COMPANIES = [
@@ -130,6 +125,7 @@ KNOWN_COMPANIES = [
     'Kimberly-Clark', '大王製紙', '王子ホールディングス', '日本製紙', 'Essity',
     '株式会社瑞光（Zuiko）', '瑞光', 'GDM', 'Fameccanica', 'OPTIMA Packaging', 'ファナック',
     'Winner Medical（稳健医疗）', '丸富製紙', 'カミ商事',
+    'Vinda（维达）', 'Hengan（恒安）', '中顺洁柔', 'C&S Paper',
 ]
 
 

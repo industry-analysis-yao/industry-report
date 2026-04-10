@@ -17,12 +17,22 @@ except ImportError:
 
 # Maximum retry attempts for high-value items that fail the formatting check
 MAX_RETRIES = 3
-# Only the top-N scored items are kept in the final JSON
-TOP_N = 20
 # Items with a score above this threshold are retried if formatting is poor
 RETRY_SCORE_THRESHOLD = 80
 # Maximum characters kept when falling back to the article title as the summary
 TITLE_FALLBACK_LENGTH = 200
+
+# 20+20 bucket quota — top 20 from each bucket → 40 items total
+BUCKET_QUOTA = 20
+TOP_N = BUCKET_QUOTA * 2  # 40
+
+# Bucket B: Production / Machine R&D
+# An item belongs to Bucket B when its category_id or info_type match any of these signals.
+BUCKET_B_CATEGORY_IDS = {'③', '④'}
+BUCKET_B_INFO_TYPES = {'加工機技術', '包装機技術', '研究開発', '特許'}
+BUCKET_B_COMPANY_KEYWORDS = [
+    'zuiko', '瑞光', 'gdm', 'fameccanica', 'optima', 'fanuc', 'ファナック',
+]
 
 
 def strip_html(text):
@@ -65,17 +75,19 @@ def ai_summarize(title, snippet, company, api_key, retry_feedback=None):
         prompt = (
             'あなたは家庭紙・衛生用品業界の専門記者です。\n\n'
             '【ステップ1: 関連性チェック】\n'
-            'この記事が「家庭紙・ティッシュ・トイレットペーパー・おむつ・衛生用品・不織布・'
-            '吸収体加工機・包装機・パレタイザー」に直接関連する業界ニュースかどうかを判断してください。\n'
+            'この記事が「家庭紙・ティッシュ・トイレットペーパー・おむつ・ナプキン・衛生用品・不織布・'
+            '吸収体加工機・包装機・パレタイザー・学術論文・特許」に直接関連する業界ニュースかどうかを判断してください。\n'
             '洗剤・柔軟剤・シャンプー・化粧品・食品・飲料など、家庭紙／衛生用品と無関係な'
             'FMCGニュースであれば「IRRELEVANT」とだけ出力してください。\n\n'
             '【ステップ2: 要約（関連する場合のみ）】\n'
             '業界関連ニュースの場合は、本文スニペットを深く読み込み、'
             '「誰が・いつ・何を・どのように・数値」が明確に伝わる、'
-            '業界関係者向けの日本語ニュースサマリーを80〜150字で作成してください。\n'
-            'タイトルをそのまま言い換えるだけでなく、本文から得た具体的な数字・背景・意義を'
-            '含めた独自の文章にしてください。本文に数値がない場合もタイトル以外の情報を補足して'
-            'ください。\n'
+            '業界関係者向けの日本語ニュースサマリーを80〜150字で作成してください。\n\n'
+            '【厳禁事項】\n'
+            '・タイトルに含まれる単語・フレーズを要約中で使用することは絶対禁止です。\n'
+            '・本文スニペットから、タイトルに記載されていない具体的な数値・技術仕様・戦略的事実を'
+            '必ず1つ以上抽出して要約に含めてください。\n'
+            '・タイトルの言い換えや単純な要約は不可です。本文から独自の情報を付加してください。\n'
             + retry_section +
             '\n【出力例】\n'
             '「ユニ・チャームは2026年4月1〜3日に普通株式584,800株を取得価額約5.5億円で取得し、'
@@ -123,6 +135,8 @@ def audit_item(title, summary, company, api_key):
             '   - 自社技術開発・製造プロセス・競合優位性・特許戦略への影響\n'
             '   - 競合他社の技術革新・設備投資・新製品が自社R&Dに与える脅威または機会\n'
             '   - 家庭紙・ティッシュ・トイレットペーパーに直結する内容は高得点\n'
+            '   - おむつ・ナプキン・ウェットティッシュの新技術・新製品も同等の高得点\n'
+            '   - 加工機・包装機・パレタイザー等の生産設備技術革新は、競合製品ローンチと同等の高得点\n'
             '2. 市場・業界構造への影響度（25点）\n'
             '   - 価格動向、市場シェア変動、規制・政策変更、原料需給への影響\n'
             '3. 情報の具体性・信頼性（20点）\n'
@@ -345,13 +359,43 @@ def main():
     # Sort by impact score descending
     data.sort(key=lambda x: x.get('score', 0), reverse=True)
 
-    # Keep only the top-N highest-scored items in the final JSON
-    if len(data) > TOP_N:
-        print(
-            f'Keeping top {TOP_N} items by score '
-            f'(discarding {len(data) - TOP_N} lower-scored items).'
-        )
-        data = data[:TOP_N]
+    # ── 20+20 Bucket System ───────────────────────────────────────────────
+    # Bucket B: Production / Machine R&D
+    # Bucket A: Competitor / Market Intelligence (everything else)
+
+    def is_bucket_b(item):
+        if item.get('category_id') in BUCKET_B_CATEGORY_IDS:
+            return True
+        if item.get('info_type') in BUCKET_B_INFO_TYPES:
+            return True
+        company_lower = (item.get('company') or '').lower()
+        title_lower = (item.get('title') or '').lower()
+        return any(kw in company_lower or kw in title_lower for kw in BUCKET_B_COMPANY_KEYWORDS)
+
+    bucket_b = [it for it in data if is_bucket_b(it)]
+    bucket_a = [it for it in data if not is_bucket_b(it)]
+
+    # Take top BUCKET_QUOTA from each; if one bucket is short, fill from the other
+    selected_b = bucket_b[:BUCKET_QUOTA]
+    selected_a = bucket_a[:BUCKET_QUOTA]
+
+    shortage_b = BUCKET_QUOTA - len(selected_b)
+    shortage_a = BUCKET_QUOTA - len(selected_a)
+
+    if shortage_b > 0:
+        # Bucket B is short — pull extras from A beyond its own quota
+        selected_a = bucket_a[:BUCKET_QUOTA + shortage_b]
+    if shortage_a > 0:
+        # Bucket A is short — pull extras from B beyond its own quota
+        selected_b = bucket_b[:BUCKET_QUOTA + shortage_a]
+
+    data = selected_a + selected_b
+
+    print(
+        f'Bucket A (Competitor/Market): {len(selected_a)} items. '
+        f'Bucket B (Machine/R&D): {len(selected_b)} items. '
+        f'Total kept: {len(data)}'
+    )
 
     # Build Top-3 highlights from best-scored items
     today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
