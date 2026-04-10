@@ -637,10 +637,11 @@ function filterCards(gridId, kw, cat, type) {
     const matchType = !type || item.info_type === type;
     return matchKw && matchCat && matchType;
   });
-  // Deduplicate by URL to ensure unique article IDs
+  // Deduplicate by URL to ensure unique article IDs; items without a URL are kept as-is
   const seenUrls = new Set();
   const uniqueFiltered = filtered.filter(item => {
-    const key = item.url || item.title || '';
+    const key = item.url || '';
+    if (!key) return true;
     if (seenUrls.has(key)) return false;
     seenUrls.add(key);
     return true;
@@ -655,7 +656,7 @@ function filterCards(gridId, kw, cat, type) {
   const sectionKey = gridId.replace('grid-', '');
   if (sectionKey === 'overview') {
     const cnt = document.getElementById('cnt-overview');
-    if (cnt) cnt.textContent = new Set(DATA.map(d => d.url || d.title || '')).size;
+    if (cnt) cnt.textContent = dedupeByUrl(DATA).length;
   } else {
     const cnt = document.getElementById('cnt-' + sectionKey);
     if (cnt) cnt.textContent = uniqueFiltered.length;
@@ -772,11 +773,13 @@ function renderHighlights(highlights) {
 // ============================================================
 // INIT GRIDS
 // ============================================================
-// Deduplicate an array of items by URL (or title as fallback), returning unique items only.
+// Deduplicate an array of items by URL, returning unique items only.
+// Items without a URL are always kept (they cannot be reliably deduplicated).
 function dedupeByUrl(arr) {
   var seen = new Set();
   return arr.filter(function(d) {
-    var key = d.url || d.title || '';
+    var key = d.url || '';
+    if (!key) return true;  // no URL — keep unconditionally
     if (seen.has(key)) return false;
     seen.add(key);
     return true;

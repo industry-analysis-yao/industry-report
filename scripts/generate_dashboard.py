@@ -48,15 +48,17 @@ def strip_html(text):
 def _gemini_generate(client, model, contents):
     """Call Gemini API with rate limiting and 429 retry logic.
 
-    Sleeps GEMINI_THROTTLE_SECONDS before every attempt to stay within the
-    free-tier 15 RPM limit.  On a 429 / RESOURCE_EXHAUSTED error, waits an
-    additional GEMINI_429_WAIT_SECONDS and retries up to MAX_429_RETRIES times.
-    Raises the last exception if all retries are exhausted.
+    Sleeps GEMINI_THROTTLE_SECONDS *after* every successful call to stay within
+    the free-tier 15 RPM limit.  On a 429 / RESOURCE_EXHAUSTED error, waits
+    GEMINI_429_WAIT_SECONDS (which already exceeds the throttle interval) and
+    retries up to MAX_429_RETRIES times.  Raises the last exception if all
+    retries are exhausted.
     """
     for attempt in range(MAX_429_RETRIES + 1):
-        time.sleep(GEMINI_THROTTLE_SECONDS)
         try:
-            return client.models.generate_content(model=model, contents=contents)
+            response = client.models.generate_content(model=model, contents=contents)
+            time.sleep(GEMINI_THROTTLE_SECONDS)  # throttle between calls
+            return response
         except Exception as e:
             err_str = str(e)
             is_rate_limit = (
@@ -269,7 +271,7 @@ def process_item_with_retry(item, api_key):
             # Acceptable quality or low score — no retry needed
             break
 
-    item['summary'] = best_summary or 'Analysis Pending'
+    item['summary'] = best_summary or '分析待ち'
     item['score'] = best_score
     item['impact_analysis'] = best_impact
     return True
@@ -339,15 +341,20 @@ def main():
         print('No data found. Run fetch_news.py first.')
         return
 
-    # Deduplicate by URL before processing; keep the item with the highest score
+    # Deduplicate by URL before processing; keep the item with the highest score.
+    # Only items with a real URL are deduplicated; URL-less items are kept as-is.
     url_map = {}
+    no_url_items = []
     for item in data:
-        url = item.get('url') or item.get('title') or ''
-        if url not in url_map or (item.get('score') or 0) > (url_map[url].get('score') or 0):
+        url = item.get('url') or ''
+        if not url:
+            no_url_items.append(item)
+        elif url not in url_map or (item.get('score') or 0) > (url_map[url].get('score') or 0):
             url_map[url] = item
-    if len(url_map) < len(data):
-        print(f'Deduplication removed {len(data) - len(url_map)} duplicate items.')
-    data = list(url_map.values())
+    deduped = list(url_map.values()) + no_url_items
+    if len(deduped) < len(data):
+        print(f'Deduplication removed {len(data) - len(deduped)} duplicate items.')
+    data = deduped
 
     updated = 0
     irrelevant_indices = []
