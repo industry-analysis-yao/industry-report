@@ -238,13 +238,14 @@ def fetch_from_google_news_rss(query, max_items=10):
         return []
 
 
-def fetch_news():
+def fetch_news(existing_urls=None):
     api_key = os.environ.get('GOOGLE_API_KEY', '')
     cse_id = os.environ.get('GOOGLE_CSE_ID', '')
 
     today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
     results = []
     use_rss_fallback = False
+    _existing = existing_urls or set()
 
     if not api_key or not cse_id:
         print('WARNING: GOOGLE_API_KEY or GOOGLE_CSE_ID not set. Falling back to Google News RSS.')
@@ -268,6 +269,11 @@ def fetch_news():
             url = item.get('link', '')
             snippet = strip_html(item.get('snippet', ''))
             source_name = item.get('displayLink', '')
+
+            # Skip URLs we already have — no need to re-process known items
+            if url and url in _existing:
+                print(f'  [SKIP existing] {title[:60]}')
+                continue
 
             # Mandatory relevance check — discard off-topic articles (e.g. laundry detergent)
             if not is_industry_relevant(title, snippet):
@@ -344,7 +350,7 @@ if __name__ == '__main__':
     print(f'Existing items: {len(existing)} regular, {len(patents)} patents')
     print('Fetching new items via Google Custom Search API...')
 
-    new_items = fetch_news()
+    new_items = fetch_news(existing_urls=existing_urls)
     if not new_items:
         print(f'No recent news found (last {DATE_RESTRICT_DAYS} days).')
     appended = 0
