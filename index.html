@@ -637,15 +637,29 @@ function filterCards(gridId, kw, cat, type) {
     const matchType = !type || item.info_type === type;
     return matchKw && matchCat && matchType;
   });
-  state.items = filtered;
+  // Deduplicate by URL to ensure unique article IDs
+  const seenUrls = new Set();
+  const uniqueFiltered = filtered.filter(item => {
+    const key = item.url || item.title || '';
+    if (seenUrls.has(key)) return false;
+    seenUrls.add(key);
+    return true;
+  });
+  state.items = uniqueFiltered;
   state.page = 0;
   renderPage(gridId);
   // Update filter-bar count
   const fc = document.getElementById('fc-' + gridId.replace('grid-', ''));
-  if (fc) fc.textContent = filtered.length + '件表示';
-  // Update sidebar nav count so it always reflects what is filtered/displayed
-  const cnt = document.getElementById('cnt-' + gridId.replace('grid-', ''));
-  if (cnt) cnt.textContent = filtered.length;
+  if (fc) fc.textContent = uniqueFiltered.length + '件表示';
+  // Update sidebar nav count — overview always reflects total unique stored items
+  const sectionKey = gridId.replace('grid-', '');
+  if (sectionKey === 'overview') {
+    const cnt = document.getElementById('cnt-overview');
+    if (cnt) cnt.textContent = new Set(DATA.map(d => d.url || d.title || '')).size;
+  } else {
+    const cnt = document.getElementById('cnt-' + sectionKey);
+    if (cnt) cnt.textContent = uniqueFiltered.length;
+  }
 }
 
 // ============================================================
@@ -761,15 +775,17 @@ function renderHighlights(highlights) {
 function initGrids() {
   paginateGrid('grid-overview', DATA);
 
+  // Total count = unique items stored (deduplicated by URL)
+  const uniqueTotal = new Set(DATA.map(function(d) { return d.url || d.title || ''; })).size;
   var totalEl = document.getElementById('total-count');
-  if (totalEl) totalEl.textContent = DATA.length;
+  if (totalEl) totalEl.textContent = uniqueTotal;
   var companyEl = document.getElementById('company-count');
   if (companyEl) {
     var uniqueCompanies = new Set(DATA.map(function(d) { return d.company; }).filter(function(c) { return c && c !== '不明'; }));
     companyEl.textContent = uniqueCompanies.size;
   }
   var cntOverview = document.getElementById('cnt-overview');
-  if (cntOverview) cntOverview.textContent = DATA.length;
+  if (cntOverview) cntOverview.textContent = uniqueTotal;
 
   var rivals = DATA.filter(function(d) { return d.category_id === '①' || d.category_id === '②'; });
   paginateGrid('grid-rivals', rivals);
