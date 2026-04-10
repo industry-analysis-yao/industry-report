@@ -190,7 +190,19 @@
     aside.mobile-open { display: block; z-index: 901; }
   }
 
-  /* SCROLLBAR */
+  /* DATE NAVIGATOR */
+  .date-nav-bar {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px 16px; margin-bottom: 20px; display: flex; align-items: center;
+    gap: 10px; flex-wrap: wrap; box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .date-nav-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .date-nav-display {
+    font-size: 15px; font-weight: 700; color: var(--navy); min-width: 110px; text-align: center;
+  }
+  .date-nav-count { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+
+
   aside::-webkit-scrollbar { width: 4px; }
   aside::-webkit-scrollbar-track { background: transparent; }
   aside::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
@@ -265,6 +277,16 @@
 
 <!-- MAIN -->
 <main>
+
+<!-- DATE NAVIGATOR (global — controls which day's news is shown) -->
+<div class="date-nav-bar" id="date-nav-bar">
+  <span class="date-nav-label">📅 表示日:</span>
+  <button class="pg-btn" id="btn-prev-day" onclick="navigateDate(1)" title="前の日">← 前の日</button>
+  <span class="date-nav-display" id="date-nav-display">―</span>
+  <button class="pg-btn" id="btn-next-day" onclick="navigateDate(-1)" title="次の日">次の日 →</button>
+  <select class="filter-input" id="date-select" onchange="selectDate(this.value)" style="max-width:160px;"></select>
+  <span class="date-nav-count" id="date-nav-count"></span>
+</div>
 
   <!-- ① OVERVIEW -->
   <div class="section active" id="s-overview">
@@ -475,7 +497,11 @@
 // ============================================================
 // DATA (loaded from data/news_data.json)
 // ============================================================
-let DATA = [];
+let DATA = [];      // items for the currently selected date
+let PATENTS = [];   // permanent patent archive (all dates)
+let DATES = {};     // {YYYY-MM-DD: [items]}
+let SORTED_DATES = []; // dates sorted newest-first
+let SELECTED_DATE_IDX = 0;
 
 // ============================================================
 // BADGE MAPPING
@@ -506,6 +532,7 @@ function buildCard(item, idx) {
   const typeClass = getTypeBadgeClass(item.info_type);
   const catColor = getCatColor(item.category_id);
   const verifyBadge = item.confidence === '要確認' ? '<span class="badge badge-verify">⚠️ 要確認</span>' : '';
+  const permanentBadge = item.permanent_record ? '<span class="badge badge-patent">📌 永久保存</span>' : '';
   const cardId = 'card-' + idx;
 
   // Score badge (red ≥80, orange ≥60, blue ≥40, grey otherwise)
@@ -534,13 +561,14 @@ function buildCard(item, idx) {
             <span class="badge ${typeClass}">${item.info_type}</span>
             ${scoreBadge}
             ${verifyBadge}
+            ${permanentBadge}
           </div>
         </div>
         <div class="card-date">📅 ${item.date}</div>
       </div>
       <div class="card-body">
         <div class="card-title">${item.title}</div>
-        <div class="card-source">�� ソース: <a href="${item.url}" target="_blank" rel="noopener">${item.source_name}</a></div>
+        <div class="card-source">🔗 ソース: <a href="${item.url}" target="_blank" rel="noopener">${item.source_name}</a></div>
         <div class="card-summary-label">🤖 AI要約</div>
         <div class="card-summary">${item.summary}</div>
         ${impactSection}
@@ -661,6 +689,52 @@ function filterCards(gridId, kw, cat, type) {
     const cnt = document.getElementById('cnt-' + sectionKey);
     if (cnt) cnt.textContent = uniqueFiltered.length;
   }
+}
+
+// ============================================================
+// DATE NAVIGATION
+// ============================================================
+function navigateDate(delta) {
+  SELECTED_DATE_IDX = Math.max(0, Math.min(SORTED_DATES.length - 1, SELECTED_DATE_IDX + delta));
+  updateDateNav();
+  DATA = DATES[SORTED_DATES[SELECTED_DATE_IDX]] || [];
+  initGrids();
+}
+
+function selectDate(dateStr) {
+  var idx = SORTED_DATES.indexOf(dateStr);
+  if (idx >= 0) {
+    SELECTED_DATE_IDX = idx;
+    updateDateNav();
+    DATA = DATES[dateStr] || [];
+    initGrids();
+  }
+}
+
+function updateDateNav() {
+  var date = SORTED_DATES[SELECTED_DATE_IDX] || '';
+  var el = document.getElementById('date-nav-display');
+  if (el) el.textContent = date || '―';
+  var btnPrev = document.getElementById('btn-prev-day');
+  var btnNext = document.getElementById('btn-next-day');
+  if (btnPrev) btnPrev.disabled = SELECTED_DATE_IDX >= SORTED_DATES.length - 1;
+  if (btnNext) btnNext.disabled = SELECTED_DATE_IDX <= 0;
+  var sel = document.getElementById('date-select');
+  if (sel && date) sel.value = date;
+  var cnt = document.getElementById('date-nav-count');
+  if (cnt) {
+    var n = (DATES[date] || []).length;
+    cnt.textContent = n > 0 ? n + '件' : '';
+  }
+}
+
+function buildDateSelect() {
+  var sel = document.getElementById('date-select');
+  if (!sel) return;
+  sel.innerHTML = SORTED_DATES.map(function(d) {
+    return '<option value="' + d + '">' + d + '</option>';
+  }).join('');
+  if (SORTED_DATES[SELECTED_DATE_IDX]) sel.value = SORTED_DATES[SELECTED_DATE_IDX];
 }
 
 // ============================================================
@@ -790,7 +864,7 @@ function initGrids() {
   var uniqueData = dedupeByUrl(DATA);
   paginateGrid('grid-overview', uniqueData);
 
-  // Total count = unique items stored (deduplicated by URL)
+  // Total count = unique items for selected date
   var uniqueTotal = uniqueData.length;
   var totalEl = document.getElementById('total-count');
   if (totalEl) totalEl.textContent = uniqueTotal;
@@ -839,15 +913,18 @@ function initGrids() {
   paginateGrid('grid-toilet', toilet);
   document.getElementById('cnt-toilet').textContent = toilet.length;
 
-  var patent = dedupeByUrl(DATA.filter(function(d) { return d.info_type === '特許'; }));
-  if (patent.length === 0) {
+  // Patent section: permanent archive (PATENTS) merged with any patents in current date
+  var datePatents = dedupeByUrl(DATA.filter(function(d) { return d.info_type === '特許'; }));
+  var allPatents = dedupeByUrl(PATENTS.concat(datePatents));
+  if (allPatents.length === 0) {
     document.getElementById('empty-patent').style.display = 'block';
     document.getElementById('grid-patent').innerHTML = '';
   } else {
-    paginateGrid('grid-patent', patent);
+    document.getElementById('empty-patent').style.display = 'none';
+    paginateGrid('grid-patent', allPatents);
   }
-  document.getElementById('cnt-patent').textContent = patent.length || '0';
-  updateFilterCount('fc-patent', patent.length);
+  document.getElementById('cnt-patent').textContent = allPatents.length || '0';
+  updateFilterCount('fc-patent', allPatents.length);
 
   var research = dedupeByUrl(DATA.filter(function(d) { return d.info_type === '研究開発'; }));
   if (research.length === 0) {
@@ -861,7 +938,7 @@ function initGrids() {
   updateFilterCount('fc-research', research.length);
 
   var patentRd = dedupeByUrl(DATA.filter(function(d) { return d.info_type === '特許' || d.info_type === '研究開発'; }));
-  document.getElementById('patent-count').textContent = patentRd.length;
+  document.getElementById('patent-count').textContent = dedupeByUrl(patentRd.concat(PATENTS)).length;
 }
 
 // ============================================================
@@ -876,24 +953,62 @@ function init() {
     })
     .then(function(json) {
       var highlights;
-      // Support both legacy array and new {last_updated, highlights, items} format
+
       if (Array.isArray(json)) {
-        DATA = json;
+        // Legacy bare-array format — group by date
+        var allItems = json;
         highlights = [];
-      } else {
-        DATA = json.items || [];
-        setLastUpdated(json.last_updated);
+        PATENTS = [];
+        DATES = {};
+        allItems.forEach(function(item) {
+          var d = item.date || 'unknown';
+          if (!DATES[d]) DATES[d] = [];
+          DATES[d].push(item);
+        });
+      } else if (json.dates) {
+        // New date-bucket format
+        DATES = json.dates || {};
+        PATENTS = json.patents || [];
         highlights = json.highlights || [];
+        setLastUpdated(json.last_updated);
+      } else {
+        // Legacy {last_updated, highlights, items} format — group by date
+        var allItems = json.items || [];
+        highlights = json.highlights || [];
+        PATENTS = [];
+        setLastUpdated(json.last_updated);
+        DATES = {};
+        allItems.forEach(function(item) {
+          var d = item.date || 'unknown';
+          if (!DATES[d]) DATES[d] = [];
+          DATES[d].push(item);
+        });
       }
-      // Sort newest-first before rendering so the highlights fallback picks the right items
-      // Sort by impact score descending; fall back to date for unscored items
-      DATA.sort(function(a, b) { var sd = (b.score || 0) - (a.score || 0); return sd !== 0 ? sd : (b.date || '').localeCompare(a.date || ''); });
+
+      // Sort dates newest-first
+      SORTED_DATES = Object.keys(DATES).sort().reverse();
+      SELECTED_DATE_IDX = 0;
+
+      // Sort each date's items by score desc, then date desc
+      SORTED_DATES.forEach(function(d) {
+        DATES[d].sort(function(a, b) {
+          var sd = (b.score || 0) - (a.score || 0);
+          return sd !== 0 ? sd : (b.date || '').localeCompare(a.date || '');
+        });
+      });
+
+      // Set DATA to most recent date's items
+      DATA = SORTED_DATES.length > 0 ? (DATES[SORTED_DATES[0]] || []) : [];
+
+      buildDateSelect();
+      updateDateNav();
       renderHighlights(highlights);
       initGrids();
     })
     .catch(function(e) {
       console.error('Error loading data/news_data.json:', e);
       DATA = [];
+      PATENTS = [];
       renderHighlights([]);
       initGrids();
     });
@@ -905,5 +1020,6 @@ function updateFilterCount(id, n) {
   if (el) el.textContent = n + '件表示';
 }
 </script>
+
 <script src="https://www.genspark.ai/sandbox_inspect.js"></script></body>
 </html>

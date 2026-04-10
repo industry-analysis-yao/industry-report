@@ -153,7 +153,7 @@ def ai_summarize(title, snippet, company, api_key, retry_feedback=None):
         try:
             response = _gemini_generate(client, 'gemini-2.5-flash', prompt)
         except Exception as primary_err:
-            print(f'  [FALLBACK-A] gemini-2.5-flash failed: {primary_err}. Retrying with gemini-1.5-flash...')
+            print(f'  [FALLBACK-TRIGGERED] gemini-2.5-flash failed: {primary_err}. Retrying with gemini-1.5-flash...')
             response = _gemini_generate(client, 'gemini-1.5-flash', prompt)
         text = response.text.strip()
         if text.strip().upper() == 'IRRELEVANT':
@@ -217,7 +217,7 @@ def audit_item(title, summary, company, api_key):
         try:
             response = _gemini_generate(client, 'gemini-2.5-flash', prompt)
         except Exception as primary_err:
-            print(f'  [FALLBACK-B] gemini-2.5-flash failed: {primary_err}. Retrying with gemini-1.5-flash...')
+            print(f'  [FALLBACK-TRIGGERED] gemini-2.5-flash failed: {primary_err}. Retrying with gemini-1.5-flash...')
             response = _gemini_generate(client, 'gemini-1.5-flash', prompt)
         text = response.text.strip()
         text = re.sub(r'^```(?:json)?\s*', '', text)
@@ -339,20 +339,48 @@ def generate_highlights(items, api_key):
 
 
 def load_data(path):
+    """Return (items, last_updated, highlights).
+
+    Flattens both the date-bucket ``dates`` dict and the ``patents`` permanent
+    archive into a single list so the processing pipeline can operate on all
+    items uniformly.  The ``permanent_record`` flag on patent items is
+    preserved so they are kept separate again at save time.
+    """
     if os.path.exists(path):
         with open(path, 'r', encoding='utf-8') as f:
             raw = json.load(f)
         if isinstance(raw, list):
             return raw, None, []
+        # New date-bucket format
+        if 'dates' in raw:
+            items = []
+            for date_items in raw.get('dates', {}).values():
+                items.extend(date_items)
+            items.extend(raw.get('patents', []))
+            return items, raw.get('last_updated'), raw.get('highlights', [])
+        # Legacy {last_updated, highlights, items} format
         return raw.get('items', []), raw.get('last_updated'), raw.get('highlights', [])
     return [], None, []
 
 
 def save_data(path, items, highlights=None, last_updated=None):
+    """Save items in date-bucket format.
+
+    Items with ``permanent_record=True`` are stored in the ``patents``
+    permanent archive and excluded from date buckets (which are subject to
+    30-day pruning).
+    """
+    patents = [i for i in items if i.get('permanent_record')]
+    regular = [i for i in items if not i.get('permanent_record')]
+    dates = {}
+    for item in regular:
+        d = item.get('date', 'unknown')
+        dates.setdefault(d, []).append(item)
     payload = {
         'last_updated': last_updated or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
         'highlights': highlights or [],
-        'items': items,
+        'dates': dates,
+        'patents': patents,
     }
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
@@ -464,6 +492,13 @@ def main():
             item['score'] = 0
         if not item.get('impact_analysis'):
             item['impact_analysis'] = ''
+
+    # Tag patent items with permanent_record so they are archived permanently
+    for item in data:
+        if item.get('info_type') == '特許' and not item.get('permanent_record'):
+            item['permanent_record'] = True
+            item['category'] = 'patent'
+            print(f'  [PATENT-SAVED] {item.get("title", "")[:60]}')
 
     # Sort by impact score descending
     data.sort(key=lambda x: x.get('score', 0), reverse=True)
