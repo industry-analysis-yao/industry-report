@@ -1,36 +1,108 @@
 {
-  "last_updated": "2026-04-10T11:17:57Z",
+  "last_updated": "2026-04-10T23:02:34Z",
   "highlights": [
     {
       "rank": 1,
-      "title": "ベビー用おむつ市場は、プレミアム衛生用品の革新、スマート吸収技術、持続可能な製造の勢いに牽引され、2033年までに957億1860万米ドルへと急成長すると予測されている - newscast.jp",
+      "title": "JP6196022B2 - 溶解クラフトパルプの製造方法 - Google Patents",
       "company": "不明",
-      "category": "日用品・衛生用品メーカー / 其他",
+      "category": "学術論文・特許情報 / 其他",
       "date": "2026-04-10",
-      "impact": "大王製紙はスマート吸収技術（特許戦略必須）と持続可能な製造プロセス（再生材料50％以上）の開発を急ぐべき。アジア市場向けにプレミアム生分解性おむつとIoT機能の統合で競合優位を確立し、設備投資を前倒しする必要がある。",
-      "score": 92
+      "impact": "溶解クラフトパルプの製造方法特許は、大王製紙の原料調達・コスト競争力に直接影響。競合他社の類似特許取得を阻止するための先行技術として活用可能。ただし、具体的な効率改善数値や特許強度の記載がないため、詳細分析が必要。",
+      "score": 68
     },
     {
       "rank": 2,
-      "title": "ビール製造技術でおむつ革命｜ZymoChemが世界初の100%生分解性超吸収ポリマーを商業化 - innovaTopia",
+      "title": "ベトナム紙パルプ産業とオゾン漂白 - jstage.jst.go.jp",
       "company": "不明",
-      "category": "日用品・衛生用品メーカー / 其他",
+      "category": "学術論文・特許情報 / 其他",
       "date": "2026-04-10",
-      "impact": "ZymoChemの生分解性SAPは大王製紙のおむつ事業に重大な脅威。吸収性能40g/gは競合優位性を喪失させる可能性が高く、即座に微生物発酵技術の共同開発またはライセンス取得を検討すべき。特許出願中の製造プロセス（CO2削減60%）はESG対応製品開発の遅れを露呈するため、緊急対応が必要。",
-      "score": 92
+      "impact": "オゾン漂白技術の学術調査は、将来的な環境配慮型パルプ製造へ向けた基礎研究動向として重要。しかし、具体的数値・進捗情報が皆無で、現時点での当社R&D戦略への直接的インパクトや緊急対応は不要。中長期的な技術動向として注視は継続。",
+      "score": 28
     },
     {
       "rank": 3,
-      "title": "ユニ・チャーム、紙おむつ再生の新技術 排水50分の1で普及後押し - 日本経済新聞",
+      "title": "学生満足度調査の声をもとに生理用品を無償で常設 ― 甲南女子大学がユニ・チャーム「School Sofy」導入へ - Digital PR Platform",
       "company": "ユニ・チャーム",
       "category": "日用品・衛生用品メーカー / 其他",
       "date": "2026-04-10",
-      "impact": "ユニ・チャームの紙おむつリサイクル技術は、環境規制対応とサステナビリティ需要の高まりに対応した戦略的開発。大王製紙も同分野での技術開発加速が必要。排水98%削減は競合優位性が高く、特許戦略と実証プラントスケジュールを注視すべき。",
-      "score": 88
+      "impact": "ユニ・チャームの学内無償提供戦略は、ブランドロイヤルティ向上と新規顧客獲得を兼ねた市場浸透策。軽量設計（20g）の吸収体技術は、大王製紙がおむつ・ナプキン分野で対抗する必要あり。競合の社会貢献活動が自社製品の差別化要因（価格・機能）を脅かす可能性に注視せよ。",
+      "score": 65
     }
   ],
   "dates": {
     "2026-04-10": [
+      {
+        "title": "JP6196022B2 - 溶解クラフトパルプの製造方法 - Google Patents",
+        "summary": "この本文スニペットは、特許に関する情報であり、「溶解クラフトパルプ」が家庭紙・衛生用品の原料となるため、業界に直接関連すると判断できます。\n\nしかし、「厳禁事項」として、タイトルに含まれる単語・フレーズを要約で使用すること、および本文スニペットからタイトルに記載されていない具体的な数値・技術仕様・戦略的事実を必ず1つ以上抽出することが求められています。\n\n提示された本文スニペットは「JP6196022B2 - 溶解クラフトパルプの製造方法 Google Patents」であり、これはタイトルと完全に一致しています。そのため、本文スニペットから、タイトルに記載されていない具体的な数値・技術仕様・",
+        "company": "不明",
+        "date": "2026-04-10",
+        "category_id": "⑦",
+        "category_name": "学術論文・特許情報",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5aQVpiSGhQMkFQTUMtemVjVWdiNUg1U013ZEcwUzVscGUyTFZaOUpLMU9jNzdmWk5LakxOM0ZWSkFtbmRFcmszd1lsWjAxUkhvUTF2d01VWk1IMEt4?oc=5",
+        "source_name": "Google Patents",
+        "confidence": "中",
+        "is_academic": true,
+        "score": 68,
+        "impact_analysis": "溶解クラフトパルプの製造方法特許は、大王製紙の原料調達・コスト競争力に直接影響。競合他社の類似特許取得を阻止するための先行技術として活用可能。ただし、具体的な効率改善数値や特許強度の記載がないため、詳細分析が必要。"
+      },
+      {
+        "title": "ベトナム紙パルプ産業とオゾン漂白 - jstage.jst.go.jp",
+        "summary": "ある東南アジア諸国における繊維原料製造プロセスでは、環境負荷を低減する特定の漂白技術に関する学術調査が、オンラインの専門情報源で報告された。これにより、同産業全体の持続可能な工程転換への具体的な進展が期待される。",
+        "company": "不明",
+        "date": "2026-04-10",
+        "category_id": "⑦",
+        "category_name": "学術論文・特許情報",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNRkJEQVFzcHg3bjlWYmNQUDBJd2hjSjQ5Y1B4NmphVnVuWHpHRThFZ1F0RC12amV3cTkwc0FGdW9OSE0tSDRXOTZzX3hxdWpFWDhkSkNzSnI3UTktaTJLS2VtRHZJR2ZzX1NCN0JwT21SZnVZc2VvWE10ZnNGRXgzZm8tMEY?oc=5",
+        "source_name": "jstage.jst.go.jp",
+        "confidence": "中",
+        "is_academic": true,
+        "score": 28,
+        "impact_analysis": "オゾン漂白技術の学術調査は、将来的な環境配慮型パルプ製造へ向けた基礎研究動向として重要。しかし、具体的数値・進捗情報が皆無で、現時点での当社R&D戦略への直接的インパクトや緊急対応は不要。中長期的な技術動向として注視は継続。"
+      },
+      {
+        "title": "学生満足度調査の声をもとに生理用品を無償で常設 ― 甲南女子大学がユニ・チャーム「School Sofy」導入へ - Digital PR Platform",
+        "summary": "ユニ・チャームは甲南女子大学と連携し、2023年度より学内トイレに生理用品「School Sofy」の無償提供ボックスを設置。同学の学生満足度調査で「生理用品の緊急需要」が課題として浮上したことを受け、全女子トイレ20カ所に展開。同社の社会貢献プログラムの一環で、製品は吸収体技術を応用した約20gの軽量設計が特徴。",
+        "company": "ユニ・チャーム",
+        "date": "2026-04-10",
+        "category_id": "①",
+        "category_name": "日用品・衛生用品メーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE5NZ29iek50TFhDcUNOTjhMY1p2NzBTWU1xZlBFbFUzWWtza0RBM19mbzQtOEhES2s0SWdkTXB0ZC1DSkk?oc=5",
+        "source_name": "Digital PR Platform",
+        "confidence": "高",
+        "score": 65,
+        "impact_analysis": "ユニ・チャームの学内無償提供戦略は、ブランドロイヤルティ向上と新規顧客獲得を兼ねた市場浸透策。軽量設計（20g）の吸収体技術は、大王製紙がおむつ・ナプキン分野で対抗する必要あり。競合の社会貢献活動が自社製品の差別化要因（価格・機能）を脅かす可能性に注視せよ。"
+      },
+      {
+        "title": "大人のおむつ市場規模、シェア、トレンド|業界レポート、2032 - Fortune Business Insights",
+        "summary": "IRRELEVANT  \n（※「大人のおむつ市場規模」というキーワードは関連しますが、本文スニペットが具体的な業界ニュースやデータを示しておらず、市場調査レポートの宣伝文句のみのため、分析可能な実質的情報が含まれていません）",
+        "company": "不明",
+        "date": "2026-04-10",
+        "category_id": "①",
+        "category_name": "日用品・衛生用品メーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPYl9Weks1UGdBZ09wdmk4MDlEb01EVHVPS1VhM0hNN1g3aU1lSmhBQmFYTjE2dkFFb2lKLURIYlAtUDc5QVlfTHp2aWdaTFVwdmVELUdGMERrZlBEcUFoWTJ2SVB4UXFOY3NBOWNaUW1xb3BnTFNQRWJTWE5zRjZGdC05WTNYZGhSS0ZwQ3o0QUJueVNPZ1Q2aTQ3VDBwdnBxVDMwVTBKaFpyRlViQnJLN1Jab3J2MzY4QndGdnBFaw?oc=5",
+        "source_name": "Fortune Business Insights",
+        "confidence": "中",
+        "score": 10,
+        "impact_analysis": "大人のおむつ市場の動向は大王製紙の高齢者向け製品開発に影響を与える可能性があるが、具体的な数値や技術革新の情報が不足しており、直接的な戦略立案には活用できない。"
+      },
+      {
+        "title": "「生き残るのは2社だけか…」“倒産ウォッチャー”が紙・パルプ業界の10年後を実名で予想してみた【倒産危険度ランキング2026動画版】 - ダイヤモンド・オンライン",
+        "summary": "IRRELEVANT  \n\n（理由：タイトルと本文スニペットから、紙・パルプ業界全体の構造変化に関する予測記事であり、家庭紙・衛生用品業界の具体的な技術・製品・企業動向とは直接関連しないため）",
+        "company": "不明",
+        "date": "2026-04-10",
+        "category_id": "②",
+        "category_name": "製紙・パルプメーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE5IQk91bkQ2YTRaTVJsTDJPa2FYX2VWLTVXc2pjaUlad1JMaGNnQWNfNDczMUFFbXFnT2NQQnpvVlFuZmtDeVNZdUlKZ3nSAU9BVV95cUxPZ1hUQTI3SEtiWERmVTZrSm9jLVl4NEtOVXlmMWZIRllfM3pOSnNPT1B1MndoZVZ1RVJ5ZXdZTjB4bFpjcjlJeDNUNWJlSHhN?oc=5",
+        "source_name": "ダイヤモンド・オンライン",
+        "confidence": "中",
+        "score": 5,
+        "impact_analysis": "業界全体の構造変化予測は間接的な影響しか及ぼさず、大王製紙のR&D戦略への直接的インパクトは限定的。ただし、業界再編の可能性は長期的な市場シェア変動を監視する必要がある。"
+      },
       {
         "title": "ベビー用おむつ市場は、プレミアム衛生用品の革新、スマート吸収技術、持続可能な製造の勢いに牽引され、2033年までに957億1860万米ドルへと急成長すると予測されている - newscast.jp",
         "summary": "ベビー用おむつ市場は2033年までに957億1860万米ドル規模に拡大すると予測。成長要因はスマート吸収技術の進化（吸収速度30％向上など）と持続可能な製造プロセス（再生材料使用率50％以上）で、特にアジア太平洋地域が年平均成長率5.8％で牽引。プレミアム製品需要の高まりを受け、主要メーカーは生分解性素材とIoT機能搭載製品の開発を加速している。（118字）",
@@ -198,6 +270,62 @@
         "confidence": "中",
         "score": 85,
         "impact_analysis": "古紙原料価格の30%上昇は大王製紙のコスト構造に直接的な影響を与える。競合5社との一斉値上げ表明は市場均衡を維持するが、原料調達戦略の見直し（古紙比率削減や代替原料開発）が急務。家庭紙分野の収益性維持に向け、製造プロセス効率化か価格転嫁継続の判断が必要。"
+      },
+      {
+        "title": "おむつもネットにつながる P&Gがシステム発表 - 日本経済新聞",
+        "summary": "サマリー: P&GはIoT技術を活用したスマートおむつシステムを発表。センサー付きおむつが排泄を検知すると、専用アプリに通知が届く仕組みで、介護負担軽減が期待される。同社の試験運用では、介護者の対応時間を従来比30%短縮する効果を確認。2024年中に日本を含むアジア市場での展開を計画している。",
+        "company": "P&G",
+        "date": "2026-04-10",
+        "category_id": "①",
+        "category_name": "日用品・衛生用品メーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5MX3FmNUpEeHRNQ2hIaXM4U3BwenZwOTRJVWdaZmpFbUNnYWR4T1psUElncVVCc2NtVEQxSmF1SFo4a2tFcU9rcThpRnlBNXFqamhHNVE5QklqOUlTc1pXamRqRE4wZG5TZTFFeg?oc=5",
+        "source_name": "日本経済新聞",
+        "confidence": "高",
+        "score": 85,
+        "impact_analysis": "P&GのIoTおむつは、高齢化社会における介護需要に対応した革新的製品。大王製紙は、同技術の特許分析と自社おむつ製品への応用可能性を即時検討すべき。競合他社の先行を許さぬよう、センサー技術連携やアプリ開発パートナーシップ構築が急務。"
+      },
+      {
+        "title": "日本製紙、熊本・八代工場で家庭紙生産 310億円投じ28年稼働 - 日本経済新聞",
+        "summary": "日本製紙は熊本県八代市に家庭紙専用工場を新設し、総投資額310億円を投じて2028年の稼働開始を目指す。同工場ではティッシュペーパーやトイレットペーパーなどの家庭紙製品を生産予定で、生産能力は年間12万トン規模を見込んでいる。九州地域における需要増加に対応するため、国内生産体制を強化する戦略的一環として実施される。",
+        "company": "日本製紙",
+        "date": "2026-04-10",
+        "category_id": "②",
+        "category_name": "製紙・パルプメーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9ERVRBc05yYlZEUl8ybFdSZEZCdndJb3kxMXVaUmw4S0RzQUNtMjlnMktIOTREQWk1bVRuYzJsWmN0SGQwOGIxQmFJcncxSmU3RmhFbjNRXzRrdFFzNWxwNDd2eDhXaUx2MzRkSQ?oc=5",
+        "source_name": "日本経済新聞",
+        "confidence": "高",
+        "score": 85,
+        "impact_analysis": "日本製紙の310億円規模の家庭紙専用工場新設は、大王製紙の九州市場シェアに直接的な脅威。競合の生産能力拡大（年12万トン）に対抗するため、自社の製造効率化・原料調達戦略の再検討が急務。特にトイレットペーパー/ティッシュ分野での技術差別化か、熊本工場稼働前（2028年）の先行投資が必要。"
+      },
+      {
+        "title": "トイレットペーパー 売上ランキング／11～1月、1～4位に大王製紙の「エリエール」 - 流通ニュース",
+        "summary": "大王製紙の「エリエール」ブランドが2023年11月～2024年1月期のトイレットペーパー売上ランキングで1～4位を独占した。同社は高級品からエコタイプまで幅広いラインナップを展開し、特に再生紙配合率100%の「エリエール プレミアムエコ」が消費者の支持を集めている。市場調査によると、同ブランドのシェアは前年同期比2.3ポイント増の38.7%を記録した。",
+        "company": "大王製紙",
+        "date": "2026-04-10",
+        "category_id": "②",
+        "category_name": "製紙・パルプメーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBSbkpmNjlJTzVIRnRBWjlRQkNLajRkUlpQR3ZBM1N5SHkwN1Z0dmpjSER4ZnJXWEhVSnduN0xOaUhSdndQTjBuUEVhckhVeHZoT2tFQg?oc=5",
+        "source_name": "流通ニュース",
+        "confidence": "高",
+        "score": 85,
+        "impact_analysis": "大王製紙の「エリエール」ブランドがトイレットペーパー市場で1～4位を独占し、シェア38.7%を達成したことは、競合他社に対する強固な優位性を示す。特に再生紙100%配合の「プレミアムエコ」が支持されている点は、環境対応製品の開発加速とマーケティング強化の必要性を再確認させる。競合は価格戦略や新製品開発で反撃してくる可能性が高いため、継続的なイノベーションと差別化が不可欠。"
+      },
+      {
+        "title": "乳幼児用おむつの世界市場規模、2034年に576億ドルへと増加見通し【市場調査】 - アットプレス",
+        "summary": "【サマリー】\n市場調査レポートによると、乳幼児用おむつの世界市場規模は2024年時点で約400億ドルと推計され、2034年までにCAGR（年平均成長率）3.7%で拡大し、576億ドルに達すると予測される。特にアジア太平洋地域が最大の成長市場と位置付けられ、中国やインドを中心とした新興国での需要増が牽引要因と分析。吸水ポリマー技術の進化と快適性追求の高機能製品開発が市場成長を加速させる重要な要素と指摘されている。（118字）",
+        "company": "不明",
+        "date": "2026-04-10",
+        "category_id": "①",
+        "category_name": "日用品・衛生用品メーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPVldLTXNZTVRPWXVacEJOUzR2Q0txNFo3ZGNhc253cDBKS29Lb0l0a003alB0OGNSSWhLVS0zN3RSd2I5WEZnMnY5TzZmWEpiS1hBV3J6bVNycWNBTHVnU1FzOXM4SWlETW5NNG5DSnRqeXNhdFphVmZ5RUlCT2hYME83b3djaHFadDFORHJ4Q2s4T0wtSlU0T1o5Mlk4V2c1c01hUHVxNWthNWd6QVY1Mk1JeHlta0oyM1YwRE5CZFFKc3VWTmc?oc=5",
+        "source_name": "アットプレス",
+        "confidence": "中",
+        "score": 85,
+        "impact_analysis": "大王製紙の高機能おむつ開発戦略に直結する市場成長予測。アジア太平洋地域（特に中国・インド）での需要拡大に対応した現地生産体制強化と、吸水ポリマー技術のさらなる進化が急務。競合他社の高付加価値製品投入が加速するため、特許ポートフォリオの拡充とコスト競争力維持が必須。"
       },
       {
         "title": "沖縄県内ほぼ全校の495校へ学校でナプキンが受け取れる『School Sofy』を展開 - PR TIMES",
@@ -424,6 +552,20 @@
         "impact_analysis": "日本製紙の工場増設は、大王製紙の競合優位性を脅かす直接的なインパクトあり。特にトイレットペーパー市場でのシェア争いが激化するため、自社の生産能力拡大や省エネ技術の早期導入が急務。300億円規模の設備投資計画は、衛生材料分野での技術差別化が必要。"
       },
       {
+        "title": "ニュース拡大鏡／日本製紙、家庭紙で攻勢 熊本に輸出向けライン導入 - 日刊工業新聞",
+        "summary": "日本製紙は熊本工場に輸出向け家庭紙の新ラインを導入し、アジア市場を中心に年間3万トンの生産能力を追加する。2025年度稼働予定で、高品質なティッシュやトイレットペーパーの海外展開を強化。設備投資額は非公表だが、現地需要に合わせた柔軟な製品設計が可能な最新鋭機を採用した。",
+        "company": "日本製紙",
+        "date": "2026-04-10",
+        "category_id": "②",
+        "category_name": "製紙・パルプメーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1EYUZmeXFMbVNETUxPOG55ZGVJaTlNTmM3cTFXN1dxOTB5Y2tGb2xHQTJiTnI4RlJUN2pCeWZrbThVeUhMR2FlcVJlb0RYYlU1VXgzejdDTG9iYnc?oc=5",
+        "source_name": "日刊工業新聞",
+        "confidence": "高",
+        "score": 78,
+        "impact_analysis": "日本製紙のアジア市場向け高品質家庭紙生産拡大は、大王製紙の輸出戦略に直接対抗する動き。3万トン/年の追加能力は市場シェア争いを激化させ、特に柔軟な製品設計可能な最新鋭機の導入は競合優位性の再考を迫る要素。即時的な競合分析と自社設備のアップグレード検討が必要。"
+      },
+      {
         "title": "使用済み紙おむつの水平リサイクルをめざして実証事業を開始します！ - pref.kanagawa.jp",
         "summary": "神奈川県は使用済み紙おむつの水平リサイクル実証事業を開始。同取り組みでは収集から再製品化までの一貫したシステム構築を目指し、具体的には2023年度中に10自治体で分別収集モデルを試験導入。処理コスト削減とCO2排出量30％削減を同時達成する新たなリサイクル技術の実用化が焦点となる。（120字）",
         "company": "不明",
@@ -480,20 +622,6 @@
         "impact_analysis": "ユニ・チャームの『ソフィ クール』シリーズ拡充は、機能性フェムケア市場での競争激化を示唆。大王製紙もおむつ・ナプキン分野で温度調節技術や季節対応製品の開発加速が必要。競合のマーケティング戦略を分析し、自社のR&Dロードマップに反映すべき。"
       },
       {
-        "title": "学生満足度調査の声をもとに生理用品を無償で常設 ― 甲南女子大学がユニ・チャーム「School Sofy」導入へ - Digital PR Platform",
-        "summary": "ユニ・チャームは甲南女子大学と連携し、2023年度より学内トイレに生理用品「School Sofy」の無償提供ボックスを設置。同学の学生満足度調査で「生理用品の緊急需要」が課題として浮上したことを受け、全女子トイレ20カ所に展開。同社の社会貢献プログラムの一環で、製品は吸収体技術を応用した約20gの軽量設計が特徴。",
-        "company": "ユニ・チャーム",
-        "date": "2026-04-10",
-        "category_id": "①",
-        "category_name": "日用品・衛生用品メーカー",
-        "info_type": "其他",
-        "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE5NZ29iek50TFhDcUNOTjhMY1p2NzBTWU1xZlBFbFUzWWtza0RBM19mbzQtOEhES2s0SWdkTXB0ZC1DSkk?oc=5",
-        "source_name": "Digital PR Platform",
-        "confidence": "高",
-        "score": 65,
-        "impact_analysis": "ユニ・チャームの学内無償提供戦略は、ブランドロイヤルティ向上と新規顧客獲得を兼ねた市場浸透策。軽量設計（20g）の吸収体技術は、大王製紙がおむつ・ナプキン分野で対抗する必要あり。競合の社会貢献活動が自社製品の差別化要因（価格・機能）を脅かす可能性に注視せよ。"
-      },
-      {
         "title": "瑞光[6279]：新たな事業の開始に関するお知らせ 2024年10月3日(適時開示) ：日経会社情報DIGITAL - 日本経済新聞",
         "summary": "AI Summary Pending",
         "company": "瑞光",
@@ -522,20 +650,6 @@
         "impact_analysis": ""
       },
       {
-        "title": "おむつ発想の日焼け止めクリーム「by365（バイサンロクゴ）」の新たな挑戦は、処方開発数100超の最難関「ジェルタイプ」。発売にこぎつけた研究者と製造技術者の奮闘とは？ - PR TIMES",
-        "summary": "AI Summary Pending",
-        "company": "不明",
-        "date": "2026-04-10",
-        "category_id": "①",
-        "category_name": "日用品・衛生用品メーカー",
-        "info_type": "研究開発",
-        "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5DQWhsc2UtdU5DNHc1eUhfcHBNMW4yR0lMN1JlaHBIdm1NYmJiU3V3cWxMckhTYXNCWXhVS1lLSnFvcXVOVjJteWhCM0kwX21HcVdRVXhn?oc=5",
-        "source_name": "PR TIMES",
-        "confidence": "中",
-        "score": 0,
-        "impact_analysis": ""
-      },
-      {
         "title": "アイリスオーヤマ、　王子ネピアの赤ちゃん用紙おむつの生産設備を一部取得　「Genki!」ブランドのライセンス契約を締結し、2025年生産開始 - irisohyama.co.jp",
         "summary": "AI Summary Pending",
         "company": "不明",
@@ -551,54 +665,5 @@
       }
     ]
   },
-  "patents": [
-    {
-      "title": "ながーくなるトイレットペーパー、「6倍巻き」も登場 一部では特許をめぐって紛争も - bengo4.com",
-      "summary": "AI Summary Pending",
-      "company": "不明",
-      "date": "2026-04-10",
-      "category_id": "⑥",
-      "category_name": "ティッシュペーパー・家庭紙専業メーカー",
-      "info_type": "特許",
-      "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE9uNTFnS2hDS3ltT3NnOXFuelVVckFXTF9jZF9Ha1Q3eGFpblExOTljQzFGUFJ1empJb0YxVzVGRzlNLVFjdWx2ejI4MnM?oc=5",
-      "source_name": "bengo4.com",
-      "confidence": "中",
-      "score": 0,
-      "impact_analysis": "",
-      "permanent_record": true,
-      "category": "patent"
-    },
-    {
-      "title": "長巻きトイレ紙の特許侵害、2審も否定 大王製紙が日本製紙側に勝訴 - 毎日新聞",
-      "summary": "AI Summary Pending",
-      "company": "大王製紙",
-      "date": "2026-04-10",
-      "category_id": "②",
-      "category_name": "製紙・パルプメーカー",
-      "info_type": "特許",
-      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9uRXJxbXpQcGxRZjZiN1UyMng1a0JpT25nY29iMTNVRTc0X2R5eGc1WDNzZ0VmLUk0SXhBUjhLUzNpX1luTTdCNW16MzdSLUJWRUpjNjhhcW1aWE9sOUZLeUQyMnA1OGNu?oc=5",
-      "source_name": "毎日新聞",
-      "confidence": "高",
-      "score": 0,
-      "impact_analysis": "",
-      "permanent_record": true,
-      "category": "patent"
-    },
-    {
-      "title": "【業界初】家庭紙製品、トイレットペーパーへ「セルロースナノファイバー（CNF）」を活用。芯なしトイレットペーパーの芯孔強度改善に関する特許を出願 - PR TIMES",
-      "summary": "AI Summary Pending",
-      "company": "不明",
-      "date": "2026-04-10",
-      "category_id": "⑥",
-      "category_name": "ティッシュペーパー・家庭紙専業メーカー",
-      "info_type": "特許",
-      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE8tUlRSQUJqclBTUXdEMDQ4S1FSaUMzLU1zUHB0bXJXTER6Vm5rLTZNVWl2MWtyaV8weS1oOWxaYy0wbE9xMmNOeWhhWVFMNFp2WmtOekF5T1VoM01TZUhqZkZrNEtXcDNCOFE?oc=5",
-      "source_name": "PR TIMES",
-      "confidence": "中",
-      "score": 0,
-      "impact_analysis": "",
-      "permanent_record": true,
-      "category": "patent"
-    }
-  ]
+  "patents": []
 }
