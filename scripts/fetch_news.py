@@ -41,6 +41,19 @@ TISSUE_CORE_TERMS = [
     '抽紙', '衛生紙',
 ]
 
+# Terms that directly indicate household/tissue paper (NOT sanitary/diaper products).
+# Used as a guard: articles about sanitary pads or non-R&D diapers must also contain one of these.
+HOUSEHOLD_PAPER_DIRECT_TERMS = [
+    '家庭紙', 'ティシュー', 'ティッシュ', 'トイレット', 'ちり紙', 'キッチンペーパー',
+    '衛生用紙', '抽紙', '衛生紙',
+]
+
+# R&D context signals — diaper articles are allowed when one of these is present
+RD_SIGNAL_TERMS = [
+    '研究', '開発', '技術', '特許', '論文', 'R&D', '素材', '設計', '試験', '実験',
+    '加工機', '設備', '製造', '生産技術', 'イノベーション',
+]
+
 # Industry-specific companies (presence alone qualifies the article)
 TISSUE_INDUSTRY_COMPANIES = [
     'ユニ・チャーム', 'unicharm',
@@ -61,14 +74,37 @@ OFFTOPIC_TERMS = [
 
 
 def is_industry_relevant(title, snippet):
-    """Return True only if the article is relevant to the tissue/hygiene/paper industry."""
+    """Return True only if the article is relevant to the tissue/hygiene/paper industry.
+
+    Strict guards:
+    - Sanitary pad articles (生理用品/ナプキン) are rejected unless the article also
+      contains a direct household-paper term (家庭紙, ティッシュ, トイレット, etc.).
+    - Diaper articles (おむつ/オムツ) are rejected unless there is a household-paper
+      signal OR an explicit R&D/technology context.
+    - Detergent / off-topic FMCG articles are rejected unless core tissue terms appear.
+    """
     text = (title + ' ' + snippet).lower()
     has_core = any(term.lower() in text for term in TISSUE_CORE_TERMS)
     has_company = any(name.lower() in text for name in TISSUE_INDUSTRY_COMPANIES)
     has_offtopic = any(term.lower() in text for term in OFFTOPIC_TERMS)
+    has_household_paper = any(term.lower() in text for term in HOUSEHOLD_PAPER_DIRECT_TERMS)
+
     # Explicitly off-topic articles without any tissue/hygiene signal are rejected
     if has_offtopic and not has_core:
         return False
+
+    # Sanitary pad guard: require direct household paper signal
+    has_sanitary = any(term.lower() in text for term in ['生理用', 'ナプキン', '生理ナプキン'])
+    if has_sanitary and not has_household_paper:
+        return False
+
+    # Diaper guard: require household paper signal OR R&D context
+    has_diaper = any(term.lower() in text for term in ['おむつ', 'オムツ'])
+    if has_diaper and not has_household_paper:
+        has_rd = any(term.lower() in text for term in RD_SIGNAL_TERMS)
+        if not has_rd:
+            return False
+
     return has_core or has_company
 
 CATEGORY_KEYWORDS = {
