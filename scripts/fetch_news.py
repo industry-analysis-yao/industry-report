@@ -16,8 +16,17 @@ try:
 except ImportError:
     pass
 
-# Number of days to restrict Google Custom Search results to
+# Number of days to restrict Google Custom Search results to (base value)
 DATE_RESTRICT_DAYS = 10
+
+# Per-bucket daily quotas — total = 45 items
+QUOTA_INDUSTRY = 20   # Bucket A: competitor / market intelligence
+QUOTA_MACHINE = 20    # Bucket B: equipment / production R&D
+QUOTA_ACADEMIC = 5    # Bucket C: J-STAGE / Google Scholar / patents
+
+# Path for deficit-tracking configuration
+_SCRIPT_DIR = os.path.dirname(__file__)
+SEARCH_CONFIG_PATH = os.path.normpath(os.path.join(_SCRIPT_DIR, '..', 'data', 'search_config.json'))
 
 # Search queries for the industry — full coverage across all five product segments
 SEARCH_QUERIES = [
@@ -48,12 +57,23 @@ SEARCH_QUERIES = [
     'GDM Fameccanica 吸収体 加工機',
     'OPTIMA packaging 包装機 衛生',
     'ファナック FANUC パレタイザー 衛生 OR 包装',
-    # Academic & Patent searches
-    # Note: Google Custom Search Engine supports site: operators in queries;
-    # the RSS fallback will pass them through to Google News search as well.
-    'site:jstage.jst.go.jp ティッシュ OR 不織布 OR 吸収体 OR おむつ OR 衛生用品',
-    'site:patents.google.com 不織布 吸収体 おむつ OR ティシュー OR 衛生用品',
-    'scholar.google.com 不織布 OR 吸収体 OR おむつ 技術 OR 研究 OR 開発',
+]
+
+# Academic & Patent queries — Bucket C (J-STAGE / Google Scholar / patents only)
+ACADEMIC_QUERIES = [
+    # Group 1: Direct Paper Competitors (Tissue & Towels)
+    # Focus: Oji Holdings/Nepia, Nippon Paper/Crecia, Kamishoji — excluding Daio Paper
+    'site:jstage.jst.go.jp ("王子ホールディングス" OR "王子ネピア" OR "日本製紙" OR "日本製紙クレシア" OR "カミ商事") ("ティッシュ" OR "タオル" OR "パルプ") (特許 OR 発明 OR 新技術) -"大王製紙"',
+    'site:patents.google.com ("王子ホールディングス" OR "王子ネピア" OR "日本製紙" OR "日本製紙クレシア") ("ティッシュ" OR "タオル" OR "パルプ") -"大王製紙"',
+
+    # Group 2: Hygiene & Sanitary Competitors (Diapers & Napkins)
+    # Focus: Unicharm, Kao, P&G technical papers on non-woven fabrics and absorbents
+    'site:jstage.jst.go.jp ("ユニ・チャーム" OR "花王" OR "P&G") ("不織布" OR "おむつ" OR "生理用品" OR "吸収体") (特許 OR 発明 OR 新技術) -"大王製紙"',
+    'site:patents.google.com ("ユニ・チャーム" OR "花王" OR "P&G") ("不織布" OR "おむつ" OR "生理用品" OR "吸収体") -"大王製紙"',
+
+    # Group 3: Process & Equipment Innovation (Smaller innovative rivals)
+    # Focus: Tokushu Tokai Paper and Marufuji Paper manufacturing process papers
+    'site:jstage.jst.go.jp ("特種東海製紙" OR "丸富製紙") ("加工技術" OR "包装" OR "省エネルギー") (特許 OR 発明 OR 新技術) -"大王製紙"',
 ]
 
 # Core tissue/hygiene terms — at least one must appear in title+snippet
@@ -167,9 +187,10 @@ def determine_info_type(text):
     return '其他'
 
 
-def fetch_from_google_cse(query, api_key, cse_id, num=10):
+def fetch_from_google_cse(query, api_key, cse_id, num=10, date_restrict_days=None):
     """Return list of items on success, None on a fatal API error (e.g. 403 forbidden)."""
     url = 'https://www.googleapis.com/customsearch/v1'
+    restrict = date_restrict_days if date_restrict_days else DATE_RESTRICT_DAYS
     params = {
         'key': api_key,
         'cx': cse_id,
@@ -177,7 +198,7 @@ def fetch_from_google_cse(query, api_key, cse_id, num=10):
         'num': num,
         'lr': 'lang_ja',
         'sort': 'date',
-        'dateRestrict': f'd{DATE_RESTRICT_DAYS}',
+        'dateRestrict': f'd{restrict}',
     }
     try:
         resp = requests.get(url, params=params, timeout=15)
@@ -238,13 +259,16 @@ def fetch_from_google_news_rss(query, max_items=10):
         return []
 
 
-def fetch_news(existing_urls=None):
+def fetch_news(existing_urls=None, use_rss_fallback=False):
+    """Fetch industry news (Bucket A + B).
+
+    Returns a list of new items; does NOT include academic/patent items.
+    """
     api_key = os.environ.get('GOOGLE_API_KEY', '')
     cse_id = os.environ.get('GOOGLE_CSE_ID', '')
 
     today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
     results = []
-    use_rss_fallback = False
     _existing = existing_urls or set()
 
     if not api_key or not cse_id:
@@ -270,12 +294,10 @@ def fetch_news(existing_urls=None):
             snippet = strip_html(item.get('snippet', ''))
             source_name = item.get('displayLink', '')
 
-            # Skip URLs we already have — no need to re-process known items
             if url and url in _existing:
                 print(f'  [SKIP existing] {title[:60]}')
                 continue
 
-            # Mandatory relevance check — discard off-topic articles (e.g. laundry detergent)
             if not is_industry_relevant(title, snippet):
                 print(f'  [SKIP non-relevant] {title[:60]}')
                 continue
@@ -298,7 +320,104 @@ def fetch_news(existing_urls=None):
                 'confidence': '高' if company != '不明' else '中',
             })
 
+    return results, use_rss_fallback
+
+
+def fetch_academic_news(existing_urls=None, date_restrict_days=None, use_rss_fallback=False):
+    """Fetch academic / patent items (Bucket C) from J-STAGE, Google Scholar, patents.google.
+
+    Uses an extended date range when a deficit is detected from the previous run.
+    Returns a list of new items tagged with category_id='⑦'.
+    """
+    api_key = os.environ.get('GOOGLE_API_KEY', '')
+    cse_id = os.environ.get('GOOGLE_CSE_ID', '')
+
+    today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    results = []
+    _existing = existing_urls or set()
+    restrict_days = date_restrict_days or DATE_RESTRICT_DAYS
+
+    if not api_key or not cse_id:
+        use_rss_fallback = True
+
+    for query in ACADEMIC_QUERIES:
+        print(f'  [ACADEMIC] Searching ({restrict_days}d): {query}')
+        if use_rss_fallback:
+            items = fetch_from_google_news_rss(query)
+        else:
+            cse_items = fetch_from_google_cse(query, api_key, cse_id, date_restrict_days=restrict_days)
+            if cse_items is None:
+                use_rss_fallback = True
+                items = fetch_from_google_news_rss(query)
+            else:
+                items = cse_items
+
+        for item in items:
+            title = item.get('title', '')
+            url = item.get('link', '')
+            snippet = strip_html(item.get('snippet', ''))
+            source_name = item.get('displayLink', '')
+
+            if url and url in _existing:
+                print(f'  [SKIP existing] {title[:60]}')
+                continue
+
+            if not is_industry_relevant(title, snippet):
+                print(f'  [SKIP non-relevant] {title[:60]}')
+                continue
+
+            company = extract_company(title + ' ' + snippet)
+            info_type = determine_info_type(title + ' ' + snippet)
+
+            results.append({
+                'title': title,
+                'summary': snippet,
+                'company': company,
+                'date': today,
+                'category_id': '⑦',
+                'category_name': CATEGORY_NAMES['⑦'],
+                'info_type': info_type,
+                'url': url,
+                'source_name': source_name,
+                'confidence': '高' if company != '不明' else '中',
+                'is_academic': True,
+            })
+
     return results
+
+
+def load_search_config():
+    """Load deficit-tracking configuration from search_config.json.
+
+    Returns a dict with at minimum:
+      - academic_deficit: int  (cumulative shortfall vs QUOTA_ACADEMIC)
+      - last_run_date: str     (YYYY-MM-DD of last run that computed a deficit)
+    """
+    defaults = {'academic_deficit': 0, 'last_run_date': ''}
+    if os.path.exists(SEARCH_CONFIG_PATH):
+        try:
+            with open(SEARCH_CONFIG_PATH, 'r', encoding='utf-8') as f:
+                cfg = json.load(f)
+            defaults.update(cfg)
+        except Exception as e:
+            print(f'  [WARN] Could not read search_config.json: {e}')
+    return defaults
+
+
+def save_search_config(cfg):
+    """Persist deficit-tracking configuration to search_config.json."""
+    os.makedirs(os.path.dirname(SEARCH_CONFIG_PATH), exist_ok=True)
+    with open(SEARCH_CONFIG_PATH, 'w', encoding='utf-8') as f:
+        json.dump(cfg, f, ensure_ascii=False, indent=2)
+
+
+def academic_date_restrict(deficit):
+    """Return an extended date-restrict window (days) based on the accumulated deficit.
+
+    Each missing item adds 3 extra search days (capped at 60 extra days).
+    """
+    return DATE_RESTRICT_DAYS + min(deficit * 3, 60)
+
 
 
 def load_existing(path):
@@ -348,23 +467,122 @@ if __name__ == '__main__':
     existing_urls.update(item['url'] for item in patents if item.get('url'))
 
     print(f'Existing items: {len(existing)} regular, {len(patents)} patents')
-    print('Fetching new items via Google Custom Search API...')
 
-    new_items = fetch_news(existing_urls=existing_urls)
-    if not new_items:
-        print(f'No recent news found (last {DATE_RESTRICT_DAYS} days).')
-    appended = 0
-    for item in new_items:
-        if appended >= 40:
-            print(f'  Daily cap of 40 new items reached; skipping remaining.')
-            break
-        if item['url'] and item['url'] not in existing_urls:
+    # ── Load deficit config ──────────────────────────────────────────────────
+    cfg = load_search_config()
+    deficit = cfg.get('academic_deficit', 0)
+    restrict_days = academic_date_restrict(deficit)
+    print(f'Academic deficit from previous runs: {deficit}. '
+          f'Using {restrict_days}-day window for academic queries.')
+
+    # ── Fetch Bucket A + B (industry / machine news) ──────────────────────────
+    print('Fetching industry news (Bucket A + B)...')
+    industry_items, rss_fallback = fetch_news(existing_urls=existing_urls)
+
+    # ── Fetch Bucket C (academic / patents) ───────────────────────────────────
+    print('Fetching academic / patent news (Bucket C)...')
+    academic_items = fetch_academic_news(
+        existing_urls=existing_urls,
+        date_restrict_days=restrict_days,
+        use_rss_fallback=rss_fallback,
+    )
+
+    # ── Deduplicate within newly fetched items ────────────────────────────────
+    seen_new_urls = set()
+    deduped_industry = []
+    for item in industry_items:
+        u = item.get('url', '')
+        if u and u in seen_new_urls:
+            continue
+        seen_new_urls.add(u) if u else None
+        deduped_industry.append(item)
+
+    deduped_academic = []
+    for item in academic_items:
+        u = item.get('url', '')
+        if u and (u in seen_new_urls or u in existing_urls):
+            continue
+        seen_new_urls.add(u) if u else None
+        deduped_academic.append(item)
+
+    # ── Classify industry items into Bucket A (industry) and Bucket B (machine) ─
+    MACHINE_CATEGORY_IDS = {'③', '④'}
+    MACHINE_KEYWORDS = ['zuiko', '瑞光', 'gdm', 'fameccanica', 'optima', 'fanuc', 'ファナック']
+
+    def is_machine_item(item):
+        if item.get('category_id') in MACHINE_CATEGORY_IDS:
+            return True
+        text = (item.get('company', '') + ' ' + item.get('title', '')).lower()
+        return any(kw in text for kw in MACHINE_KEYWORDS)
+
+    bucket_a_new = [it for it in deduped_industry if not is_machine_item(it)]
+    bucket_b_new = [it for it in deduped_industry if is_machine_item(it)]
+    bucket_c_new = deduped_academic
+
+    # ── Compute per-bucket shortfalls relative to today's existing data ───────
+    today_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    today_existing = [it for it in existing if it.get('date') == today_str]
+    today_academic = [it for it in patents if it.get('date') == today_str]
+
+    existing_a = len([it for it in today_existing if not is_machine_item(it)
+                      and it.get('category_id') != '⑦'])
+    existing_b = len([it for it in today_existing if is_machine_item(it)])
+    existing_c = len([it for it in today_existing if it.get('category_id') == '⑦']) + len(today_academic)
+
+    cap_a = max(0, QUOTA_INDUSTRY - existing_a)
+    cap_b = max(0, QUOTA_MACHINE - existing_b)
+    cap_c = max(0, QUOTA_ACADEMIC - existing_c)
+
+    def append_capped(source_list, target, cap, label):
+        added = 0
+        for item in source_list:
+            if added >= cap:
+                print(f'  [{label}] Daily cap of {cap} reached; skipping remaining.')
+                break
+            if item.get('url') and item['url'] in existing_urls:
+                continue
+            target.append(item)
+            existing_urls.add(item['url'])
+            existing.append(item)
+            added += 1
+            print(f'  [{label}-NEW] {item["title"][:60]}')
+        return added
+
+    appended_a = append_capped(bucket_a_new, [], cap_a, 'BUCKET-A')
+    appended_b = append_capped(bucket_b_new, [], cap_b, 'BUCKET-B')
+    appended_c = append_capped(bucket_c_new, [], cap_c, 'BUCKET-C')
+
+    # ── Fill-in: if a bucket is still under quota, pull from others ───────────
+    fill_pool = []
+    if appended_a < cap_a:
+        leftover = [it for it in bucket_b_new if it.get('url') not in existing_urls]
+        fill_pool.extend(leftover[:cap_a - appended_a])
+    if appended_b < cap_b:
+        leftover = [it for it in bucket_a_new if it.get('url') not in existing_urls]
+        fill_pool.extend(leftover[:cap_b - appended_b])
+    for item in fill_pool:
+        if item.get('url') and item['url'] not in existing_urls:
             existing.append(item)
             existing_urls.add(item['url'])
-            appended += 1
-            print(f'  [SEARCH-NEW] {item["title"][:60]}')
+            print(f'  [FILL-IN] {item["title"][:60]}')
 
-    # Prune regular items older than 30 days; patents (permanent_record) are never pruned
+    appended_total = appended_a + appended_b + appended_c
+    if not appended_total and not fill_pool:
+        print(f'No recent news found (last {DATE_RESTRICT_DAYS} days).')
+
+    # ── Update academic deficit for next run ──────────────────────────────────
+    actual_academic_today = existing_c + appended_c
+    daily_shortfall = max(0, QUOTA_ACADEMIC - actual_academic_today)
+    # Deficit formula: add today's shortfall, but subtract any overshoot (items
+    # fetched beyond the daily cap reduce the backlog).  Never go below zero.
+    new_deficit = max(0, deficit + daily_shortfall - max(0, appended_c - cap_c))
+    cfg['academic_deficit'] = new_deficit
+    cfg['last_run_date'] = today_str
+    save_search_config(cfg)
+    print(f'Academic quota: target={QUOTA_ACADEMIC}, fetched today={actual_academic_today}, '
+          f'deficit={new_deficit} (was {deficit}).')
+
+    # ── Prune regular items older than 30 days; patents are never pruned ──────
     cutoff = datetime.now(timezone.utc) - timedelta(days=30)
     cutoff_str = cutoff.strftime('%Y-%m-%d')
     kept = []
@@ -384,4 +602,7 @@ if __name__ == '__main__':
     existing.sort(key=lambda x: x.get('date', ''), reverse=True)
 
     save_data(data_path, existing, highlights=highlights, patents=patents)
-    print(f'Appended {appended} new items. Total: {len(existing)} regular + {len(patents)} patents saved to {data_path}')
+    total_appended = appended_a + appended_b + appended_c
+    print(f'Appended {total_appended} new items '
+          f'(A={appended_a}, B={appended_b}, C={appended_c}). '
+          f'Total: {len(existing)} regular + {len(patents)} patents saved to {data_path}')

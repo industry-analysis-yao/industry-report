@@ -8,7 +8,7 @@ try:
 except ImportError:
     pass
 
-CUTOFF_DAYS = 30
+CUTOFF_DAYS = 90
 
 
 def main():

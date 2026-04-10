@@ -29,14 +29,16 @@ RETRY_SCORE_THRESHOLD = 80
 _OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1/chat/completions'
 _OPENROUTER_MODELS = ['deepseek/deepseek-chat', 'google/gemini-flash-1.5']
 
-# 20+20 bucket quota — top 20 from each bucket → 40 items total
+# 20+20+5 bucket quota — Bucket A: industry (20), Bucket B: machine R&D (20), Bucket C: academic/patents (5)
 BUCKET_QUOTA = 20
-TOP_N = BUCKET_QUOTA * 2  # 40
+ACADEMIC_QUOTA = 5
+TOP_N = BUCKET_QUOTA * 2 + ACADEMIC_QUOTA  # 45
 
 # Bucket B: Production / Machine R&D
 # An item belongs to Bucket B when its category_id or info_type match any of these signals.
 BUCKET_B_CATEGORY_IDS = {'③', '④'}
-BUCKET_B_INFO_TYPES = {'加工機技術', '包装機技術', '研究開発', '特許'}
+# Only machine-specific info types qualify for Bucket B (research/patent go to Bucket C)
+BUCKET_B_INFO_TYPES = {'加工機技術', '包装機技術'}
 BUCKET_B_COMPANY_KEYWORDS = [
     'zuiko', '瑞光', 'gdm', 'fameccanica', 'optima', 'fanuc', 'ファナック',
 ]
@@ -564,11 +566,17 @@ def main():
     # Sort by impact score descending
     data.sort(key=lambda x: x.get('score', 0), reverse=True)
 
-    # ── 20+20 Bucket System ───────────────────────────────────────────────
-    # Bucket B: Production / Machine R&D
+    # ── 20+20+5 Bucket System ─────────────────────────────────────────────────
+    # Bucket C: Academic / Patents (category_id='⑦' or is_academic flag)
+    # Bucket B: Production / Machine R&D (③④ and machine companies) — excludes academic
     # Bucket A: Competitor / Market Intelligence (everything else)
 
+    def is_bucket_c(item):
+        return item.get('category_id') == '⑦' or bool(item.get('is_academic'))
+
     def is_bucket_b(item):
+        if is_bucket_c(item):
+            return False
         if item.get('category_id') in BUCKET_B_CATEGORY_IDS:
             return True
         if item.get('info_type') in BUCKET_B_INFO_TYPES:
@@ -577,29 +585,46 @@ def main():
         title_lower = (item.get('title') or '').lower()
         return any(kw in company_lower or kw in title_lower for kw in BUCKET_B_COMPANY_KEYWORDS)
 
+    bucket_c = [it for it in data if is_bucket_c(it)]
     bucket_b = [it for it in data if is_bucket_b(it)]
-    bucket_a = [it for it in data if not is_bucket_b(it)]
+    bucket_a = [it for it in data if not is_bucket_b(it) and not is_bucket_c(it)]
 
-    # Take top BUCKET_QUOTA from each; if one bucket is short, fill from the other
+    # Take top quota from each bucket
+    selected_c = bucket_c[:ACADEMIC_QUOTA]
     selected_b = bucket_b[:BUCKET_QUOTA]
     selected_a = bucket_a[:BUCKET_QUOTA]
 
+    # Fill-in: if a bucket is short, pull from the others
+    shortage_c = ACADEMIC_QUOTA - len(selected_c)
     shortage_b = BUCKET_QUOTA - len(selected_b)
     shortage_a = BUCKET_QUOTA - len(selected_a)
 
     if shortage_b > 0:
-        # Bucket B is short — pull extras from A beyond its own quota
         selected_a = bucket_a[:BUCKET_QUOTA + shortage_b]
     if shortage_a > 0:
-        # Bucket A is short — pull extras from B beyond its own quota
         selected_b = bucket_b[:BUCKET_QUOTA + shortage_a]
+    if shortage_c > 0:
+        # Pull academic shortfall from highest-scored remaining items
+        used_urls = {it.get('url') for it in selected_a + selected_b + selected_c}
+        fallback = [it for it in data if it.get('url') not in used_urls]
+        selected_c = selected_c + fallback[:shortage_c]
 
-    data = selected_a + selected_b
+    # Deduplicate across all three buckets (URL-based, keep highest score)
+    seen_urls: set = set()
+    final_data = []
+    for item in selected_c + selected_a + selected_b:
+        url = item.get('url', '')
+        if url and url in seen_urls:
+            continue
+        seen_urls.add(url) if url else None
+        final_data.append(item)
+    data = final_data
 
     print(
         f'Bucket A (Competitor/Market): {len(selected_a)} items. '
         f'Bucket B (Machine/R&D): {len(selected_b)} items. '
-        f'Total kept: {len(data)}'
+        f'Bucket C (Academic/Patents): {len(selected_c)} items. '
+        f'Total (after dedup): {len(data)}'
     )
 
     # Build Top-3 highlights from best-scored items
