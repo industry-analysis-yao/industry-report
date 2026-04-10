@@ -391,9 +391,6 @@ def main():
 
     data = selected_a + selected_b
 
-    if len(data) > TOP_N:
-        data = data[:TOP_N]
-
     print(
         f'Bucket A (Competitor/Market): {len(selected_a)} items. '
         f'Bucket B (Machine/R&D): {len(selected_b)} items. '

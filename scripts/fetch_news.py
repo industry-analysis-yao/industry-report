@@ -46,6 +46,8 @@ SEARCH_QUERIES = [
     'OPTIMA packaging 包装機 衛生',
     'ファナック FANUC パレタイザー 衛生 OR 包装',
     # Academic & Patent searches
+    # Note: Google Custom Search Engine supports site: operators in queries;
+    # the RSS fallback will pass them through to Google News search as well.
     'site:jstage.jst.go.jp ティッシュ OR 不織布 OR 吸収体 OR おむつ OR 衛生用品',
     'site:patents.google.com 不織布 吸収体 おむつ OR ティシュー OR 衛生用品',
     'scholar.google.com 不織布 OR 吸収体 OR おむつ 技術 OR 研究 OR 開発',
