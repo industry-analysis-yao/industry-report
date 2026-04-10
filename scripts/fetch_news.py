@@ -174,7 +174,7 @@ def fetch_from_google_cse(query, api_key, cse_id, num=10):
         'num': num,
         'lr': 'lang_ja',
         'sort': 'date',
-        'dateRestrict': 'd7',
+        'dateRestrict': 'd10',
     }
     try:
         resp = requests.get(url, params=params, timeout=15)
@@ -293,20 +293,39 @@ def fetch_news():
 
 
 def load_existing(path):
+    """Return (regular_items, last_updated, highlights, patents)."""
     if os.path.exists(path):
         with open(path, 'r', encoding='utf-8') as f:
             raw = json.load(f)
-        # Support both legacy array format and new {"last_updated":..., "items":[...]} format
+        # Legacy bare-array format
         if isinstance(raw, list):
-            return raw, None
-        return raw.get('items', []), raw.get('last_updated')
-    return [], None
+            return raw, None, [], []
+        # New date-bucket format: {last_updated, highlights, dates, patents}
+        if 'dates' in raw:
+            items = []
+            for date_items in raw.get('dates', {}).values():
+                items.extend(date_items)
+            patents = raw.get('patents', [])
+            return items, raw.get('last_updated'), raw.get('highlights', []), patents
+        # Legacy {last_updated, highlights, items} format
+        return raw.get('items', []), raw.get('last_updated'), raw.get('highlights', []), []
+    return [], None, [], []
 
 
-def save_data(path, items):
+def save_data(path, items, highlights=None, patents=None):
+    """Save items in date-bucket format; patents are stored in a permanent archive."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     now = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-    payload = {'last_updated': now, 'items': items}
+    dates = {}
+    for item in items:
+        d = item.get('date', 'unknown')
+        dates.setdefault(d, []).append(item)
+    payload = {
+        'last_updated': now,
+        'highlights': highlights or [],
+        'dates': dates,
+        'patents': patents or [],
+    }
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
@@ -315,15 +334,16 @@ if __name__ == '__main__':
     data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'news_data.json')
     data_path = os.path.normpath(data_path)
 
-    existing, _ = load_existing(data_path)
-    existing_urls = {item['url'] for item in existing}
+    existing, _, highlights, patents = load_existing(data_path)
+    existing_urls = {item['url'] for item in existing if item.get('url')}
+    existing_urls.update(item['url'] for item in patents if item.get('url'))
 
-    print(f'Existing items: {len(existing)}')
+    print(f'Existing items: {len(existing)} regular, {len(patents)} patents')
     print('Fetching new items via Google Custom Search API...')
 
     new_items = fetch_news()
     if not new_items:
-        print('No recent news found (last 7 days).')
+        print('No recent news found (last 10 days).')
     appended = 0
     for item in new_items:
         if appended >= 40:
@@ -333,18 +353,26 @@ if __name__ == '__main__':
             existing.append(item)
             existing_urls.add(item['url'])
             appended += 1
+            print(f'  [SEARCH-NEW] {item["title"][:60]}')
 
-    # Prune items older than 90 days
-    cutoff = datetime.now(timezone.utc) - timedelta(days=90)
+    # Prune regular items older than 30 days; patents (permanent_record) are never pruned
+    cutoff = datetime.now(timezone.utc) - timedelta(days=30)
     cutoff_str = cutoff.strftime('%Y-%m-%d')
-    before_prune = len(existing)
-    existing = [item for item in existing if item.get('date', '9999-99-99') >= cutoff_str]
-    pruned = before_prune - len(existing)
+    kept = []
+    for item in existing:
+        if item.get('permanent_record'):
+            kept.append(item)
+        elif item.get('date', '9999-99-99') >= cutoff_str:
+            kept.append(item)
+        else:
+            print(f'  [PRUNED-OLD-NEWS] {item.get("title", "")[:60]} ({item.get("date", "")})')
+    pruned = len(existing) - len(kept)
     if pruned:
-        print(f'Pruned {pruned} items older than 90 days.')
+        print(f'Pruned {pruned} items older than 30 days.')
+    existing = kept
 
     # Sort newest first
     existing.sort(key=lambda x: x.get('date', ''), reverse=True)
 
-    save_data(data_path, existing)
-    print(f'Appended {appended} new items. Total: {len(existing)} items saved to {data_path}')
+    save_data(data_path, existing, highlights=highlights, patents=patents)
+    print(f'Appended {appended} new items. Total: {len(existing)} regular + {len(patents)} patents saved to {data_path}')
