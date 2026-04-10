@@ -507,6 +507,23 @@ function buildCard(item, idx) {
   const catColor = getCatColor(item.category_id);
   const verifyBadge = item.confidence === '要確認' ? '<span class="badge badge-verify">⚠️ 要確認</span>' : '';
   const cardId = 'card-' + idx;
+
+  // Score badge (red ≥80, orange ≥60, blue ≥40, grey otherwise)
+  const score = item.score || 0;
+  let scoreColor = '#94a3b8';
+  if (score >= 80) scoreColor = '#ef4444';
+  else if (score >= 60) scoreColor = '#f97316';
+  else if (score >= 40) scoreColor = '#3b82f6';
+  const scoreBadge = score > 0
+    ? `<span class="badge" style="background:${scoreColor};color:#fff;">⚡ ${score}点</span>`
+    : '';
+
+  // Strategic impact analysis section
+  const impactSection = item.impact_analysis
+    ? `<div class="card-summary-label" style="margin-top:8px;">🎯 戦略的インパクト分析</div>`
+      + `<div class="card-summary" style="border-left-color:#ef4444;background:#fff5f5;">${item.impact_analysis}</div>`
+    : '';
+
   return `
     <div class="news-card" id="${cardId}" data-cat="${item.category_id}" data-type="${item.info_type}" data-company="${item.company}" data-title="${item.title}">
       <div class="card-header">
@@ -515,6 +532,7 @@ function buildCard(item, idx) {
             <span class="badge badge-company">🏢 ${item.company}</span>
             <span class="badge badge-cat" style="background:${catColor}">${item.category_id} ${item.category_name}</span>
             <span class="badge ${typeClass}">${item.info_type}</span>
+            ${scoreBadge}
             ${verifyBadge}
           </div>
         </div>
@@ -525,6 +543,7 @@ function buildCard(item, idx) {
         <div class="card-source">�� ソース: <a href="${item.url}" target="_blank" rel="noopener">${item.source_name}</a></div>
         <div class="card-summary-label">🤖 AI要約</div>
         <div class="card-summary">${item.summary}</div>
+        ${impactSection}
         <div class="card-memo-label">📝 編集者メモ</div>
         <textarea class="card-memo" placeholder="ここにメモを入力できます..."></textarea>
       </div>
@@ -621,8 +640,12 @@ function filterCards(gridId, kw, cat, type) {
   state.items = filtered;
   state.page = 0;
   renderPage(gridId);
+  // Update filter-bar count
   const fc = document.getElementById('fc-' + gridId.replace('grid-', ''));
   if (fc) fc.textContent = filtered.length + '件表示';
+  // Update sidebar nav count so it always reflects what is filtered/displayed
+  const cnt = document.getElementById('cnt-' + gridId.replace('grid-', ''));
+  if (cnt) cnt.textContent = filtered.length;
 }
 
 // ============================================================
@@ -699,7 +722,7 @@ function renderHighlights(highlights) {
   var section = document.getElementById('highlights-section');
   if (!container) return;
 
-  // If no AI-generated highlights, build a fallback from the top 3 DATA items
+  // If no AI-generated highlights, build a fallback from the top-scored DATA items
   if (!highlights || highlights.length === 0) {
     if (!DATA || DATA.length === 0) {
       if (section) section.style.display = 'none';
@@ -711,7 +734,8 @@ function renderHighlights(highlights) {
         company: d.company || '不明',
         category: (d.category_name || '') + ' / ' + (d.info_type || ''),
         date: d.date || '',
-        impact: d.summary || d.title || '',
+        impact: d.impact_analysis || d.summary || d.title || '',
+        score: d.score || 0,
       };
     });
   }
@@ -719,8 +743,11 @@ function renderHighlights(highlights) {
   if (section) section.style.display = '';
   container.innerHTML = highlights.map(function(h, i) {
     var rank = RANK_ICONS[i] || '🏅';
+    var scoreHtml = h.score
+      ? ' <span style="background:rgba(239,68,68,0.3);color:#fca5a5;padding:1px 6px;border-radius:10px;font-size:11px;">' + h.score + '点</span>'
+      : '';
     return '<div class="highlight-card">'
-      + '<div class="highlight-card-rank">' + rank + '</div>'
+      + '<div class="highlight-card-rank">' + rank + scoreHtml + '</div>'
       + '<div class="highlight-card-title">' + (h.title || '') + '</div>'
       + '<div class="highlight-card-company">📌 ' + (h.category || '') + ' ／ ' + (h.date || '') + '</div>'
       + '<div class="highlight-card-impact">⚡ ' + (h.impact || '') + '</div>'
@@ -828,7 +855,8 @@ function init() {
         highlights = json.highlights || [];
       }
       // Sort newest-first before rendering so the highlights fallback picks the right items
-      DATA.sort(function(a, b) { return (b.date || '').localeCompare(a.date || ''); });
+      // Sort by impact score descending; fall back to date for unscored items
+      DATA.sort(function(a, b) { var sd = (b.score || 0) - (a.score || 0); return sd !== 0 ? sd : (b.date || '').localeCompare(a.date || ''); });
       renderHighlights(highlights);
       initGrids();
     })

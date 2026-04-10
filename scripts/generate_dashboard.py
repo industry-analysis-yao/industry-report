@@ -15,14 +15,26 @@ try:
 except ImportError:
     GENAI_AVAILABLE = False
 
+# Maximum retry attempts for high-value items that fail the formatting check
+MAX_RETRIES = 3
+# Only the top-N scored items are kept in the final JSON
+TOP_N = 20
+
 
 def strip_html(text):
     """Remove HTML tags from a string."""
     return re.sub(r'<[^>]+>', '', text or '').strip()
 
 
-def ai_summarize(title, snippet, company, api_key):
-    """Generate a Japanese factual news summary using Gemini API.
+# ============================================================
+# AGENT A — Summarizer
+# ============================================================
+
+def ai_summarize(title, snippet, company, api_key, retry_feedback=None):
+    """Agent A: Generate a Japanese factual news summary using Gemini API.
+
+    When *retry_feedback* is provided (a string with specific improvement instructions
+    from Agent B), it is appended to the prompt so the model can correct the issues.
 
     Returns a 2-tuple: (is_relevant: bool, summary: str | None).
     Returns (False, None) if Gemini determines the article is off-topic.
@@ -37,6 +49,15 @@ def ai_summarize(title, snippet, company, api_key):
         return False, None
     try:
         client = google_genai.Client(api_key=api_key)
+
+        retry_section = ''
+        if retry_feedback:
+            retry_section = (
+                f'\n\n【前回審査からのフィードバック（必ず反映してください）】\n'
+                f'{retry_feedback}\n'
+                f'上記の指摘をすべて改善した新しい要約を作成してください。\n'
+            )
+
         prompt = (
             'あなたは家庭紙・衛生用品業界の専門記者です。\n\n'
             '【ステップ1: 関連性チェック】\n'
@@ -50,8 +71,9 @@ def ai_summarize(title, snippet, company, api_key):
             '業界関係者向けの日本語ニュースサマリーを80〜150字で作成してください。\n'
             'タイトルをそのまま言い換えるだけでなく、本文から得た具体的な数字・背景・意義を'
             '含めた独自の文章にしてください。本文に数値がない場合もタイトル以外の情報を補足して'
-            'ください。\n\n'
-            '【出力例】\n'
+            'ください。\n'
+            + retry_section +
+            '\n【出力例】\n'
             '「ユニ・チャームは2026年4月1〜3日に普通株式584,800株を取得価額約5.5億円で取得し、'
             '2月12日決議の自己株式取得を完了した。」\n\n'
             f'会社名: {company}\n'
@@ -73,53 +95,163 @@ def ai_summarize(title, snippet, company, api_key):
         return True, None
 
 
-def generate_highlights(items, api_key):
-    """Use Gemini to select the 3 most impactful news items and produce strategic insights."""
-    if not GENAI_AVAILABLE or not api_key or not items:
-        return []
+# ============================================================
+# AGENT B — Auditor
+# ============================================================
+
+def audit_item(title, summary, company, api_key):
+    """Agent B: Critically evaluate a news summary as a senior R&D director at Daio Paper.
+
+    Assigns a unique 1–100 impact score with heavy weight on strategic R&D relevance.
+    Returns a 3-tuple: (score: int, impact_analysis: str, formatting_feedback: str | None).
+    *formatting_feedback* is non-None only when there are correctable formatting issues.
+    """
+    if not GENAI_AVAILABLE or not api_key:
+        return 0, '', None
     try:
-        # Build a compact news list for the prompt (limit to 40 most recent items)
-        candidates = items[:40]
-        news_list = '\n'.join(
-            f'{i+1}. [{item.get("category_name","")}/{item.get("info_type","")}] '
-            f'{item.get("company","不明")} — {item.get("title","")} ({item.get("date","")})'
-            for i, item in enumerate(candidates)
-        )
         client = google_genai.Client(api_key=api_key)
         prompt = (
-            '以下は家庭紙・衛生用品業界の最新ニュース一覧です。\n'
-            '大王製紙の技術開発部にとって最もインパクトの大きい3件を選び、'
-            '各件について以下のJSON形式で回答してください。\n'
-            'JSON以外の文章は一切出力しないでください。\n\n'
-            '出力形式:\n'
-            '[\n'
-            '  {\n'
-            '    "rank": 1,\n'
-            '    "title": "ニュースタイトル（短く要約）",\n'
-            '    "company": "企業名",\n'
-            '    "category": "カテゴリー／情報種別",\n'
-            '    "date": "YYYY-MM-DD",\n'
-            '    "impact": "大王製紙への戦略的インパクトや競合・市場への影響（60〜100字）"\n'
-            '  },\n'
-            '  ...\n'
-            ']\n\n'
-            f'ニュース一覧:\n{news_list}\n'
+            'あなたは大王製紙の最上席研究開発ディレクターです。業界歴30年以上、競合他社の技術動向・'
+            '市場変化・設備投資・研究開発に精通した、業界随一の厳格な審査官として行動してください。\n\n'
+            '以下のニュース要約を容赦なく評価し、JSON形式のみで回答してください。\n\n'
+            '【評価基準（合計100点、同点禁止・必ず整数）】\n'
+            '1. 大王製紙R&D戦略への直接的インパクト（最重要・40点）\n'
+            '   - 自社技術開発・製造プロセス・競合優位性・特許戦略への影響\n'
+            '   - 競合他社の技術革新・設備投資・新製品が自社R&Dに与える脅威または機会\n'
+            '   - 家庭紙・ティッシュ・トイレットペーパーに直結する内容は高得点\n'
+            '2. 市場・業界構造への影響度（25点）\n'
+            '   - 価格動向、市場シェア変動、規制・政策変更、原料需給への影響\n'
+            '3. 情報の具体性・信頼性（20点）\n'
+            '   - 具体的数値（金額・比率・容量・日付）の有無、一次情報ソース\n'
+            '4. 緊急性・時宜性（15点）\n'
+            '   - 即時対応・意思決定が必要か、競合の動向として見逃せないか\n\n'
+            '【フォーマット失格チェック】\n'
+            '以下のいずれかに該当する場合のみformatting_feedbackに具体的改善指示を記載してください。\n'
+            '該当しない場合は必ずnullにしてください：\n'
+            '- タイトルをほぼそのまま言い換えただけで独自情報が皆無\n'
+            '- 具体的数値・金額・比率・日付が一切含まれていない\n'
+            '- 80字未満の著しく短い要約\n'
+            '- 文章が途中で切れる・構造的エラー\n\n'
+            '【出力形式（JSON以外は一切出力禁止）】\n'
+            '{\n'
+            '  "score": <1〜100の整数、他のニュースと同点不可>,\n'
+            '  "impact_analysis": "<大王製紙技術開発部への具体的戦略的含意・競合対応策（60〜120字）>",\n'
+            '  "formatting_feedback": <null または "<具体的改善指示（数値不足・タイトル丸写し等の指摘）>">\n'
+            '}\n\n'
+            f'会社名: {company}\n'
+            f'タイトル: {title}\n'
+            f'要約: {summary}\n'
         )
         response = client.models.generate_content(
             model='gemini-2.0-flash',
             contents=prompt,
         )
         text = response.text.strip()
-        # Strip markdown code fences if present
         text = re.sub(r'^```(?:json)?\s*', '', text)
         text = re.sub(r'\s*```$', '', text)
-        highlights = json.loads(text)
-        if isinstance(highlights, list):
-            return highlights[:3]
-        return []
+        result = json.loads(text)
+        score = int(result.get('score', 0))
+        score = max(1, min(100, score))
+        impact_analysis = (result.get('impact_analysis') or '')[:300]
+        formatting_feedback = result.get('formatting_feedback') or None
+        return score, impact_analysis, formatting_feedback
     except Exception as e:
-        print(f'  Gemini highlights error: {e}')
-        return []
+        print(f'  Audit error for "{title[:40]}...": {e}')
+        return 0, '', None
+
+
+# ============================================================
+# DUAL-AGENT PIPELINE WITH RETRY
+# ============================================================
+
+def process_item_with_retry(item, api_key):
+    """Run Agent A (Summarizer) → Agent B (Auditor) pipeline.
+
+    For items that score > 80 but fail the formatting check, the item is sent back
+    to Agent A with specific feedback.  At most MAX_RETRIES attempts are made.
+    High-value items are never discarded due to formatting failures — the best
+    result across all attempts is retained.
+
+    Mutates *item* in place with updated summary, score, and impact_analysis.
+    Returns True if item is relevant, False if it should be removed.
+    """
+    title = item.get('title', '')
+    snippet = strip_html(item.get('summary', ''))
+    company = item.get('company', '不明')
+
+    best_score = item.get('score') or 0
+    best_summary = snippet if len(snippet) >= 80 else ''
+    best_impact = item.get('impact_analysis') or ''
+    feedback = None
+
+    for attempt in range(MAX_RETRIES):
+        is_relevant, new_summary = ai_summarize(
+            title, snippet, company, api_key, retry_feedback=feedback
+        )
+        if not is_relevant:
+            return False
+
+        current_summary = new_summary or best_summary
+        if not current_summary:
+            # Cannot obtain a usable summary; stop retrying
+            break
+
+        score, impact_analysis, fmt_feedback = audit_item(
+            title, current_summary, company, api_key
+        )
+
+        # Always track the best result seen so far
+        if score > best_score:
+            best_score = score
+            best_summary = current_summary
+            best_impact = impact_analysis
+
+        if score > 80 and fmt_feedback:
+            print(
+                f'  [RETRY {attempt + 1}/{MAX_RETRIES}] score={score}, '
+                f'feedback: {fmt_feedback[:80]}'
+            )
+            feedback = fmt_feedback
+            # Loop again with the feedback
+        else:
+            # Acceptable quality or low score — no retry needed
+            break
+
+    item['summary'] = best_summary or snippet or title[:200]
+    item['score'] = best_score
+    item['impact_analysis'] = best_impact
+    return True
+
+
+# ============================================================
+# TOP-3 HIGHLIGHTS (derived directly from scored items)
+# ============================================================
+
+def generate_highlights(items, api_key):
+    """Build Top-3 highlights from the already-scored items.
+
+    Items are expected to be sorted by score descending.  The impact_analysis
+    field generated by Agent B is reused — no additional API call is needed.
+    Falls back to a Gemini-generated strategic summary when items lack scores.
+    """
+    scored = [it for it in items if it.get('score', 0) > 0]
+    top3 = (scored if scored else items)[:3]
+
+    highlights = []
+    for i, item in enumerate(top3):
+        highlights.append({
+            'rank': i + 1,
+            'title': item.get('title', ''),
+            'company': item.get('company', '不明'),
+            'category': (
+                (item.get('category_name') or '') + ' / ' +
+                (item.get('info_type') or '')
+            ),
+            'date': item.get('date', ''),
+            'impact': item.get('impact_analysis') or item.get('summary') or '',
+            'score': item.get('score', 0),
+        })
+    return highlights
 
 
 def load_data(path):
@@ -148,7 +280,7 @@ def main():
 
     api_key = os.environ.get('GEMINI_API_KEY', '')
     if not api_key:
-        print('WARNING: GEMINI_API_KEY not set. Summaries will not be updated.')
+        print('WARNING: GEMINI_API_KEY not set. Summaries and scores will not be updated.')
 
     data, last_updated, existing_highlights = load_data(data_path)
     if not data:
@@ -158,32 +290,33 @@ def main():
     updated = 0
     irrelevant_indices = []
     for idx, item in enumerate(data):
+        # Strip HTML from existing summary
         summary = strip_html(item.get('summary', ''))
-        # Strip HTML from existing summary if it contained tags
         if item.get('summary', '') != summary:
             item['summary'] = summary
 
-        # Skip if already has a quality AI-generated summary (plain text, >=80 chars)
-        if len(summary) >= 80 and '<' not in summary:
+        # Skip if already has a quality summary, a score, and an impact analysis
+        has_quality_summary = len(summary) >= 80 and '<' not in summary
+        has_score = (item.get('score') is not None) and (item.get('score', 0) > 0)
+        has_impact = bool(item.get('impact_analysis'))
+        if has_quality_summary and has_score and has_impact:
             continue
 
-        title = item.get('title', '')
-        company = item.get('company', '不明')
-        snippet = summary or ''
+        if not api_key:
+            # No API key — assign defaults so all items have required fields
+            if not has_score:
+                item['score'] = 0
+            if not has_impact:
+                item['impact_analysis'] = ''
+            continue
 
-        is_relevant, new_summary = ai_summarize(title, snippet, company, api_key)
+        is_relevant = process_item_with_retry(item, api_key)
         if not is_relevant:
-            # Gemini flagged as off-topic or paywall-only — mark for removal
             irrelevant_indices.append(idx)
-            continue
-        if new_summary:
-            item['summary'] = new_summary
+        else:
             updated += 1
-        elif not summary:
-            # Only keep the title fallback if it's not a pure paywall stub
-            item['summary'] = title[:200]
 
-    # Remove items flagged as irrelevant by Gemini (in reverse order to preserve indices)
+    # Remove items flagged as irrelevant (in reverse order to preserve indices)
     for idx in sorted(irrelevant_indices, reverse=True):
         removed_title = data[idx].get('title', '')[:60]
         print(f'  Removing irrelevant item: {removed_title}')
@@ -192,23 +325,37 @@ def main():
     if irrelevant_indices:
         print(f'Removed {len(irrelevant_indices)} irrelevant/paywall items.')
 
-    # Sort newest first
-    data.sort(key=lambda x: x.get('date', ''), reverse=True)
+    # Ensure every item has the required schema fields
+    for item in data:
+        if item.get('score') is None:
+            item['score'] = 0
+        if not item.get('impact_analysis'):
+            item['impact_analysis'] = ''
 
-    # Regenerate Top 3 highlights — prefer today's items, fall back to most recent 40
+    # Sort by impact score descending
+    data.sort(key=lambda x: x.get('score', 0), reverse=True)
+
+    # Keep only the top-N highest-scored items in the final JSON
+    if len(data) > TOP_N:
+        print(
+            f'Keeping top {TOP_N} items by score '
+            f'(discarding {len(data) - TOP_N} lower-scored items).'
+        )
+        data = data[:TOP_N]
+
+    # Build Top-3 highlights from best-scored items
     today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
     today_items = [item for item in data if item.get('date', '') == today]
-    source_items = today_items if today_items else data[:40]
-    if api_key and source_items:
-        print(f'Generating Top 3 highlights from {len(source_items)} items...')
-        highlights = generate_highlights(source_items, api_key)
-        if not highlights:
-            highlights = existing_highlights
-    else:
+    source_items = today_items if today_items else data
+    highlights = generate_highlights(source_items, api_key) if source_items else existing_highlights
+    if not highlights:
         highlights = existing_highlights
 
     save_data(data_path, data, highlights=highlights)
-    print(f'Updated {updated} summaries. Highlights: {len(highlights)}. Total items: {len(data)}')
+    print(
+        f'Updated {updated} items. Highlights: {len(highlights)}. '
+        f'Total items saved: {len(data)}'
+    )
 
 
 if __name__ == '__main__':
