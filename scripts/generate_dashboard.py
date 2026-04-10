@@ -20,6 +20,16 @@ class DailyQuotaExhausted(Exception):
     """Raised when a Gemini API key has hit its daily quota (limit: 0)."""
 
 
+class CircuitBreakerTripped(Exception):
+    """Raised when too many consecutive 503/404 Gemini API errors have occurred."""
+
+
+# Number of consecutive 503/404 failures that trigger the circuit breaker
+CIRCUIT_BREAKER_THRESHOLD = 5
+# Module-level counter tracking consecutive 503/404 Gemini failures
+_consecutive_503_404_failures = 0
+
+
 # Maximum retry attempts for high-value items that fail the formatting check
 MAX_RETRIES = 3
 # Items with a score above this threshold are retried if formatting is poor
@@ -52,15 +62,20 @@ def strip_html(text):
 def _gemini_generate(client, model, contents):
     """Call Gemini API with rate limiting and 429 retry logic.
 
-    Sleeps GEMINI_THROTTLE_SECONDS *after* every successful call to stay within
-    the free-tier 15 RPM limit.  On a 429 / RESOURCE_EXHAUSTED error, waits
-    GEMINI_429_WAIT_SECONDS (which already exceeds the throttle interval) and
-    retries up to MAX_429_RETRIES times.  Raises the last exception if all
-    retries are exhausted.
+    Sleeps 1 second before every call and GEMINI_THROTTLE_SECONDS after every
+    successful call to stay within the free-tier 15 RPM limit.  On a 429 /
+    RESOURCE_EXHAUSTED error, waits GEMINI_429_WAIT_SECONDS and retries up to
+    MAX_429_RETRIES times.  Tracks consecutive 503/404 failures and raises
+    CircuitBreakerTripped when CIRCUIT_BREAKER_THRESHOLD is reached.
+    Raises the last exception if all retries are exhausted.
     """
+    global _consecutive_503_404_failures
     for attempt in range(MAX_429_RETRIES + 1):
+        if attempt > 0:
+            time.sleep(1)  # brief pause between retry attempts
         try:
             response = client.models.generate_content(model=model, contents=contents)
+            _consecutive_503_404_failures = 0  # reset on success
             time.sleep(GEMINI_THROTTLE_SECONDS)  # throttle between calls
             return response
         except Exception as e:
@@ -78,6 +93,19 @@ def _gemini_generate(client, model, contents):
             )
             if is_daily_quota:
                 raise DailyQuotaExhausted(err_str) from e
+            # 503 / 404 — count consecutive failures and trip circuit breaker if threshold reached
+            is_service_error = '503' in err_str or '404' in err_str
+            if is_service_error:
+                _consecutive_503_404_failures += 1
+                print(
+                    f'  [SERVICE-ERROR] 503/404 response '
+                    f'(consecutive failures: {_consecutive_503_404_failures}/{CIRCUIT_BREAKER_THRESHOLD}): '
+                    f'{err_str[:120]}'
+                )
+                if _consecutive_503_404_failures >= CIRCUIT_BREAKER_THRESHOLD:
+                    raise CircuitBreakerTripped(
+                        f'{CIRCUIT_BREAKER_THRESHOLD} consecutive 503/404 errors — aborting.'
+                    ) from e
             # 429 / transient rate-limiting — sleep and retry (never for daily quota)
             is_rate_limit = (
                 '429' in err_str
@@ -153,8 +181,8 @@ def ai_summarize(title, snippet, company, api_key, retry_feedback=None):
         try:
             response = _gemini_generate(client, 'gemini-2.5-flash', prompt)
         except Exception as primary_err:
-            print(f'  [FALLBACK-TRIGGERED] gemini-2.5-flash failed: {primary_err}. Retrying with gemini-1.5-flash...')
-            response = _gemini_generate(client, 'gemini-1.5-flash', prompt)
+            print(f'  [FALLBACK-TRIGGERED] gemini-2.5-flash failed: {primary_err}. Retrying with gemini-1.5-flash-latest...')
+            response = _gemini_generate(client, 'gemini-1.5-flash-latest', prompt)
         text = response.text.strip()
         if text.strip().upper() == 'IRRELEVANT':
             print(f'  [AI-IRRELEVANT] {title[:60]}')
@@ -217,8 +245,8 @@ def audit_item(title, summary, company, api_key):
         try:
             response = _gemini_generate(client, 'gemini-2.5-flash', prompt)
         except Exception as primary_err:
-            print(f'  [FALLBACK-TRIGGERED] gemini-2.5-flash failed: {primary_err}. Retrying with gemini-1.5-flash...')
-            response = _gemini_generate(client, 'gemini-1.5-flash', prompt)
+            print(f'  [FALLBACK-TRIGGERED] gemini-2.5-flash failed: {primary_err}. Retrying with gemini-1.5-flash-latest...')
+            response = _gemini_generate(client, 'gemini-1.5-flash-latest', prompt)
         text = response.text.strip()
         text = re.sub(r'^```(?:json)?\s*', '', text)
         text = re.sub(r'\s*```$', '', text)
@@ -453,6 +481,9 @@ def main():
 
         try:
             is_relevant = process_item_with_retry(item, active_key)
+        except CircuitBreakerTripped as e:
+            print(f'  [CIRCUIT BREAKER] {e} Saving progress and exiting.')
+            break
         except DailyQuotaExhausted:
             exhausted_idx = key_idx
             key_idx += 1
