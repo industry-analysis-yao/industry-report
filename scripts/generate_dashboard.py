@@ -19,6 +19,10 @@ except ImportError:
 MAX_RETRIES = 3
 # Only the top-N scored items are kept in the final JSON
 TOP_N = 20
+# Items with a score above this threshold are retried if formatting is poor
+RETRY_SCORE_THRESHOLD = 80
+# Maximum characters kept when falling back to the article title as the summary
+TITLE_FALLBACK_LENGTH = 200
 
 
 def strip_html(text):
@@ -180,7 +184,9 @@ def process_item_with_retry(item, api_key):
     company = item.get('company', '不明')
 
     best_score = item.get('score') or 0
-    best_summary = snippet if len(snippet) >= 80 else ''
+    # Use whatever snippet is available as the initial best_summary; quality
+    # will be improved (or confirmed) once Agent B evaluates it.
+    best_summary = snippet
     best_impact = item.get('impact_analysis') or ''
     feedback = None
 
@@ -200,13 +206,17 @@ def process_item_with_retry(item, api_key):
             title, current_summary, company, api_key
         )
 
-        # Always track the best result seen so far
-        if score > best_score:
+        # Prefer results with a higher score, OR the same score but with
+        # resolved formatting issues (no feedback from Agent B).
+        is_better = score > best_score or (
+            score == best_score and fmt_feedback is None and best_impact == ''
+        )
+        if is_better:
             best_score = score
             best_summary = current_summary
             best_impact = impact_analysis
 
-        if score > 80 and fmt_feedback:
+        if score > RETRY_SCORE_THRESHOLD and fmt_feedback:
             print(
                 f'  [RETRY {attempt + 1}/{MAX_RETRIES}] score={score}, '
                 f'feedback: {fmt_feedback[:80]}'
@@ -217,7 +227,7 @@ def process_item_with_retry(item, api_key):
             # Acceptable quality or low score — no retry needed
             break
 
-    item['summary'] = best_summary or snippet or title[:200]
+    item['summary'] = best_summary or title[:TITLE_FALLBACK_LENGTH]
     item['score'] = best_score
     item['impact_analysis'] = best_impact
     return True
