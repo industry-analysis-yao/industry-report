@@ -173,6 +173,8 @@ def fetch_from_google_cse(query, api_key, cse_id, num=10):
         'q': query,
         'num': num,
         'lr': 'lang_ja',
+        'sort': 'date',
+        'dateRestrict': 'd7',
     }
     try:
         resp = requests.get(url, params=params, timeout=15)
@@ -320,6 +322,8 @@ if __name__ == '__main__':
     print('Fetching new items via Google Custom Search API...')
 
     new_items = fetch_news()
+    if not new_items:
+        print('No recent news found (last 7 days).')
     appended = 0
     for item in new_items:
         if appended >= 40:
