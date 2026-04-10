@@ -412,6 +412,7 @@ def academic_date_restrict(deficit):
 
 
 
+def load_existing(path):
     """Return (regular_items, last_updated, highlights, patents)."""
     if os.path.exists(path):
         with open(path, 'r', encoding='utf-8') as f:
@@ -524,9 +525,6 @@ if __name__ == '__main__':
     cap_b = max(0, QUOTA_MACHINE - existing_b)
     cap_c = max(0, QUOTA_ACADEMIC - existing_c)
 
-    # ── Enforce minimum quota: at least 1 item per bucket when possible ───────
-    MIN_PER_BUCKET = 1
-
     def append_capped(source_list, target, cap, label):
         added = 0
         for item in source_list:
@@ -567,7 +565,8 @@ if __name__ == '__main__':
     # ── Update academic deficit for next run ──────────────────────────────────
     actual_academic_today = existing_c + appended_c
     daily_shortfall = max(0, QUOTA_ACADEMIC - actual_academic_today)
-    # Reduce deficit when we overshoot; never go negative
+    # Deficit formula: add today's shortfall, but subtract any overshoot (items
+    # fetched beyond the daily cap reduce the backlog).  Never go below zero.
     new_deficit = max(0, deficit + daily_shortfall - max(0, appended_c - cap_c))
     cfg['academic_deficit'] = new_deficit
     cfg['last_run_date'] = today_str

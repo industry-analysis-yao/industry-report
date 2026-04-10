@@ -37,7 +37,8 @@ TOP_N = BUCKET_QUOTA * 2 + ACADEMIC_QUOTA  # 45
 # Bucket B: Production / Machine R&D
 # An item belongs to Bucket B when its category_id or info_type match any of these signals.
 BUCKET_B_CATEGORY_IDS = {'③', '④'}
-BUCKET_B_INFO_TYPES = {'加工機技術', '包装機技術', '研究開発', '特許'}
+# Only machine-specific info types qualify for Bucket B (research/patent go to Bucket C)
+BUCKET_B_INFO_TYPES = {'加工機技術', '包装機技術'}
 BUCKET_B_COMPANY_KEYWORDS = [
     'zuiko', '瑞光', 'gdm', 'fameccanica', 'optima', 'fanuc', 'ファナック',
 ]
@@ -578,8 +579,7 @@ def main():
             return False
         if item.get('category_id') in BUCKET_B_CATEGORY_IDS:
             return True
-        # Limit Bucket B info types to machine-specific types only (exclude 研究開発/特許)
-        if item.get('info_type') in {'加工機技術', '包装機技術'}:
+        if item.get('info_type') in BUCKET_B_INFO_TYPES:
             return True
         company_lower = (item.get('company') or '').lower()
         title_lower = (item.get('title') or '').lower()
