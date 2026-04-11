@@ -1,8 +1,18 @@
 {
-  "last_updated": "2026-04-11T02:23:15Z",
+  "last_updated": "2026-04-11T22:07:28Z",
   "highlights": [
     {
       "rank": 1,
+      "title": "新聞を縮小し「家庭用品」へシフト 日本製紙が工場増設で八代市と立地協定 熊本 - TBS NEWS DIG",
+      "company": "日本製紙",
+      "category": "製紙・パルプメーカー / 其他",
+      "date": "2026-04-11",
+      "impact": "日本製紙の不織布活用新工場計画は、当社の衛生材料・高機能不織布分野へ直接脅威。R&Dは不織布素材・加工技術の深掘り、高付加価値製品の迅速開発を急ぐべし。競合のサプライチェーン強化に対抗し、生産効率・コスト競争力向上も不可欠だ。",
+      "score": 93,
+      "is_patent": false
+    },
+    {
+      "rank": 2,
       "title": "ベビー用おむつ市場は、プレミアム衛生用品の革新、スマート吸収技術、持続可能な製造の勢いに牽引され、2033年までに957億1860万米ドルへと急成長すると予測されている - newscast.jp",
       "company": "不明",
       "category": "日用品・衛生用品メーカー / 其他",
@@ -12,7 +22,7 @@
       "is_patent": false
     },
     {
-      "rank": 2,
+      "rank": 3,
       "title": "ビール製造技術でおむつ革命｜ZymoChemが世界初の100%生分解性超吸収ポリマーを商業化 - innovaTopia",
       "company": "不明",
       "category": "日用品・衛生用品メーカー / 其他",
@@ -20,16 +30,6 @@
       "impact": "ZymoChemの生分解性SAPは大王製紙のおむつ事業に重大な脅威。吸収性能40g/gは競合優位性を喪失させる可能性が高く、即座に微生物発酵技術の共同開発またはライセンス取得を検討すべき。特許出願中の製造プロセス（CO2削減60%）はESG対応製品開発の遅れを露呈するため、緊急対応が必要。",
       "score": 92,
       "is_patent": false
-    },
-    {
-      "rank": 3,
-      "title": "長巻きトイレ紙の特許侵害、2審も否定 大王製紙が日本製紙側に勝訴 - 毎日新聞",
-      "company": "大王製紙",
-      "category": "製紙・パルプメーカー / 特許",
-      "date": "2026-04-11",
-      "impact": "大王製紙の特許勝訴は競合他社への強力な抑止力となり、長巻きトイレットペーパー市場での技術優位性を確定。特許第XXXX号の有効性が司法で確認されたことで、関連技術のライセンス収益化や他製品への応用展開が可能に。競合の日本製紙は技術開発路線の見直しを迫られる。",
-      "score": 88,
-      "is_patent": true
     }
   ],
   "dates": {
@@ -80,6 +80,20 @@
         "impact_analysis": "特許情報のみで大王製紙のR&D戦略・競合動向・市場影響を評価する具体的要素が皆無。家庭紙/衛生用品関連技術・生産設備革新の記載なし。"
       },
       {
+        "title": "新聞を縮小し「家庭用品」へシフト 日本製紙が工場増設で八代市と立地協定 熊本 - TBS NEWS DIG",
+        "summary": "日本製紙は熊本県八代市に家庭用品生産の新工場を建設するため、2024年2月に同市と立地協定を締結した。新聞用紙需要の減少（国内生産量がピーク時の約3分の1に減尐）を受け、同社は家庭用紙・衛生材料など高収益品目への転換を加速。新工場では不織布を活用した製品製造を想定し、既存の八代工場（特殊紙生産）と連携したサプライチェーン構築を計画している。",
+        "company": "日本製紙",
+        "date": "2026-04-11",
+        "category_id": "②",
+        "category_name": "製紙・パルプメーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5KRFVkcEUydW9iSW9sQ1FpQTIwR3NKV1lSVFFsbG5lVDVzTFlvbk52eGcwRjFHY2x5Tl9Fd3Q1aUpDSkg4bTd1dGdWN0FBSFdqUzdxWi1aTWVLalJienhhb1U0THl1bVU?oc=5",
+        "source_name": "TBS NEWS DIG",
+        "confidence": "高",
+        "score": 93,
+        "impact_analysis": "日本製紙の不織布活用新工場計画は、当社の衛生材料・高機能不織布分野へ直接脅威。R&Dは不織布素材・加工技術の深掘り、高付加価値製品の迅速開発を急ぐべし。競合のサプライチェーン強化に対抗し、生産効率・コスト競争力向上も不可欠だ。"
+      },
+      {
         "title": "紙オムツ「土に還る」 神戸大が微生物由来の高吸水材 - 日刊工業新聞",
         "summary": "神戸大学は微生物が生成する多糖類を利用した生分解性高吸水性材料を開発した。従来の石油系ポリマーと異なり、土中で微生物により分解可能な特性を持ち、使用済み紙おむつの環境負荷低減が期待される。吸水性は現行製品と同等レベルを達成しており、2025年までの実用化を目指す。",
         "company": "不明",
@@ -106,6 +120,48 @@
         "confidence": "中",
         "score": 85,
         "impact_analysis": "大王製紙のR&D戦略において、タンポン需要拡大とスプレー・内部洗浄剤分野の技術革新は重要機会。競合他社の新製品開発動向を注視し、自社の吸収体技術・抗菌素材研究を加速させる必要がある。特に2034年までの成長予測を踏まえた特許出願戦略が急務。"
+      },
+      {
+        "title": "ニュース拡大鏡／日本製紙、家庭紙で攻勢 熊本に輸出向けライン導入 - 日刊工業新聞",
+        "summary": "日本製紙は熊本工場に輸出向け家庭紙の新生産ラインを導入し、アジア市場への展開を強化する。2024年度中に設備投資を完了させ、年間生産能力を現状比20％増の15万トンに拡大する計画。主に高級ティッシュやトイレットペーパーを製造し、中国・東南アジア向け輸出比率を現在の15％から25％に引き上げる戦略。",
+        "company": "日本製紙",
+        "date": "2026-04-11",
+        "category_id": "②",
+        "category_name": "製紙・パルプメーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1EYUZmeXFMbVNETUxPOG55ZGVJaTlNTmM3cTFXN1dxOTB5Y2tGb2xHQTJiTnI4RlJUN2pCeWZrbThVeUhMR2FlcVJlb0RYYlU1VXgzejdDTG9iYnc?oc=5",
+        "source_name": "日刊工業新聞",
+        "confidence": "高",
+        "score": 85,
+        "impact_analysis": "日本製紙のアジア市場向け高級家庭紙生産拡大は、大王製紙の輸出戦略に直接対抗する脅威。競合の生産能力20％増（15万トン）と輸出比率25％目標は、自社の技術差別化・現地生産体制の再検討を迫る。特に中国・東南アジア向け高級品ラインの即時分析が必要。"
+      },
+      {
+        "title": "トイレットペーパーなどの需要拡大で日本製紙が工場を増設の立地協定結ぶ（2026年1月11日掲載）｜KKT NEWS NNN - 日テレNEWS NNN",
+        "summary": "日本製紙は2026年1月11日、熊本県菊池市と工場増設の立地協定を締結した。衛生用品需要の拡大に対応するため、同社初の九州地区生産拠点として約50億円を投じ、2028年度稼働を目指す。新工場では再生パルプを原料としたトイレットペーパーを主力に、年間10万トン規模の生産能力を見込んでいる。",
+        "company": "日本製紙",
+        "date": "2026-04-11",
+        "category_id": "②",
+        "category_name": "製紙・パルプメーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQcm9wMmhycUZLS2VLOVloVldaWHRTWkxvd1A0ZE9fbkVwMkJ2dG04R2FTN1k5MDlkMEgzMFBISkRyV1dXQmVtZ3h0VnlxM3BnX1Fjc1J5Z3BVSldKVTI2SG9wZVY2QkFER1BLaFljYnZhOGl6UXJOVWwxQ3ZFU0FUb2FUTnhUVGM?oc=5",
+        "source_name": "日テレNEWS NNN",
+        "confidence": "高",
+        "score": 85,
+        "impact_analysis": "日本製紙の九州進出は、大王製紙の西日本市場シェアに直接的な脅威。再生パルプ利用技術と年間10万トン規模の生産能力は、コスト競争力向上を意味する。自社の設備増強・原料調達戦略の再検討が必要。特に熊本工場の2028年稼働までに、対抗する技術開発または九州地域での協業・M&Aを急ぐべき。"
+      },
+      {
+        "title": "トイレットペーパー、経産省が正確な情報を基にした購買呼びかけ…業界団体「原料は中東に依存せずホルムズ海峡封鎖の影響ない」 - 読売新聞オンライン",
+        "summary": "経済産業省はトイレットペーパーの買い占めを防ぐため、業界団体を通じて原料調達の実態を公表した。日本家庭紙工業会によると、国内トイレットペーパーの原料（古紙パルプ）の供給源は80%以上が国内で、中東依存はなくホルムズ海峡情勢の影響を受けないと説明。2月時点の在庫量は平常時と同水準を維持していることを確認した。（98字）",
+        "company": "不明",
+        "date": "2026-04-11",
+        "category_id": "⑥",
+        "category_name": "ティッシュペーパー・家庭紙専業メーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9tRW5kQ0o5aGRhaFdXOHFWUDRBQlZTU3hhOVpQUHZWR1p0UUdLZ3lwb2F5cDZ0RThMMEFmcUxiXzkwei1NR1V0eThrR1NBNkVMeVpHbHBSUTJCc0lHdzF4ci00eDI?oc=5",
+        "source_name": "読売新聞オンライン",
+        "confidence": "中",
+        "score": 85,
+        "impact_analysis": "原料調達の安定性確認は大王製紙の生産計画維持に直結。競合他社との原料確保競争優位性をアピール可能。中東依存否定は消費者不安解消材料としてマーケティング活用すべき。"
       },
       {
         "title": "「2017-2025年」世界成人用おむつ市場調査レポート（製品タイプ、エンドユーザー/アプリケーションおよび地域/国別） - PR TIMES",
@@ -148,6 +204,20 @@
         "confidence": "中",
         "score": 78,
         "impact_analysis": "生分解性生理用ナプキンの市場成長は、大王製紙の持続可能素材開発戦略に直結する。競合他社が竹・トウモロコシ等の新素材を採用する可能性が高く、自社の特許ポートフォリオ強化と原料多様化が急務。30代女性ターゲットのマーケティングデータを活用した製品設計が必要。"
+      },
+      {
+        "title": "花王の大人用おむつ「リリーフ」と衛生用品「消臭ストロング」が2026年4月15日（水）～17日（金）開催のバリアフリー2026に出展 - 朝日新聞",
+        "summary": "花王は、2026年4月15日から17日までの3日間開催される福祉機器総合展で、介護用吸水製品「リリーフ」や、介護環境の清潔保持を目的とした「消臭ストロング」ブランドの商品を展示する。",
+        "company": "花王",
+        "date": "2026-04-11",
+        "category_id": "①",
+        "category_name": "日用品・衛生用品メーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9mamFONThMcFNtWG84bGtPUHV5YmpyaWxGam1qZG9xVk5zZmluOVdENGt4S3pSeklwM3JwalkyZEFyNlFZd1JVNmtsNGtCVHd6U0czem10dmQxckk?oc=5",
+        "source_name": "朝日新聞",
+        "confidence": "高",
+        "score": 78,
+        "impact_analysis": "花王の介護用吸水製品「リリーフ」と衛生用品「消臭ストロング」の展示は、高齢化市場における競合優位性の強化を示唆。大王製紙は、同分野の技術開発加速と差別化特許戦略の再検討が必要。特に消臭・吸水技術の自社R&Dへの影響を即時分析すべき。"
       }
     ],
     "2026-04-10": [
@@ -530,76 +600,6 @@
         "confidence": "中",
         "score": 78,
         "impact_analysis": "インド市場の大人用おむつ需要拡大は、大王製紙の高吸収体技術と生産設備の輸出機会。競合の低価格戦略に対抗するため、現地企業との技術提携か吸収体素材のコストダウン開発が急務。農村部向け包装技術のノウハウ蓄積が競争優位性を決定する。"
-      },
-      {
-        "title": "紙おむつ製造・販売60年のリブドゥコーポレーション 大阪・関西万博「未来のおむつコレクション」に参画 - PR TIMES",
-        "summary": "リブドゥコーポレーションは2025年開催の大阪・関西万博において、創業60年の紙おむつ製造技術を活用した「未来のおむつコレクション」展示を実施。同社の吸収体加工技術を応用した次世代製品コンセプトを披露し、環境配慮型素材の採用率を現行比30%向上させる新設計を公開する。展示会場では実機によるデモンストレーションも予定されている。",
-        "company": "不明",
-        "date": "2026-04-10",
-        "category_id": "①",
-        "category_name": "日用品・衛生用品メーカー",
-        "info_type": "其他",
-        "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9UYTRycDZhV1duN28yVkRlSG9Pc1NYVUxUMU1zczF2LXV4TmJUTWQzZTFla0xHUGFkQUMyTDZ3dkIyYVhhaG44X3JJSTRoaWRZRW45MXJ0S09YVEl3T3J5VTNXelVkS2hHY3c?oc=5",
-        "source_name": "PR TIMES",
-        "confidence": "中",
-        "score": 78,
-        "impact_analysis": "リブドゥの次世代おむつ技術展示は、大王製紙の家庭用紙製品部門に直接的な競合脅威。特に吸収体加工技術の革新は特許戦略見直しが必要。万博での展示は市場認知度向上に直結するため、即座に対応製品開発を加速すべき。"
-      },
-      {
-        "title": "花王、使用済み紙おむつを資源化して活用する 炭素化リサイクルシステムの実証実験を徳島県上勝町で開始 - Kao",
-        "summary": "花王は徳島県上勝町で2023年9月より、使用済み紙おむつの炭素化リサイクル実証実験を開始した。同技術は高温処理でおむつを炭素資源に変換するもので、処理能力1日50kg規模のプラントを導入。生成した炭素材料は土壌改良材などへの活用を検証し、2025年度までの実用化を目指す。",
-        "company": "花王",
-        "date": "2026-04-10",
-        "category_id": "①",
-        "category_name": "日用品・衛生用品メーカー",
-        "info_type": "其他",
-        "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTFA4WU9oNVZiT2JlaExUVjNOQW1KMnZpRGRncjBjTDU0RDd4TzV6TGl6a3p2RjZRQ044akdnTHJQQTNuZlFYYzlydGtIV1dnei1ndF84MnpSS3p1VnJ1V3JKckVFLWR0dXBXNEliZkFUbms?oc=5",
-        "source_name": "Kao",
-        "confidence": "高",
-        "score": 78,
-        "impact_analysis": "花王の炭素化リサイクル技術は、大王製紙のおむつ事業に直接的な競合優位性の脅威となる。特にサステナビリティ分野での技術差別化が懸念されるため、自社でも類似技術の開発加速または提携戦略を検討すべき。処理能力50kg/日の規模は小規模だが、2025年実用化目標は市場シェア争いのタイムリミットを示唆。"
-      },
-      {
-        "title": "パンパース、「おむつ回収プロジェクト」を4月中旬に開始。神戸市内8カ所に回収ボックスを設置 - Circular Economy Hub",
-        "summary": "「P&Gの紙おむつブランド『パンパース』は2024年4月中旬より神戸市で使用済みおむつのリサイクル実証実験を開始。市内8カ所に回収ボックスを設置し、回収後はセメント原料化処理を行う。同事業は環境省の補助金を活用し、年間約3.6トンの使用済みおむつ処理を見込む循環型モデル構築が目的。」",
-        "company": "不明",
-        "date": "2026-04-10",
-        "category_id": "①",
-        "category_name": "日用品・衛生用品メーカー",
-        "info_type": "其他",
-        "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE50WmUydVZqcUxiNm5BVU9xaUxLOUZBSGhsWWxtdG1DeDZFSk1Za0FfdktzU1JZWHR1YVl2ZS1ONkc1UVhpbUpUQTFnNGJGNmZqZ2ZwN2tIR2ZzTGVqOEFB?oc=5",
-        "source_name": "Circular Economy Hub",
-        "confidence": "中",
-        "score": 78,
-        "impact_analysis": "パンパースのリサイクル実証実験は、大王製紙のおむつ事業に直接的影響を与える。競合の循環型ビジネスモデル構築が進む中、自社でも同様の技術開発・特許戦略を急ぐ必要がある。環境省補助金活用事例として、政策動向も注視すべき。"
-      },
-      {
-        "title": "コドモン、P&Gジャパン合同会社と連携開始 12月7日(火)より、コドモン利用施設に対しパンパースの保育施設向けおむつの定額使い放題サービス「すくすくサブスク™プログラム」を連携開始 - newscast.jp",
-        "summary": "P&Gジャパンは12月7日より、保育施設管理システム「コドモン」利用施設向けに「パンパース」おむつの定額制サービス「すくすくサブスク」を開始した。同プログラムでは施設規模に応じた月額料金（例：10人未満施設で5,500円）で使い放題が可能となり、自動配送と在庫管理機能を提供する。P&Gのサブスクリプションビジネス拡大戦略の一環で、B2B市場開拓を加速させる。",
-        "company": "P&G",
-        "date": "2026-04-10",
-        "category_id": "①",
-        "category_name": "日用品・衛生用品メーカー",
-        "info_type": "其他",
-        "url": "https://news.google.com/rss/articles/CBMiR0FVX3lxTFBNcXozcjUyQkpSQnpzYWxqVkljR1pEQnNFMUdmYlJCOHdKeFFlWTdFUzlDWkdicU00YV9MbWRoS0JyZ21ETUhV?oc=5",
-        "source_name": "newscast.jp",
-        "confidence": "高",
-        "score": 78,
-        "impact_analysis": "P&Gのサブスクリプション戦略は、B2B市場での競争激化を示唆。大王製紙はおむつ分野のサブスクモデル検討と、自動配送・在庫管理システムの技術連携を急ぐべき。競合の顧客囲い込みを阻止するため、自社ブランドの価値提案強化が必須。"
-      },
-      {
-        "title": "P&G、期間限定おむつ「パンパース はらまきパンツ」を発売 - 日本経済新聞",
-        "summary": "P&Gは2024年3月12日より、日本の伝統的な「はらまき」をモチーフにした期間限定おむつ「パンパース はらまきパンツ」を全国で発売。和柄デザインを採用し、従来品と同様の吸収性能（最大500ml保持）を維持したまま、赤ちゃんの動きを妨げない伸縮性を実現。日本の文化行事シーズンに向けた需要開拓を目的とした商品展開である。",
-        "company": "P&G",
-        "date": "2026-04-10",
-        "category_id": "①",
-        "category_name": "日用品・衛生用品メーカー",
-        "info_type": "其他",
-        "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9fTUxYX2ZNOElHS3dyZ0tzZHR5Um1aRGI3eExYR2prbkpqV3dUdUVVVFgyUmpVMzJHWVJBeU52T3BkQklSVHA4RlctU3RzbHJ5S1ZYT2NLX2daTjN3QmIyczJNdC1mM1VJcFliLQ?oc=5",
-        "source_name": "日本経済新聞",
-        "confidence": "高",
-        "score": 78,
-        "impact_analysis": "P&Gの期間限定おむつ「パンパース はらまきパンツ」は、文化的要素を取り入れた製品差別化戦略を示しており、大王製紙も文化的ニーズに対応した製品開発を検討すべき。吸収性能（500ml保持）と伸縮性の技術は競合優位性を脅かす可能性があり、類似技術の開発または特許戦略の見直しが必要。"
       },
       {
         "title": "瑞光[6279]：新たな事業の開始に関するお知らせ 2024年10月3日(適時開示) ：日経会社情報DIGITAL - 日本経済新聞",
