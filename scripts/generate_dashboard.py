@@ -92,9 +92,17 @@ def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None):
     Returns (False, None) if the model determines the article is off-topic.
     Returns (True, 'AI Summary Pending') if the API is unavailable.
     """
-    # Skip paywall-only articles: snippet is essentially empty or just repeats the title
+    # Skip paywall-only articles: snippet is essentially empty or just repeats the title.
+    # Exception: competitor companies (Unicharm, Kao, P&G, etc.) are kept even with short
+    # snippets because brief corporate news items are still high-value intelligence.
     clean_snippet = (snippet or '').strip()
-    if len(clean_snippet) < 30 or clean_snippet == title.strip():
+    COMPETITOR_COMPANIES = [
+        'ユニ・チャーム', 'unicharm', '花王', 'p&g', '花王', 'ライオン',
+        'essity', 'kimberly', 'キンバリー', 'vinda', '维达', 'hengan', '恒安',
+    ]
+    is_competitor = any(kw in (company or '').lower() for kw in COMPETITOR_COMPANIES)
+    min_snippet_len = 10 if is_competitor else 30
+    if len(clean_snippet) < min_snippet_len or clean_snippet == title.strip():
         print(f'  [SKIP paywall/no-body] {title[:60]}')
         return False, None
     try:
@@ -112,11 +120,14 @@ def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None):
             'この記事が「家庭紙・ティッシュ・トイレットペーパー・おむつ・ナプキン・衛生用品・不織布・'
             '吸収体加工機・包装機・パレタイザー・学術論文・特許」に直接関連する業界ニュースかどうかを判断してください。\n'
             '洗剤・柔軟剤・シャンプー・化粧品・食品・飲料など、家庭紙／衛生用品と無関係な'
-            'FMCGニュースであれば「IRRELEVANT」とだけ出力してください。\n\n'
+            'FMCGニュースであれば「IRRELEVANT」とだけ出力してください。\n'
+            '※ ユニ・チャーム・花王・P&G・ライオン・Essity・Kimberly-Clark等の競合他社のニュースは'
+            'スニペットが短くても「IRRELEVANT」にしないでください。競合情報として必ず保持してください。\n\n'
             '【ステップ2: 要約（関連する場合のみ）】\n'
             '業界関連ニュースの場合は、本文スニペットを深く読み込み、'
             '「誰が・いつ・何を・どのように・数値」が明確に伝わる、'
-            '業界関係者向けの日本語ニュースサマリーを80〜150字で作成してください。\n\n'
+            '業界関係者向けの日本語ニュースサマリーを80〜150字で作成してください。\n'
+            'スニペットが短い場合は、入手可能な情報を最大限活用して要約を作成してください。\n\n'
             '【厳禁事項】\n'
             '・タイトルに含まれる単語・フレーズを要約中で使用することは絶対禁止です。\n'
             '・本文スニペットから、タイトルに記載されていない具体的な数値・技術仕様・戦略的事実を'
@@ -629,6 +640,11 @@ def main():
 
     for date_str, date_items in dates_for_files.items():
         date_file = os.path.join(data_dir, f'{date_str}.json')
+        # Snapshot locking: never overwrite a past day's file once it has been created.
+        # Only today's file is allowed to be (re)written so today's highlights are current.
+        if date_str != today and os.path.exists(date_file):
+            print(f'  [DATE-FILE] Skipping {date_file} (snapshot locked — historical integrity)')
+            continue
         date_payload = {
             'date': date_str,
             'items': date_items,
