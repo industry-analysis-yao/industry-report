@@ -1,7 +1,9 @@
 import json
 import os
 import re
+import time
 import requests
+import pytz
 from datetime import datetime, timezone
 
 try:
@@ -10,24 +12,15 @@ try:
 except ImportError:
     pass
 
-try:
-    from google import genai as google_genai
-    GENAI_AVAILABLE = True
-except ImportError:
-    GENAI_AVAILABLE = False
-
-class DailyQuotaExhausted(Exception):
-    """Raised when a Gemini API key has hit its daily quota (limit: 0)."""
-
-
 # Maximum retry attempts for high-value items that fail the formatting check
 MAX_RETRIES = 3
 # Items with a score above this threshold are retried if formatting is poor
 RETRY_SCORE_THRESHOLD = 80
 
-# OpenRouter configuration
+# OpenRouter configuration — DeepSeek V3 only (no fallback to other providers)
 _OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1/chat/completions'
-_OPENROUTER_MODELS = ['deepseek/deepseek-chat', 'google/gemini-flash-1.5']
+_OPENROUTER_MODEL = 'deepseek/deepseek-chat'
+_OPENROUTER_MAX_RETRIES = 5
 
 # 20+20+5 bucket quota — Bucket A: industry (20), Bucket B: machine R&D (20), Bucket C: academic/patents (5)
 BUCKET_QUOTA = 20
@@ -49,37 +42,11 @@ def strip_html(text):
     return re.sub(r'<[^>]+>', '', text or '').strip()
 
 
-def _gemini_generate(client, model, contents):
-    """Call Gemini API once with no retries or delays.
-
-    Raises DailyQuotaExhausted when the API confirms the daily cap has been hit.
-    Any other error (including 404/503) is re-raised immediately so the caller
-    can fall through to the next tier in the waterfall.
-    """
-    try:
-        response = client.models.generate_content(model=model, contents=contents)
-        return response
-    except Exception as e:
-        err_str = str(e)
-        err_lower = err_str.lower()
-        is_daily_quota = (
-            'limit: 0' in err_str
-            or '"limit":0' in err_str
-            or '"limit": 0' in err_str
-            or 'DAILY_LIMIT_EXCEEDED' in err_str
-            or 'daily limit' in err_lower
-            or 'per day' in err_lower
-        )
-        if is_daily_quota:
-            raise DailyQuotaExhausted(err_str) from e
-        raise
-
-
 def _openrouter_generate(prompt):
-    """Call OpenRouter API as Tier 3 fallback.
+    """Call OpenRouter (DeepSeek V3) with automatic retry on failure.
 
-    Tries each model in _OPENROUTER_MODELS in order.  Returns the response
-    text on success, or raises the last exception if all models fail.
+    Retries up to _OPENROUTER_MAX_RETRIES times with exponential back-off.
+    Raises RuntimeError if all attempts fail.
     Requires the OPENROUTER_API_KEY environment variable to be set.
     """
     api_key = os.environ.get('OPENROUTER_API_KEY', '')
@@ -92,46 +59,45 @@ def _openrouter_generate(prompt):
         'X-Title': 'Industry Analysis Report',
         'Content-Type': 'application/json',
     }
+    payload = {
+        'model': _OPENROUTER_MODEL,
+        'messages': [{'role': 'user', 'content': prompt}],
+    }
+
     last_error = None
-    for model in _OPENROUTER_MODELS:
-        payload = {
-            'model': model,
-            'messages': [{'role': 'user', 'content': prompt}],
-        }
+    for attempt in range(_OPENROUTER_MAX_RETRIES):
         try:
-            resp = requests.post(_OPENROUTER_BASE_URL, headers=headers, json=payload, timeout=30)
+            resp = requests.post(_OPENROUTER_BASE_URL, headers=headers, json=payload, timeout=60)
             resp.raise_for_status()
             return resp.json()['choices'][0]['message']['content'].strip()
         except Exception as e:
-            print(f'  [OPENROUTER] {model} failed: {e}')
+            print(f'  [OPENROUTER] Attempt {attempt + 1}/{_OPENROUTER_MAX_RETRIES} failed: {e}')
             last_error = e
-    raise last_error if last_error else RuntimeError('All OpenRouter models failed')
+            if attempt < _OPENROUTER_MAX_RETRIES - 1:
+                time.sleep(2 ** attempt)
+    raise last_error if last_error else RuntimeError('OpenRouter failed after all retries')
 
 
 # ============================================================
 # AGENT A — Summarizer
 # ============================================================
 
-def ai_summarize(title, snippet, company, api_key, retry_feedback=None):
-    """Agent A: Generate a Japanese factual news summary using Gemini API.
+def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None):
+    """Agent A: Generate a Japanese factual news summary using OpenRouter (DeepSeek V3).
 
     When *retry_feedback* is provided (a string with specific improvement instructions
     from Agent B), it is appended to the prompt so the model can correct the issues.
 
     Returns a 2-tuple: (is_relevant: bool, summary: str | None).
-    Returns (False, None) if Gemini determines the article is off-topic.
-    Returns (True, None) if the API is unavailable or the article looks paywalled.
+    Returns (False, None) if the model determines the article is off-topic.
+    Returns (True, 'AI Summary Pending') if the API is unavailable.
     """
-    if not GENAI_AVAILABLE or not api_key:
-        return True, None
     # Skip paywall-only articles: snippet is essentially empty or just repeats the title
     clean_snippet = (snippet or '').strip()
     if len(clean_snippet) < 30 or clean_snippet == title.strip():
         print(f'  [SKIP paywall/no-body] {title[:60]}')
         return False, None
     try:
-        client = google_genai.Client(api_key=api_key, http_options={'api_version': 'v1beta'})
-
         retry_section = ''
         if retry_feedback:
             retry_section = (
@@ -166,57 +132,29 @@ def ai_summarize(title, snippet, company, api_key, retry_feedback=None):
             f'出力（「IRRELEVANT」またはサマリー日本語のみ）:'
         )
 
-        # ── Waterfall: Tier 1 → Tier 2 → Tier 3 ──────────────────────────
-        text = None
-        # Tier 1: Direct — Google Gemini 2.5 Flash
-        try:
-            response = _gemini_generate(client, 'gemini-2.5-flash', prompt)
-            text = response.text.strip()
-        except DailyQuotaExhausted:
-            raise  # propagate so main() can rotate keys
-        except Exception as e1:
-            print(f'  [TIER1-FAIL] gemini-2.5-flash: {e1}. Trying Tier 2...')
-            # Tier 2: Direct Fallback — Google Gemini 1.5-flash
-            try:
-                response = _gemini_generate(client, 'gemini-1.5-flash', prompt)
-                text = response.text.strip()
-            except DailyQuotaExhausted:
-                raise
-            except Exception as e2:
-                print(f'  [TIER2-FAIL] gemini-1.5-flash: {e2}. Trying Tier 3 (OpenRouter)...')
-                # Tier 3: OpenRouter
-                try:
-                    text = _openrouter_generate(prompt)
-                except Exception as e3:
-                    print(f'  [TIER3-FAIL] OpenRouter: {e3}. Marking as "AI Summary Pending".')
-                    return True, 'AI Summary Pending'
+        text = _openrouter_generate(prompt)
 
         if text and text.strip().upper() == 'IRRELEVANT':
             print(f'  [AI-IRRELEVANT] {title[:60]}')
             return False, None
         return True, (text or '')[:300]
-    except DailyQuotaExhausted:
-        raise
     except Exception as e:
-        print(f'  Gemini error for "{title[:40]}...": {e}')
-        return True, None
+        print(f'  OpenRouter error for "{title[:40]}...": {e}')
+        return True, 'AI Summary Pending'
 
 
 # ============================================================
 # AGENT B — Auditor
 # ============================================================
 
-def audit_item(title, summary, company, api_key):
+def audit_item(title, summary, company, api_key=None):
     """Agent B: Critically evaluate a news summary as a senior R&D director at Daio Paper.
 
     Assigns a unique 1–100 impact score with heavy weight on strategic R&D relevance.
     Returns a 3-tuple: (score: int, impact_analysis: str, formatting_feedback: str | None).
     *formatting_feedback* is non-None only when there are correctable formatting issues.
     """
-    if not GENAI_AVAILABLE or not api_key:
-        return 0, '', None
     try:
-        client = google_genai.Client(api_key=api_key, http_options={'api_version': 'v1beta'})
         prompt = (
             'あなたは大王製紙の最上席研究開発ディレクターです。業界歴30年以上、競合他社の技術動向・'
             '市場変化・設備投資・研究開発に精通した、業界随一の厳格な審査官として行動してください。\n\n'
@@ -252,30 +190,7 @@ def audit_item(title, summary, company, api_key):
             f'要約: {summary}\n'
         )
 
-        # ── Waterfall: Tier 1 → Tier 2 → Tier 3 ──────────────────────────
-        text = None
-        # Tier 1: Direct — Google Gemini 2.5 Flash
-        try:
-            response = _gemini_generate(client, 'gemini-2.5-flash', prompt)
-            text = response.text.strip()
-        except DailyQuotaExhausted:
-            raise
-        except Exception as e1:
-            print(f'  [TIER1-FAIL] gemini-2.5-flash: {e1}. Trying Tier 2...')
-            # Tier 2: Direct Fallback — Google Gemini 1.5-flash
-            try:
-                response = _gemini_generate(client, 'gemini-1.5-flash', prompt)
-                text = response.text.strip()
-            except DailyQuotaExhausted:
-                raise
-            except Exception as e2:
-                print(f'  [TIER2-FAIL] gemini-1.5-flash: {e2}. Trying Tier 3 (OpenRouter)...')
-                # Tier 3: OpenRouter
-                try:
-                    text = _openrouter_generate(prompt)
-                except Exception as e3:
-                    print(f'  [TIER3-FAIL] OpenRouter: {e3}. Skipping audit.')
-                    return 0, '', None
+        text = _openrouter_generate(prompt)
 
         text = re.sub(r'^```(?:json)?\s*', '', text)
         text = re.sub(r'\s*```$', '', text)
@@ -285,8 +200,6 @@ def audit_item(title, summary, company, api_key):
         impact_analysis = (result.get('impact_analysis') or '')[:300]
         formatting_feedback = result.get('formatting_feedback') or None
         return score, impact_analysis, formatting_feedback
-    except DailyQuotaExhausted:
-        raise
     except Exception as e:
         print(f'  Audit error for "{title[:40]}...": {e}')
         return 0, '', None
@@ -296,7 +209,7 @@ def audit_item(title, summary, company, api_key):
 # DUAL-AGENT PIPELINE WITH RETRY
 # ============================================================
 
-def process_item_with_retry(item, api_key):
+def process_item_with_retry(item, api_key=None):
     """Run Agent A (Summarizer) → Agent B (Auditor) pipeline.
 
     For items that score > 80 but fail the formatting check, the item is sent back
@@ -320,7 +233,7 @@ def process_item_with_retry(item, api_key):
 
     for attempt in range(MAX_RETRIES):
         is_relevant, new_summary = ai_summarize(
-            title, snippet, company, api_key, retry_feedback=feedback
+            title, snippet, company, retry_feedback=feedback
         )
         if not is_relevant:
             return False
@@ -331,7 +244,7 @@ def process_item_with_retry(item, api_key):
             break
 
         score, impact_analysis, fmt_feedback = audit_item(
-            title, current_summary, company, api_key
+            title, current_summary, company
         )
 
         # Prefer results with a higher score, OR the same score but with
@@ -370,7 +283,7 @@ def process_item_with_retry(item, api_key):
 # TOP-3 HIGHLIGHTS (derived directly from scored items)
 # ============================================================
 
-def generate_highlights(items, api_key):
+def generate_highlights(items, api_key=None):
     """Build Top-3 highlights from the already-scored items.
 
     Sorts all scored items by score descending so the absolute top-3 are
@@ -457,12 +370,9 @@ def main():
     data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'news_data.json')
     data_path = os.path.normpath(data_path)
 
-    api_key_1 = os.environ.get('GEMINI_API_KEY', '')
-    api_key_2 = os.environ.get('GEMINI_API_KEY_2', '')
-    api_keys = [k for k in [api_key_1, api_key_2] if k]
-
-    if not api_keys:
-        print('WARNING: GEMINI_API_KEY not set. Summaries and scores will not be updated.')
+    # Verify OpenRouter API key is available
+    if not os.environ.get('OPENROUTER_API_KEY', ''):
+        print('WARNING: OPENROUTER_API_KEY not set. Summaries and scores will not be generated.')
 
     data, last_updated, existing_highlights = load_data(data_path)
     if not data:
@@ -484,13 +394,8 @@ def main():
         print(f'Deduplication removed {len(data) - len(deduped)} duplicate items.')
     data = deduped
 
-    # Active API key management
-    key_idx = 0
-    active_key = api_keys[key_idx] if api_keys else ''
-
     updated = 0
     irrelevant_indices = []
-    both_keys_exhausted = False
 
     idx = 0
     while idx < len(data):
@@ -513,7 +418,7 @@ def main():
             idx += 1
             continue
 
-        if not active_key:
+        if not os.environ.get('OPENROUTER_API_KEY', ''):
             # No API key — assign defaults so all items have required fields
             if not has_score:
                 item['score'] = 0
@@ -522,25 +427,7 @@ def main():
             idx += 1
             continue
 
-        try:
-            is_relevant = process_item_with_retry(item, active_key)
-        except DailyQuotaExhausted:
-            exhausted_idx = key_idx
-            key_idx += 1
-            if key_idx >= len(api_keys):
-                print(
-                    f'  [QUOTA] All {len(api_keys)} API key(s) have hit the daily quota. '
-                    'Saving progress and exiting.'
-                )
-                both_keys_exhausted = True
-                break
-            active_key = api_keys[key_idx]
-            print(
-                f'  [QUOTA] Key index {exhausted_idx} exhausted (daily limit reached). '
-                f'Switching to key index {key_idx}. Retrying current item (idx={idx})...'
-            )
-            # Retry the same item with the new key (do not advance idx)
-            continue
+        is_relevant = process_item_with_retry(item)
 
         if not is_relevant:
             irrelevant_indices.append(idx)
@@ -636,9 +523,11 @@ def main():
     )
 
     # Build Top-3 highlights from best-scored items across the entire pool
-    today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    # Use JST (Asia/Tokyo) to ensure today's date matches the Japan business day
+    jst = pytz.timezone('Asia/Tokyo')
+    today = datetime.now(jst).strftime('%Y-%m-%d')
     # Use all data (generate_highlights sorts by score internally)
-    highlights = generate_highlights(data, active_key) if data else existing_highlights
+    highlights = generate_highlights(data) if data else existing_highlights
     if not highlights:
         highlights = existing_highlights
 
@@ -647,8 +536,6 @@ def main():
         f'Updated {updated} items. Highlights: {len(highlights)}. '
         f'Total items saved: {len(data)}'
     )
-    if both_keys_exhausted:
-        print('NOTE: Saved partial progress due to daily quota exhaustion on all API keys.')
 
     # ── Write per-date JSON files & update dates index ────────────────────────
     data_dir = os.path.dirname(data_path)

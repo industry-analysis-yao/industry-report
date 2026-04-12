@@ -5,6 +5,12 @@ import json
 import os
 
 try:
+    import pytz
+    _PYTZ_AVAILABLE = True
+except ImportError:
+    _PYTZ_AVAILABLE = False
+
+try:
     import feedparser
     _feedparser_available = True
 except ImportError:
@@ -23,6 +29,9 @@ DATE_RESTRICT_DAYS = 10
 QUOTA_INDUSTRY = 20   # Bucket A: competitor / market intelligence
 QUOTA_MACHINE = 20    # Bucket B: equipment / production R&D
 QUOTA_ACADEMIC = 5    # Bucket C: J-STAGE / Google Scholar / patents
+
+# Maximum search rounds when quota is not met (progressively wider date windows)
+_SEARCH_DATE_WINDOWS = [10, 20, 30, 60]
 
 # Path for deficit-tracking configuration
 _SCRIPT_DIR = os.path.dirname(__file__)
@@ -103,6 +112,14 @@ OFFTOPIC_TERMS = [
     '化粧品', 'リップ', 'ファンデーション', '美容液', 'スキンケア', '口紅',
     '食品', '飲料', 'コーヒー', 'ビール', '菓子', 'サプリ',
 ]
+
+
+def _today_jst():
+    """Return today's date string (YYYY-MM-DD) in Japan Standard Time (JST, UTC+9)."""
+    if _PYTZ_AVAILABLE:
+        return datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%Y-%m-%d')
+    # Fallback: manually apply +9h offset
+    return (datetime.now(timezone.utc) + timedelta(hours=9)).strftime('%Y-%m-%d')
 
 
 def is_industry_relevant(title, snippet):
@@ -267,7 +284,7 @@ def fetch_news(existing_urls=None, use_rss_fallback=False):
     api_key = os.environ.get('GOOGLE_API_KEY', '')
     cse_id = os.environ.get('GOOGLE_CSE_ID', '')
 
-    today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    today = _today_jst()
     results = []
     _existing = existing_urls or set()
 
@@ -332,7 +349,7 @@ def fetch_academic_news(existing_urls=None, date_restrict_days=None, use_rss_fal
     api_key = os.environ.get('GOOGLE_API_KEY', '')
     cse_id = os.environ.get('GOOGLE_CSE_ID', '')
 
-    today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    today = _today_jst()
     results = []
     _existing = existing_urls or set()
     restrict_days = date_restrict_days or DATE_RESTRICT_DAYS
@@ -520,7 +537,8 @@ if __name__ == '__main__':
     bucket_c_new = deduped_academic
 
     # ── Compute per-bucket shortfalls relative to today's existing data ───────
-    today_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    # Use JST to ensure the date matches Japan business day
+    today_str = _today_jst()
     today_existing = [it for it in existing if it.get('date') == today_str]
     today_academic = [it for it in patents if it.get('date') == today_str]
 
@@ -533,7 +551,7 @@ if __name__ == '__main__':
     cap_b = max(0, QUOTA_MACHINE - existing_b)
     cap_c = max(0, QUOTA_ACADEMIC - existing_c)
 
-    def append_capped(source_list, target, cap, label):
+    def append_capped(source_list, cap, label):
         added = 0
         for item in source_list:
             if added >= cap:
@@ -541,34 +559,62 @@ if __name__ == '__main__':
                 break
             if item.get('url') and item['url'] in existing_urls:
                 continue
-            target.append(item)
             existing_urls.add(item['url'])
             existing.append(item)
             added += 1
             print(f'  [{label}-NEW] {item["title"][:60]}')
         return added
 
-    appended_a = append_capped(bucket_a_new, [], cap_a, 'BUCKET-A')
-    appended_b = append_capped(bucket_b_new, [], cap_b, 'BUCKET-B')
-    appended_c = append_capped(bucket_c_new, [], cap_c, 'BUCKET-C')
+    appended_a = append_capped(bucket_a_new, cap_a, 'BUCKET-A')
+    appended_b = append_capped(bucket_b_new, cap_b, 'BUCKET-B')
+    appended_c = append_capped(bucket_c_new, cap_c, 'BUCKET-C')
 
-    # ── Fill-in: if a bucket is still under quota, pull from others ───────────
-    fill_pool = []
+    # ── Cross-fill: if a bucket is still under quota, pull from the other bucket ─
     if appended_a < cap_a:
         leftover = [it for it in bucket_b_new if it.get('url') not in existing_urls]
-        fill_pool.extend(leftover[:cap_a - appended_a])
+        extra = append_capped(leftover, cap_a - appended_a, 'FILL-A-from-B')
+        appended_a += extra
     if appended_b < cap_b:
         leftover = [it for it in bucket_a_new if it.get('url') not in existing_urls]
-        fill_pool.extend(leftover[:cap_b - appended_b])
-    for item in fill_pool:
-        if item.get('url') and item['url'] not in existing_urls:
-            existing.append(item)
-            existing_urls.add(item['url'])
-            print(f'  [FILL-IN] {item["title"][:60]}')
+        extra = append_capped(leftover, cap_b - appended_b, 'FILL-B-from-A')
+        appended_b += extra
+
+    # ── Aggressive retry: if still under quota, widen date window and re-fetch ──
+    for window in _SEARCH_DATE_WINDOWS[1:]:  # skip first (already used)
+        total_a = existing_a + appended_a
+        total_b = existing_b + appended_b
+        total_c = existing_c + appended_c
+        if total_a >= QUOTA_INDUSTRY and total_b >= QUOTA_MACHINE and total_c >= QUOTA_ACADEMIC:
+            break
+
+        print(f'  [RETRY] Quotas not met (A={total_a}/{QUOTA_INDUSTRY}, '
+              f'B={total_b}/{QUOTA_MACHINE}, C={total_c}/{QUOTA_ACADEMIC}). '
+              f'Broadening search to {window}-day window...')
+
+        if total_a < QUOTA_INDUSTRY or total_b < QUOTA_MACHINE:
+            extra_industry, rss_fallback = fetch_news(
+                existing_urls=existing_urls, use_rss_fallback=rss_fallback
+            )
+            extra_a = [it for it in extra_industry if not is_machine_item(it)]
+            extra_b = [it for it in extra_industry if is_machine_item(it)]
+            if total_a < QUOTA_INDUSTRY:
+                appended_a += append_capped(extra_a, QUOTA_INDUSTRY - total_a, f'RETRY-A-{window}d')
+            if total_b < QUOTA_MACHINE:
+                appended_b += append_capped(extra_b, QUOTA_MACHINE - total_b, f'RETRY-B-{window}d')
+
+        if total_c < QUOTA_ACADEMIC:
+            extra_academic = fetch_academic_news(
+                existing_urls=existing_urls,
+                date_restrict_days=window,
+                use_rss_fallback=rss_fallback,
+            )
+            appended_c += append_capped(
+                extra_academic, QUOTA_ACADEMIC - total_c, f'RETRY-C-{window}d'
+            )
 
     appended_total = appended_a + appended_b + appended_c
-    if not appended_total and not fill_pool:
-        print(f'No recent news found (last {DATE_RESTRICT_DAYS} days).')
+    if not appended_total:
+        print(f'No recent news found after exhausting all search windows.')
 
     # ── Update academic deficit for next run ──────────────────────────────────
     actual_academic_today = existing_c + appended_c
