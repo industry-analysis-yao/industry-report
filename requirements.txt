@@ -2,3 +2,4 @@ requests
 python-dotenv
 feedparser
 pytz
+duckduckgo_search>=6.0.0

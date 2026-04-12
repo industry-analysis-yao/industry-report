@@ -17,6 +17,12 @@ except ImportError:
     _feedparser_available = False
 
 try:
+    from duckduckgo_search import DDGS
+    _ddgs_available = True
+except ImportError:
+    _ddgs_available = False
+
+try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
@@ -205,7 +211,10 @@ def determine_info_type(text):
 
 
 def fetch_from_google_cse(query, api_key, cse_id, num=10, date_restrict_days=None):
-    """Return list of items on success, None on a fatal API error (e.g. 403 forbidden)."""
+    """Return list of items on success, None on a fatal API error (403/429).
+
+    Returns None to signal the caller to switch to the next fallback engine.
+    """
     url = 'https://www.googleapis.com/customsearch/v1'
     restrict = date_restrict_days if date_restrict_days else DATE_RESTRICT_DAYS
     params = {
@@ -220,25 +229,27 @@ def fetch_from_google_cse(query, api_key, cse_id, num=10, date_restrict_days=Non
     try:
         resp = requests.get(url, params=params, timeout=15)
         resp.raise_for_status()
-        return resp.json().get('items', [])
+        items = resp.json().get('items', [])
+        print(f'  [ENGINE=Google-CSE] {len(items)} results for: {query[:60]}')
+        return items
     except requests.exceptions.HTTPError as e:
-        print(f"  Error fetching query '{query}': {e}")
+        print(f"  [Google-CSE] Error fetching query '{query}': {e}")
         fatal = False
         try:
             body = e.response.json()
             err = body.get('error', {})
             code = err.get('code')
             reason = err.get('errors', [{}])[0].get('reason')
-            print(f"  Google API error {code}: {err.get('message')} (reason: {reason})")
-            # 403 = API not enabled / project lacks access; treat as fatal and fall back to RSS
-            if code == 403:
-                print('  Fatal API error — switching to Google News RSS fallback for all queries.')
+            print(f"  [Google-CSE] API error {code}: {err.get('message')} (reason: {reason})")
+            # 403 = API not enabled / quota exhausted; 429 = rate-limited — both fatal
+            if code in (403, 429):
+                print(f'  [Google-CSE] Fatal error {code} — switching to DuckDuckGo fallback.')
                 fatal = True
         except Exception:
             pass
         return None if fatal else []
     except Exception as e:
-        print(f"  Error fetching query '{query}': {e}")
+        print(f"  [Google-CSE] Error fetching query '{query}': {e}")
         return []
 
 
@@ -247,10 +258,40 @@ def strip_html(text):
     return re.sub(r'<[^>]+>', '', text or '').strip()
 
 
-def fetch_from_google_news_rss(query, max_items=10):
-    """Fetch news items from Google News RSS (no API key required)."""
+def fetch_from_duckduckgo(query, max_items=15):
+    """Fetch news items from DuckDuckGo News Search (no API key required).
+
+    Used as Fallback 1 when Google CSE returns a 403 or 429 error.
+    Returns a list of items normalised to the same schema as Google CSE results.
+    """
+    if not _ddgs_available:
+        print('  [DuckDuckGo] duckduckgo_search library not available; skipping.')
+        return []
+    try:
+        results = []
+        with DDGS() as ddgs:
+            for r in ddgs.news(query, region='jp-ja', max_results=max_items):
+                results.append({
+                    'title': r.get('title', ''),
+                    'link': r.get('url', ''),
+                    'snippet': r.get('body', ''),
+                    'displayLink': r.get('source', ''),
+                })
+        print(f'  [ENGINE=DuckDuckGo] {len(results)} results for: {query[:60]}')
+        return results
+    except Exception as e:
+        print(f"  [DuckDuckGo] Error fetching query '{query}': {e}")
+        return []
+
+
+def fetch_from_google_news_rss(query, max_items=100):
+    """Fetch news items from Google News RSS (no API key required).
+
+    Used as Fallback 2 when both Google CSE and DuckDuckGo fail.
+    Fetches up to *max_items* raw entries (default 100) to maximise the pool.
+    """
     if not _feedparser_available:
-        print('  feedparser not available; skipping RSS fallback.')
+        print('  [RSS] feedparser not available; skipping RSS fallback.')
         return []
     feed_url = 'https://news.google.com/rss/search?q={}&hl=ja&gl=JP&ceid=JP:ja'.format(
         requests.utils.quote(query)
@@ -270,16 +311,44 @@ def fetch_from_google_news_rss(query, max_items=10):
                 'snippet': summary,
                 'displayLink': source,
             })
+        print(f'  [ENGINE=Google-RSS] {len(items)} results for: {query[:60]}')
         return items
     except Exception as e:
-        print(f'  RSS fetch error for query \'{query}\': {e}')
+        print(f'  [RSS] Fetch error for query \'{query}\': {e}')
         return []
+
+
+def _fetch_with_fallback(query, api_key, cse_id, use_google_cse, use_ddgs, restrict_days):
+    """Try Google CSE → DuckDuckGo → Google News RSS in order.
+
+    Returns a 3-tuple: (items, use_google_cse, use_ddgs).
+    The two boolean flags are updated and returned so the caller can propagate
+    a "this engine is broken for the whole run" signal.
+    """
+    if use_google_cse:
+        cse_items = fetch_from_google_cse(query, api_key, cse_id, date_restrict_days=restrict_days)
+        if cse_items is not None:
+            return cse_items, True, use_ddgs
+        # Fatal CSE error — fall through to DuckDuckGo
+        print('  [FALLBACK] Google CSE failed; switching to DuckDuckGo for remaining queries.')
+        use_google_cse = False
+
+    if use_ddgs:
+        ddg_items = fetch_from_duckduckgo(query)
+        if ddg_items:
+            return ddg_items, False, True
+        # DDG returned nothing (could be a transient failure) — fall through to RSS
+        print('  [FALLBACK] DuckDuckGo returned no results; trying Google News RSS.')
+
+    # Tertiary fallback: Google News RSS with increased depth
+    return fetch_from_google_news_rss(query, max_items=100), False, use_ddgs
 
 
 def fetch_news(existing_urls=None, use_rss_fallback=False, date_restrict_days=None):
     """Fetch industry news (Bucket A + B).
 
-    Returns a list of new items; does NOT include academic/patent items.
+    Tries engines in order: Google CSE → DuckDuckGo → Google News RSS (100 items).
+    Returns (items, use_rss_fallback) where use_rss_fallback indicates Google CSE is down.
     *date_restrict_days* overrides DATE_RESTRICT_DAYS when broadening the search window.
     """
     api_key = os.environ.get('GOOGLE_API_KEY', '')
@@ -290,22 +359,16 @@ def fetch_news(existing_urls=None, use_rss_fallback=False, date_restrict_days=No
     _existing = existing_urls or set()
     restrict_days = date_restrict_days or DATE_RESTRICT_DAYS
 
-    if not api_key or not cse_id:
-        print('WARNING: GOOGLE_API_KEY or GOOGLE_CSE_ID not set. Falling back to Google News RSS.')
-        use_rss_fallback = True
+    use_google_cse = bool(api_key and cse_id) and not use_rss_fallback
+    use_ddgs = _ddgs_available
+    if not use_google_cse:
+        print('WARNING: GOOGLE_API_KEY or GOOGLE_CSE_ID not set. Starting from DuckDuckGo/RSS.')
 
     for query in SEARCH_QUERIES:
-        print(f'  Searching ({restrict_days}d): {query}')
-        if use_rss_fallback:
-            items = fetch_from_google_news_rss(query)
-        else:
-            cse_items = fetch_from_google_cse(query, api_key, cse_id, date_restrict_days=restrict_days)
-            if cse_items is None:
-                # None signals a fatal API error; switch to RSS for remaining queries
-                use_rss_fallback = True
-                items = fetch_from_google_news_rss(query)
-            else:
-                items = cse_items
+        print(f'  Searching ({restrict_days}d): {query[:80]}')
+        items, use_google_cse, use_ddgs = _fetch_with_fallback(
+            query, api_key, cse_id, use_google_cse, use_ddgs, restrict_days
+        )
 
         for item in items:
             title = item.get('title', '')
@@ -339,7 +402,9 @@ def fetch_news(existing_urls=None, use_rss_fallback=False, date_restrict_days=No
                 'confidence': '高' if company != '不明' else '中',
             })
 
-    return results, use_rss_fallback
+    # Signal to callers whether Google CSE is still usable
+    rss_fallback_flag = not use_google_cse
+    return results, rss_fallback_flag
 
 
 def fetch_academic_news(existing_urls=None, date_restrict_days=None, use_rss_fallback=False):
@@ -356,20 +421,14 @@ def fetch_academic_news(existing_urls=None, date_restrict_days=None, use_rss_fal
     _existing = existing_urls or set()
     restrict_days = date_restrict_days or DATE_RESTRICT_DAYS
 
-    if not api_key or not cse_id:
-        use_rss_fallback = True
+    use_google_cse = bool(api_key and cse_id) and not use_rss_fallback
+    use_ddgs = _ddgs_available
 
     for query in ACADEMIC_QUERIES:
-        print(f'  [ACADEMIC] Searching ({restrict_days}d): {query}')
-        if use_rss_fallback:
-            items = fetch_from_google_news_rss(query)
-        else:
-            cse_items = fetch_from_google_cse(query, api_key, cse_id, date_restrict_days=restrict_days)
-            if cse_items is None:
-                use_rss_fallback = True
-                items = fetch_from_google_news_rss(query)
-            else:
-                items = cse_items
+        print(f'  [ACADEMIC] Searching ({restrict_days}d): {query[:80]}')
+        items, use_google_cse, use_ddgs = _fetch_with_fallback(
+            query, api_key, cse_id, use_google_cse, use_ddgs, restrict_days
+        )
 
         for item in items:
             title = item.get('title', '')
