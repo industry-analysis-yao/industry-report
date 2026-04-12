@@ -300,11 +300,13 @@ def generate_highlights(items, api_key=None, excluded_urls=None):
     """
     excluded = excluded_urls or set()
     scored = [it for it in items if it.get('score', 0) > 0]
-    # Primary sort: score descending. Tie-breaker: publication date descending.
+    # Primary sort: score descending. Tie-breaker: publication date descending
+    # (most recent first). Both fields reversed together via reverse=True on the
+    # tuple so higher score AND newer date both sort to the front.
     scored.sort(key=lambda x: (x.get('score', 0), x.get('date', '')), reverse=True)
 
-    # Exclude URLs already featured recently; fall back to full list if needed
-    candidates = [it for it in scored if it.get('url', '') not in excluded] if excluded else scored
+    # Exclude URLs already featured recently; fall back to full list if too few remain
+    candidates = [it for it in scored if it.get('url', '') not in excluded]
     if len(candidates) < 3:
         candidates = scored
     top3 = (candidates if candidates else items)[:3]
