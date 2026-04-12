@@ -82,11 +82,15 @@ def _openrouter_generate(prompt):
 # AGENT A — Summarizer
 # ============================================================
 
-def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None):
+def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None, lenient_mode=False):
     """Agent A: Generate a Japanese factual news summary using OpenRouter (DeepSeek V3).
 
     When *retry_feedback* is provided (a string with specific improvement instructions
     from Agent B), it is appended to the prompt so the model can correct the issues.
+
+    When *lenient_mode* is True (activated when today's new-item pool is small), the
+    AI is instructed to lower the relevance bar so that competitor news and short
+    snippets are not discarded unnecessarily.
 
     Returns a 2-tuple: (is_relevant: bool, summary: str | None).
     Returns (False, None) if the model determines the article is off-topic.
@@ -97,11 +101,11 @@ def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None):
     # snippets because brief corporate news items are still high-value intelligence.
     clean_snippet = (snippet or '').strip()
     COMPETITOR_COMPANIES = [
-        'ユニ・チャーム', 'unicharm', '花王', 'p&g', '花王', 'ライオン',
+        'ユニ・チャーム', 'unicharm', '花王', 'p&g', 'ライオン',
         'essity', 'kimberly', 'キンバリー', 'vinda', '维达', 'hengan', '恒安',
     ]
     is_competitor = any(kw in (company or '').lower() for kw in COMPETITOR_COMPANIES)
-    min_snippet_len = 10 if is_competitor else 30
+    min_snippet_len = 10 if (is_competitor or lenient_mode) else 30
     if len(clean_snippet) < min_snippet_len or clean_snippet == title.strip():
         print(f'  [SKIP paywall/no-body] {title[:60]}')
         return False, None
@@ -114,34 +118,45 @@ def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None):
                 f'上記の指摘をすべて改善した新しい要約を作成してください。\n'
             )
 
-        prompt = (
-            'あなたは家庭紙・衛生用品業界の専門記者です。\n\n'
-            '【ステップ1: 関連性チェック】\n'
-            'この記事が「家庭紙・ティッシュ・トイレットペーパー・おむつ・ナプキン・衛生用品・不織布・'
-            '吸収体加工機・包装機・パレタイザー・学術論文・特許」に直接関連する業界ニュースかどうかを判断してください。\n'
-            '洗剤・柔軟剤・シャンプー・化粧品・食品・飲料など、家庭紙／衛生用品と無関係な'
-            'FMCGニュースであれば「IRRELEVANT」とだけ出力してください。\n'
-            '※ ユニ・チャーム・花王・P&G・ライオン・Essity・Kimberly-Clark等の競合他社のニュースは'
-            'スニペットが短くても「IRRELEVANT」にしないでください。競合情報として必ず保持してください。\n\n'
-            '【ステップ2: 要約（関連する場合のみ）】\n'
-            '業界関連ニュースの場合は、本文スニペットを深く読み込み、'
-            '「誰が・いつ・何を・どのように・数値」が明確に伝わる、'
-            '業界関係者向けの日本語ニュースサマリーを80〜150字で作成してください。\n'
-            'スニペットが短い場合は、入手可能な情報を最大限活用して要約を作成してください。\n\n'
-            '【厳禁事項】\n'
-            '・タイトルに含まれる単語・フレーズを要約中で使用することは絶対禁止です。\n'
-            '・本文スニペットから、タイトルに記載されていない具体的な数値・技術仕様・戦略的事実を'
-            '必ず1つ以上抽出して要約に含めてください。\n'
-            '・タイトルの言い換えや単純な要約は不可です。本文から独自の情報を付加してください。\n'
-            + retry_section +
-            '\n【出力例】\n'
-            '「ユニ・チャームは2026年4月1〜3日に普通株式584,800株を取得価額約5.5億円で取得し、'
-            '2月12日決議の自己株式取得を完了した。」\n\n'
-            f'会社名: {company}\n'
-            f'タイトル: {title}\n'
-            f'本文スニペット: {clean_snippet}\n\n'
-            f'出力（「IRRELEVANT」またはサマリー日本語のみ）:'
-        )
+        lenient_section = ''
+        if lenient_mode:
+            lenient_section = (
+                '\n【重要：本日の新規ニュース数が少ないため、関連性判定を通常より緩やかに行ってください】\n'
+                '・競合他社（ユニ・チャーム・花王・P&G・ライオン・Essity・Kimberly-Clark等）のニュースは、'
+                'スニペットが短くても・情報量が少なくても「IRRELEVANT」にしないでください。\n'
+                '・業界関連企業の動向であれば、間接的な情報も保持してください。\n'
+            )
+
+        prompt_parts = [
+            'あなたは家庭紙・衛生用品業界の専門記者です。\n\n',
+            '【ステップ1: 関連性チェック】\n',
+            'この記事が「家庭紙・ティッシュ・トイレットペーパー・おむつ・ナプキン・衛生用品・不織布・',
+            '吸収体加工機・包装機・パレタイザー・学術論文・特許」に直接関連する業界ニュースかどうかを判断してください。\n',
+            '洗剤・柔軟剤・シャンプー・化粧品・食品・飲料など、家庭紙／衛生用品と無関係な',
+            'FMCGニュースであれば「IRRELEVANT」とだけ出力してください。\n',
+            '※ ユニ・チャーム・花王・P&G・ライオン・Essity・Kimberly-Clark等の競合他社のニュースは',
+            'スニペットが短くても「IRRELEVANT」にしないでください。競合情報として必ず保持してください。\n',
+            lenient_section,
+            '\n【ステップ2: 要約（関連する場合のみ）】\n',
+            '業界関連ニュースの場合は、本文スニペットを深く読み込み、',
+            '「誰が・いつ・何を・どのように・数値」が明確に伝わる、',
+            '業界関係者向けの日本語ニュースサマリーを80〜150字で作成してください。\n',
+            'スニペットが短い場合は、入手可能な情報を最大限活用して要約を作成してください。\n\n',
+            '【厳禁事項】\n',
+            '・タイトルに含まれる単語・フレーズを要約中で使用することは絶対禁止です。\n',
+            '・本文スニペットから、タイトルに記載されていない具体的な数値・技術仕様・戦略的事実を',
+            '必ず1つ以上抽出して要約に含めてください。\n',
+            '・タイトルの言い換えや単純な要約は不可です。本文から独自の情報を付加してください。\n',
+            retry_section,
+            '\n【出力例】\n',
+            '「ユニ・チャームは2026年4月1〜3日に普通株式584,800株を取得価額約5.5億円で取得し、',
+            '2月12日決議の自己株式取得を完了した。」\n\n',
+            f'会社名: {company}\n',
+            f'タイトル: {title}\n',
+            f'本文スニペット: {clean_snippet}\n\n',
+            '出力（「IRRELEVANT」またはサマリー日本語のみ）:',
+        ]
+        prompt = ''.join(prompt_parts)
 
         text = _openrouter_generate(prompt)
 
@@ -220,13 +235,16 @@ def audit_item(title, summary, company, api_key=None):
 # DUAL-AGENT PIPELINE WITH RETRY
 # ============================================================
 
-def process_item_with_retry(item, api_key=None):
+def process_item_with_retry(item, api_key=None, lenient_mode=False):
     """Run Agent A (Summarizer) → Agent B (Auditor) pipeline.
 
     For items that score > 80 but fail the formatting check, the item is sent back
     to Agent A with specific feedback.  At most MAX_RETRIES attempts are made.
     High-value items are never discarded due to formatting failures — the best
     result across all attempts is retained.
+
+    When *lenient_mode* is True (small daily pool), Agent A is instructed to lower
+    its relevance threshold so competitor news and short snippets are not dropped.
 
     Mutates *item* in place with updated summary, score, and impact_analysis.
     Returns True if item is relevant, False if it should be removed.
@@ -244,7 +262,7 @@ def process_item_with_retry(item, api_key=None):
 
     for attempt in range(MAX_RETRIES):
         is_relevant, new_summary = ai_summarize(
-            title, snippet, company, retry_feedback=feedback
+            title, snippet, company, retry_feedback=feedback, lenient_mode=lenient_mode
         )
         if not is_relevant:
             return False
@@ -464,6 +482,22 @@ def main():
     updated = 0
     irrelevant_indices = []
 
+    # Count items that still need AI scoring (new items without a score yet).
+    # If today's new pool is small (< 15 unscored items), activate lenient mode so
+    # the AI doesn't aggressively discard competitor / short-snippet articles.
+    LENIENT_THRESHOLD = 15
+    unscored = [
+        it for it in data
+        if not ((it.get('score') or 0) > 0 and it.get('impact_analysis'))
+        and strip_html(it.get('summary', '')) != 'AI Summary Pending'
+    ]
+    lenient_mode = len(unscored) < LENIENT_THRESHOLD
+    if lenient_mode:
+        print(
+            f'[LENIENT-MODE] Only {len(unscored)} new items to score — '
+            f'lowering AI relevance threshold to avoid empty categories.'
+        )
+
     idx = 0
     while idx < len(data):
         item = data[idx]
@@ -494,7 +528,7 @@ def main():
             idx += 1
             continue
 
-        is_relevant = process_item_with_retry(item)
+        is_relevant = process_item_with_retry(item, lenient_mode=lenient_mode)
 
         if not is_relevant:
             irrelevant_indices.append(idx)
