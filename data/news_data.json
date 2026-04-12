@@ -1,8 +1,18 @@
 {
-  "last_updated": "2026-04-11T22:07:28Z",
+  "last_updated": "2026-04-12T11:36:46Z",
   "highlights": [
     {
       "rank": 1,
+      "title": "猛暑化する夏のフェムケア対策。「超涼感」で快適の『ソフィ クール』シリーズを拡充して期間限定発売 - unicharm.co.jp",
+      "company": "不明",
+      "category": "ティッシュペーパー・家庭紙専業メーカー / 其他",
+      "date": "2026-04-12",
+      "impact": "ユニ・チャームの冷却機能ナプキンは、猛暑化する夏に向けたニーズを捉えた強力な競合品。当社「エリス」も同等以上の涼感技術開発と投入時期の前倒しを急ぐべし。素材、構造、冷却成分の多角的なR&Dが必須。",
+      "score": 94,
+      "is_patent": false
+    },
+    {
+      "rank": 2,
       "title": "新聞を縮小し「家庭用品」へシフト 日本製紙が工場増設で八代市と立地協定 熊本 - TBS NEWS DIG",
       "company": "日本製紙",
       "category": "製紙・パルプメーカー / 其他",
@@ -12,22 +22,12 @@
       "is_patent": false
     },
     {
-      "rank": 2,
+      "rank": 3,
       "title": "ベビー用おむつ市場は、プレミアム衛生用品の革新、スマート吸収技術、持続可能な製造の勢いに牽引され、2033年までに957億1860万米ドルへと急成長すると予測されている - newscast.jp",
       "company": "不明",
       "category": "日用品・衛生用品メーカー / 其他",
       "date": "2026-04-10",
       "impact": "大王製紙はスマート吸収技術（特許戦略必須）と持続可能な製造プロセス（再生材料50％以上）の開発を急ぐべき。アジア市場向けにプレミアム生分解性おむつとIoT機能の統合で競合優位を確立し、設備投資を前倒しする必要がある。",
-      "score": 92,
-      "is_patent": false
-    },
-    {
-      "rank": 3,
-      "title": "ビール製造技術でおむつ革命｜ZymoChemが世界初の100%生分解性超吸収ポリマーを商業化 - innovaTopia",
-      "company": "不明",
-      "category": "日用品・衛生用品メーカー / 其他",
-      "date": "2026-04-10",
-      "impact": "ZymoChemの生分解性SAPは大王製紙のおむつ事業に重大な脅威。吸収性能40g/gは競合優位性を喪失させる可能性が高く、即座に微生物発酵技術の共同開発またはライセンス取得を検討すべき。特許出願中の製造プロセス（CO2削減60%）はESG対応製品開発の遅れを露呈するため、緊急対応が必要。",
       "score": 92,
       "is_patent": false
     }
@@ -532,76 +532,6 @@
         "impact_analysis": "大王製紙の紙おむつ技術開発に直結する規制変化。フタル酸エステル代替素材の先行開発が急務となり、競合他社より早く対応できれば市場優位性を確立可能。VOC低減技術の特許出願を加速すべき戦略的機会。"
       },
       {
-        "title": "P&G、店舗で参加できる「おむつ回収プロジェクト」を開始 - 日本経済新聞",
-        "summary": "P&Gは店頭回収プログラムを開始し、使用済みおむつを専用ボックスで回収する環境配慮型プロジェクトを推進。同社のサステナビリティ戦略の一環として、廃棄物削減とリサイクル促進を目的に実施。回収したおむつは専門処理施設で分解され、吸収体素材などの再資源化が図られる。日本の家庭ごみの約4-6%を占めるおむつ廃棄物問題への対応として注目される取り組み。（98字）",
-        "company": "P&G",
-        "date": "2026-04-10",
-        "category_id": "①",
-        "category_name": "日用品・衛生用品メーカー",
-        "info_type": "其他",
-        "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE52Tl9ILTh4UFh0T3ZONE9qOXBkOVhSbHlzM3JvTmo0WlU1NHlaNjJ2aUNPM2ZHQVRDOVVERXduX2h6Ty1kOTVoZTNCNk8wRUJmTUZKS2gyVEk2Z2tYcW5JVnItQWk3RzEtQWJPYg?oc=5",
-        "source_name": "日本経済新聞",
-        "confidence": "高",
-        "score": 78,
-        "impact_analysis": "P&Gのサステナブル戦略は大王製紙の環境対応型おむつ開発に影響。競合の回収インフラ構築は自社のリサイクル技術開発加速が必要。特に吸収体素材の特許戦略見直しが急務。"
-      },
-      {
-        "title": "ティッシュ ランキング／2～4月はカミ商事「エルモア ピコティシュー」が1位 - 流通ニュース",
-        "summary": "カミ商事の「エルモア ピコティシュー」が2023年2～4月期のティッシュ市場で販売数量1位を獲得した。同製品は0.03mmの極薄設計ながら強度を両立した不織布技術が特徴で、期間中のシェアは前年同期比1.2ポイント増の18.5%を記録。コンビニチャネルでの売上増が牽引要因と分析されている。",
-        "company": "カミ商事",
-        "date": "2026-04-10",
-        "category_id": "⑥",
-        "category_name": "ティッシュペーパー・家庭紙専業メーカー",
-        "info_type": "其他",
-        "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9FQ3ZySXkwYVpXN3VsQ292ckpxUW5UTHJXazFZUXNDckZ2dXpaUmE4ZFliUkdMYVlPeWgwRTY5ZTNFT3NwX2w3WUZuaVU1Z0xlU2JRaTFhQ3I?oc=5",
-        "source_name": "流通ニュース",
-        "confidence": "高",
-        "score": 78,
-        "impact_analysis": "カミ商事の極薄不織布技術は大王製紙のティッシュ製品開発に直接的な競合脅威。コンビニチャネル戦略と18.5%シェアの数値は市場分析の重要指標。0.03mm厚の技術特性を分解評価し、自社の超薄型ティッシュ開発ロードマップを再検討必要。"
-      },
-      {
-        "title": "ティッシュペーパー／2～4月、カミ商事「エルモア ピコティシュー」が1位 - 流通ニュース",
-        "summary": "カミ商事の「エルモア ピコティシュー」が2023年2～4月期のティッシュペーパー市場で販売数量1位を獲得した。同製品は超極薄タイプながら強度を両立した不織布構造が特徴で、前年同期比3.2%の売上増を記録。コンビニチャネルでのシェア拡大が牽引要因と分析される。（98字）",
-        "company": "カミ商事",
-        "date": "2026-04-10",
-        "category_id": "⑥",
-        "category_name": "ティッシュペーパー・家庭紙専業メーカー",
-        "info_type": "其他",
-        "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9DNGdyNUdtNHZhLWNXVlNicVNPaWx6UHZTOUNlZW11QTRoSkJaTkxUV0ZSRUR0ZHRwSnJUaUtMRGFnZXJWc1oyQjhWa2JDakRkbWc?oc=5",
-        "source_name": "流通ニュース",
-        "confidence": "高",
-        "score": 78,
-        "impact_analysis": "競合の超極薄ティッシュ技術は大王製紙の研究開発に緊急対応を要する。不織布構造の特許分析とコンビニチャネル戦略の見直しが必要。市場シェア変動を継続監視し、自社製品の強度/薄さのバランス改善を優先すべき。"
-      },
-      {
-        "title": "大王製紙、トイレットペーパーなど紙製品10%以上値上げ 4月から - 日本経済新聞",
-        "summary": "大王製紙は2024年4月より、トイレットペーパーを含む家庭紙製品の価格を10%以上引き上げることを決定した。原料のパルプ価格高騰やエネルギーコストの上昇が主な要因で、同社の家庭紙事業における2023年度の営業利益率が前年度比3.2ポイント減の5.8%まで圧迫されていたことが背景にある。今回の値上げは2021年以来3年ぶりの大規模改定となる。",
-        "company": "大王製紙",
-        "date": "2026-04-10",
-        "category_id": "②",
-        "category_name": "製紙・パルプメーカー",
-        "info_type": "規制",
-        "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB4WnkzTDZoMm9Bbm9IVjR3UE95cWdZelYybWJUMmhmd2o4b0J6UHoyWHRBQkJhb0Q3b0ppS2tmdkM0TzFLVkVxYUZnbUJPZ3NTcHpxTjMyamFzVF9NNUFDYUlwQ3QyZXozUmU5Uw?oc=5",
-        "source_name": "日本経済新聞",
-        "confidence": "高",
-        "score": 78,
-        "impact_analysis": "原料コスト高騰に対応した価格改定は競合他社にも波及する可能性が高く、大王製紙の収益改善に直結する。ただし、値上げによる市場シェア変動リスクを考慮し、高付加価値製品開発や製造効率化で差別化を図る必要がある。営業利益率の具体的数値は戦略評価の信頼性を高める。"
-      },
-      {
-        "title": "大人用おむつが売れ始めたインド 10年後、高齢者2億人超えに - 朝日新聞",
-        "summary": "サマリー: インド市場で大人用おむつ需要が拡大しており、高齢化の進行に伴い2034年までに高齢者人口が2億人を突破する見込み。現地企業は吸収体技術を改良した低価格製品を展開し、都市部を中心に市場浸透を加速。農村部向けには小分け包装で価格障壁を低減する戦略を推進中だ。",
-        "company": "不明",
-        "date": "2026-04-10",
-        "category_id": "①",
-        "category_name": "日用品・衛生用品メーカー",
-        "info_type": "其他",
-        "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE43OUlUbEtQSy1jcE11cEpDaVVkbWI1RzY4MGtCZjFISlVKMDZETEdBYVRpbWNhNG1Xa2txSkZsRnE0NEFxWjhjVG9Lb2NwclE1d1JrQllfRXVXVUVwemJWOEtkdmpNU3M?oc=5",
-        "source_name": "朝日新聞",
-        "confidence": "中",
-        "score": 78,
-        "impact_analysis": "インド市場の大人用おむつ需要拡大は、大王製紙の高吸収体技術と生産設備の輸出機会。競合の低価格戦略に対抗するため、現地企業との技術提携か吸収体素材のコストダウン開発が急務。農村部向け包装技術のノウハウ蓄積が競争優位性を決定する。"
-      },
-      {
         "title": "瑞光[6279]：新たな事業の開始に関するお知らせ 2024年10月3日(適時開示) ：日経会社情報DIGITAL - 日本経済新聞",
         "summary": "AI Summary Pending",
         "company": "瑞光",
@@ -642,6 +572,78 @@
         "confidence": "中",
         "score": 0,
         "impact_analysis": ""
+      }
+    ],
+    "2026-04-12": [
+      {
+        "title": "猛暑化する夏のフェムケア対策。「超涼感」で快適の『ソフィ クール』シリーズを拡充して期間限定発売 - unicharm.co.jp",
+        "summary": "ユニ・チャームは2024年4月22日より、生理期間の不快感軽減を目指し、冷却機能を持つ生理用品を順次出荷する。「超熟睡クール400」を新たにラインアップに加え、「はだきもちクール」はパッケージを刷新。独自の構造で肌温度を**-2℃低減し5時間持続**させ、ベタつきを**80%抑制**する機能を提供する。",
+        "company": "不明",
+        "date": "2026-04-12",
+        "category_id": "⑥",
+        "category_name": "ティッシュペーパー・家庭紙専業メーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBibGhrTGdrUHQ4QWQ5dmZWVDU3bGZGbW14UWJXZTRYZEVmWUFELWxESDZUUW5kbzcxNk9Ca0VjV0NhMG03dG9RWVlrR29ZVTdEbVMxdF9jdTFRbWR5SWdtNXpQV0QwQk1rZkJWaw?oc=5",
+        "source_name": "unicharm.co.jp",
+        "confidence": "中",
+        "score": 94,
+        "impact_analysis": "ユニ・チャームの冷却機能ナプキンは、猛暑化する夏に向けたニーズを捉えた強力な競合品。当社「エリス」も同等以上の涼感技術開発と投入時期の前倒しを急ぐべし。素材、構造、冷却成分の多角的なR&Dが必須。"
+      },
+      {
+        "title": "花王、使用済み紙おむつを資源化して活用する 炭素化リサイクルシステムの実証実験を徳島県上勝町で開始 - Kao",
+        "summary": "花王は徳島県上勝町で使用済み紙おむつの炭素化リサイクルシステム実証実験を開始した。同技術は高温処理でおむつを炭素資源に変換するもので、処理能力は1日あたり500kgを想定。2024年度中にリサイクル率80％以上の達成を目指す。実証期間は2025年3月までで、回収した炭素を農業用土壌改良剤として活用する計画だ。",
+        "company": "花王",
+        "date": "2026-04-12",
+        "category_id": "①",
+        "category_name": "日用品・衛生用品メーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTFA4WU9oNVZiT2JlaExUVjNOQW1KMnZpRGRncjBjTDU0RDd4TzV6TGl6a3p2RjZRQ044akdnTHJQQTNuZlFYYzlydGtIV1dnei1ndF84MnpSS3p1VnJ1V3JKckVFLWR0dXBXNEliZkFUbms?oc=5",
+        "source_name": "Kao",
+        "confidence": "高",
+        "score": 85,
+        "impact_analysis": "花王の炭素化リサイクル技術は、大王製紙のおむつ事業に直接的脅威。競合のサーキュラーエコノミー戦略に対抗し、自社でも廃棄物処理技術の開発加速が必要。特に処理能力500kg/日は市場優位性を示す数値であり、特許戦略の見直しが急務。"
+      },
+      {
+        "title": "ユニ・チャーム、「脱製造業」で新興国開拓 4000億円投資 - 日本経済新聞",
+        "summary": "大手生活用品メーカーは、製造業の枠を超えた事業モデルへの変革を進め、成長が見込まれる海外市場での新たな価値創造に約4000億円を投じる方針を示した。",
+        "company": "ユニ・チャーム",
+        "date": "2026-04-12",
+        "category_id": "①",
+        "category_name": "日用品・衛生用品メーカー",
+        "info_type": "投資",
+        "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5mSjk5eTlWM3JDeURmSmRsOVlTWUVmZXlwVG1ic1VhVnQ0ZU5xM0dKSlpONVRTOUxNUlhUTXFlbThnMVRkN3FNbE0zYzd6Q2hvZndnNXFkTUxzRmt2cU5YY3J0WTZfc0h3SGl4RA?oc=5",
+        "source_name": "日本経済新聞",
+        "confidence": "高",
+        "score": 79,
+        "impact_analysis": "ユニ・チャームの4000億円投資は、新興国での事業モデル変革を示唆。当社R&Dは製品技術に加え、サプライチェーン、顧客体験、サービス提供まで視野に入れた、より広範な技術戦略を練る必要がある。競合の具体的な投資内訳と展開を徹底分析し、当社の技術的優位性を再構築せねばならない。"
+      },
+      {
+        "title": "パンパース、「おむつ回収プロジェクト」を4月中旬に開始。神戸市内8カ所に回収ボックスを設置 - Circular Economy Hub",
+        "summary": "サマリー:\nP&Gの紙おむつブランド「パンパース」は2023年4月中旬より神戸市と連携し、使用済みおむつのリサイクル実証実験を開始。同市内8ヶ所に専用回収ボックスを設置し、回収後は高温滅菌処理を経てプラスチック原料として再生する循環システムを構築。年間約400トンの使用済みおむつ処理を見込み、自治体との協業モデル確立を目指す。",
+        "company": "不明",
+        "date": "2026-04-12",
+        "category_id": "①",
+        "category_name": "日用品・衛生用品メーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE50WmUydVZqcUxiNm5BVU9xaUxLOUZBSGhsWWxtdG1DeDZFSk1Za0FfdktzU1JZWHR1YVl2ZS1ONkc1UVhpbUpUQTFnNGJGNmZqZ2ZwN2tIR2ZzTGVqOEFB?oc=5",
+        "source_name": "Circular Economy Hub",
+        "confidence": "中",
+        "score": 78,
+        "impact_analysis": "大王製紙の紙おむつ技術開発に直接的な競合インパクト。P&Gの循環型ビジネスモデルは特許戦略上要注意（高温滅菌技術・自治体連携ノウハウ）。400トン規模の実証データは自社のサステナブル素材開発に応用可能。"
+      },
+      {
+        "title": "コドモン、P&Gジャパン合同会社と連携開始 12月7日(火)より、コドモン利用施設に対しパンパースの保育施設向けおむつの定額使い放題サービス「すくすくサブスク™プログラム」を連携開始 - newscast.jp",
+        "summary": "コドモンは2023年12月7日より、P&Gジャパンと提携し保育施設向けおむつ定額サービス「すくすくサブスク™プログラム」を開始した。P&Gのパンパースブランド製品を、コドモンが運営する保育施設管理システムを利用する施設に提供する新たなビジネスモデルで、施設の備品管理負担軽減が期待される。同プログラムでは使い放題形式でおむつを供給し、保育現場の業務効率化を図る。（要約字数：100字）",
+        "company": "P&G",
+        "date": "2026-04-12",
+        "category_id": "①",
+        "category_name": "日用品・衛生用品メーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMiR0FVX3lxTFBNcXozcjUyQkpSQnpzYWxqVkljR1pEQnNFMUdmYlJCOHdKeFFlWTdFUzlDWkdicU00YV9MbWRoS0JyZ21ETUhV?oc=5",
+        "source_name": "newscast.jp",
+        "confidence": "高",
+        "score": 78,
+        "impact_analysis": "P&Gとの提携は競合他社の新たなビジネスモデルとして注目。大王製紙の保育施設向けおむつ戦略に影響を与える可能性があり、自社のサブスクリプションサービス開発や施設向け販路強化の検討が必要。"
       }
     ]
   },
