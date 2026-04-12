@@ -103,5 +103,37 @@
     "is_academic": true,
     "score": 1,
     "impact_analysis": "特許情報のみで大王製紙のR&D戦略・競合動向・市場影響を評価する具体的要素が皆無。家庭紙/衛生用品関連技術・生産設備革新の記載なし。"
+  },
+  {
+    "title": "JP2014037482A - 溶解パルプ - Google Patents",
+    "summary": "サマリー: 溶解パルプに関する特許JP2014037482Aが公開された。この特許では、溶解パルプの製造方法について詳細に記載されており、特にパルプの溶解過程における温度や圧力の最適化が焦点となっている。これにより、より効率的で品質の高い溶解パルプの製造が可能となることが期待される。家庭紙・衛生用品業界において、原料となるパルプの品質向上は重要な技術進展であり、今後の製品開発に寄与する可能性が高い。",
+    "company": "不明",
+    "date": "2026-04-13",
+    "category_id": "⑦",
+    "category_name": "学術論文・特許情報",
+    "info_type": "其他",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE15Rkxmc2VIWEV5bkZaOTZjVnBpd1RJWWsxZ0tDNFdIUUJRTW9NeG5LQXpOeUNZazA3QjZlTWlYbEdMLTVjNHFRR1NwdVVUMG53Y1NvVDAwYnBNTUtrUHo4?oc=5",
+    "source_name": "Google Patents",
+    "confidence": "中",
+    "is_academic": true,
+    "score": 68,
+    "impact_analysis": "溶解パルプの製造方法の特許公開は、大王製紙の原料調達・品質管理戦略に直接影響。競合が同技術を採用すればコスト優位性が脅かされるため、自社プロセスの見直しかライセンス交渉が必要。家庭紙・衛生用品の原料品質向上は市場競争力強化に直結。"
+  },
+  {
+    "title": "知財散歩道(25) データで見る紙パルプ産業の 特許 について - jstage.jst.go.jp",
+    "summary": "IRRELEVANT\n\n（理由：タイトルとスニペットからは紙パルプ産業の特許に関する一般的な記事と推測され、家庭紙・衛生用品業界に直接関連する具体的な技術・製品・企業動向が確認できないため）",
+    "company": "不明",
+    "date": "2026-04-13",
+    "category_id": "⑦",
+    "category_name": "学術論文・特許情報",
+    "info_type": "特許",
+    "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOSDF0T3Z2YzRyNm5fU3luWFpVN0tFazlwX3NIeThKakhFcFM1cjcwWHpsbkh5NDdyRHgzemxXZzNrYUJmQ29jSFZxUm94OFZHOV9yVl8zYVhlQjR1WWU5YWp3RVZ2LUZISlI3LXlfcERzYjItWGV5b2dKaWI0cGVudWxwQQ?oc=5",
+    "source_name": "jstage.jst.go.jp",
+    "confidence": "中",
+    "is_academic": true,
+    "score": 5,
+    "impact_analysis": "紙パルプ産業全体の特許動向は間接的な参考にはなるが、家庭紙・衛生用品分野の具体的技術動向や競合情報が欠如しており、大王製紙のR&D戦略に直接活用できる情報ではない。競合特許の深堀りが必要。",
+    "permanent_record": true,
+    "category": "patent"
   }
 ]
