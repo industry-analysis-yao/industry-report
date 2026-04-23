@@ -32,19 +32,22 @@ except ImportError:
 # ============================================================
 # 配置常量
 # ============================================================
-DATE_RESTRICT_DAYS = 10            # 基础日期窗口（CSE 用）
-QUOTA_INDUSTRY = 20                # Bucket A 每日上限
-QUOTA_MACHINE = 20                 # Bucket B 每日上限
-QUOTA_ACADEMIC = 5                 # Bucket C 每日上限
-MIN_TOTAL_NEWS = 30                # 每日最少抓取总数（所有 Bucket 合计）
-_SEARCH_DATE_WINDOWS = [10, 20, 30, 60]   # 逐步放宽的窗口（天）
-_HARD_AGE_WINDOWS = [3, 7, 14, 30]        # 对应硬过滤天数（DuckDuckGo/RSS）
+DATE_RESTRICT_DAYS = 10           # Google CSE 基础日期窗口
+QUOTA_INDUSTRY = 20               # Bucket A 每日上限
+QUOTA_MACHINE = 20                # Bucket B 每日上限
+QUOTA_ACADEMIC = 5                # Bucket C 每日上限
+MIN_TOTAL_NEWS = 30               # 每日最少抓取总数（所有Bucket合计）
+
+# 搜索窗口逐步扩大 (天) 和对应的硬过滤天数 (用于 DuckDuckGo/RSS)
+# 索引对应：尝试1: 10天窗口 + 3天硬过滤；尝试2: 20天窗口 + 7天硬过滤；以此类推
+SEARCH_WINDOWS_DAYS = [10, 20, 30, 60]
+HARD_AGE_DAYS = [3, 7, 14, 30]    # 最大30天
 
 _SCRIPT_DIR = os.path.dirname(__file__)
 SEARCH_CONFIG_PATH = os.path.normpath(os.path.join(_SCRIPT_DIR, '..', 'data', 'search_config.json'))
 
 # ============================================================
-# 简化后的搜索查询（使用 | 代替 OR，移除多余括号）
+# 搜索查询（已简化，使用 | 代替 OR）
 # ============================================================
 SEARCH_QUERIES = [
     'ユニ・チャーム ティシュー|おむつ|衛生用品|ナプキン|決算|投資',
@@ -92,39 +95,19 @@ TISSUE_CORE_TERMS = [
 ]
 
 TISSUE_INDUSTRY_COMPANIES = [
-    'ユニ・チャーム', 'unicharm',
-    '大王製紙', '王子製紙', '王子ホールディングス', '日本製紙', '丸富製紙',
-    '瑞光', 'zuiko', 'gdm', 'fameccanica',
-    'winner medical', '稳健', 'essity', 'kimberly-clark', 'kimberly clark',
-    'キンバリー', 'カミ商事',
-    'vinda', '维达', 'hengan', '恒安', '中顺洁柔', 'c&s paper',
+    'ユニ・チャーム', 'unicharm', '大王製紙', '王子製紙', '王子ホールディングス', '日本製紙', '丸富製紙',
+    '瑞光', 'zuiko', 'gdm', 'fameccanica', 'winner medical', '稳健', 'essity', 'kimberly-clark',
+    'キンバリー', 'カミ商事', 'vinda', '维达', 'hengan', '恒安', '中顺洁柔', 'c&s paper',
 ]
 
 OFFTOPIC_TERMS = [
     '洗剤', '柔軟剤', '洗濯洗剤', 'アリエール', 'レノア', 'ボールド', 'ジョイ',
-    'ファブリーズ', '漂白剤', '洗濯槽',
-    'シャンプー', 'リンス', 'コンディショナー', 'ボディソープ',
+    'ファブリーズ', '漂白剤', '洗濯槽', 'シャンプー', 'リンス', 'コンディショナー', 'ボディソープ',
     '化粧品', 'リップ', 'ファンデーション', '美容液', 'スキンケア', '口紅',
     '食品', '飲料', 'コーヒー', 'ビール', '菓子', 'サプリ',
 ]
 
-# ============================================================
-# 辅助函数（保持不变）
-# ============================================================
-def _today_jst():
-    if _PYTZ_AVAILABLE:
-        return datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%Y-%m-%d')
-    return (datetime.now(timezone.utc) + timedelta(hours=9)).strftime('%Y-%m-%d')
-
-def is_industry_relevant(title, snippet):
-    text = (title + ' ' + snippet).lower()
-    has_core = any(term.lower() in text for term in TISSUE_CORE_TERMS)
-    has_company = any(name.lower() in text for name in TISSUE_INDUSTRY_COMPANIES)
-    has_offtopic = any(term.lower() in text for term in OFFTOPIC_TERMS)
-    if has_offtopic and not has_core:
-        return False
-    return has_core or has_company
-
+# 分类映射
 CATEGORY_KEYWORDS = {
     '①': ['ユニ・チャーム', '花王', 'P&G', 'ライオン', 'キンバリー', 'Kimberly', 'Essity',
            '衛生用品', 'おむつ', 'オムツ', 'ナプキン', '生理用', 'Vinda', '维达', 'Hengan', '恒安', '中顺洁柔'],
@@ -135,7 +118,6 @@ CATEGORY_KEYWORDS = {
     '⑥': ['ティシュー', 'ティッシュ', 'トイレット', '家庭紙', '衛生用紙'],
     '⑦': ['jstage', 'patents.google', 'scholar.google', '特許', '論文', '学会', 'jst.go.jp'],
 }
-
 CATEGORY_NAMES = {
     '①': '日用品・衛生用品メーカー',
     '②': '製紙・パルプメーカー',
@@ -150,9 +132,25 @@ KNOWN_COMPANIES = [
     'ユニ・チャーム', '花王', 'P&G Japan', 'P&G', 'ライオン', 'キンバリー・クラーク',
     'Kimberly-Clark', '大王製紙', '王子ホールディングス', '日本製紙', 'Essity',
     '株式会社瑞光（Zuiko）', '瑞光', 'GDM', 'Fameccanica', 'OPTIMA Packaging', 'ファナック',
-    'Winner Medical（稳健医疗）', '丸富製紙', 'カミ商事',
-    'Vinda（维达）', 'Hengan（恒安）', '中顺洁柔', 'C&S Paper',
+    'Winner Medical（稳健医疗）', '丸富製紙', 'カミ商事', 'Vinda（维达）', 'Hengan（恒安）', '中顺洁柔', 'C&S Paper',
 ]
+
+# ============================================================
+# 辅助函数
+# ============================================================
+def _today_jst():
+    if _PYTZ_AVAILABLE:
+        return datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%Y-%m-%d')
+    return (datetime.now(timezone.utc) + timedelta(hours=9)).strftime('%Y-%m-%d')
+
+def is_industry_relevant(title, snippet):
+    text = (title + ' ' + snippet).lower()
+    has_core = any(term.lower() in text for term in TISSUE_CORE_TERMS)
+    has_company = any(name.lower() in text for name in TISSUE_INDUSTRY_COMPANIES)
+    has_offtopic = any(term.lower() in text for term in OFFTOPIC_TERMS)
+    if has_offtopic and not has_core:
+        return False
+    return has_core or has_company
 
 def map_category(text):
     for cat_id, keywords in CATEGORY_KEYWORDS.items():
@@ -190,10 +188,10 @@ def strip_html(text):
     return re.sub(r'<[^>]+>', '', text or '').strip()
 
 # ============================================================
-# 搜索引擎函数（带硬日期过滤，支持 CSE）
+# 搜索引擎（带硬日期过滤）
 # ============================================================
 def fetch_from_google_cse(query, api_key, cse_id, num=10, date_restrict_days=None):
-    """返回列表，如果致命错误（403/429）返回 None，其他错误返回 []"""
+    """返回列表，若致命错误返回 None（触发 fallback）"""
     url = 'https://www.googleapis.com/customsearch/v1'
     restrict = date_restrict_days if date_restrict_days else DATE_RESTRICT_DAYS
     params = {
@@ -209,17 +207,16 @@ def fetch_from_google_cse(query, api_key, cse_id, num=10, date_restrict_days=Non
         resp = requests.get(url, params=params, timeout=15)
         resp.raise_for_status()
         items = resp.json().get('items', [])
-        print(f'  [ENGINE=Google-CSE] {len(items)} results for: {query[:60]}')
+        print(f'  [Google-CSE] {len(items)} results for: {query[:60]}')
         return items
     except requests.exceptions.HTTPError as e:
-        print(f"  [Google-CSE] Error fetching query '{query}': {e}")
+        print(f"  [Google-CSE] Error: {e}")
         fatal = False
         try:
             body = e.response.json()
             err = body.get('error', {})
             code = err.get('code')
-            reason = err.get('errors', [{}])[0].get('reason')
-            print(f"  [Google-CSE] API error {code}: {err.get('message')} (reason: {reason})")
+            print(f"  [Google-CSE] API error {code}: {err.get('message')}")
             if code in (400, 403, 429):
                 print(f'  [Google-CSE] Fatal error {code} — switching to fallback.')
                 fatal = True
@@ -227,12 +224,11 @@ def fetch_from_google_cse(query, api_key, cse_id, num=10, date_restrict_days=Non
             pass
         return None if fatal else []
     except Exception as e:
-        print(f"  [Google-CSE] Error fetching query '{query}': {e}")
+        print(f"  [Google-CSE] Exception: {e}")
         return []
 
 def fetch_from_duckduckgo(query, max_items=15, max_age_days=3):
     if not _ddgs_available:
-        print('  [DuckDuckGo] duckduckgo_search library not available; skipping.')
         return []
     try:
         results = []
@@ -244,7 +240,6 @@ def fetch_from_duckduckgo(query, max_items=15, max_age_days=3):
                     try:
                         pub_date = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
                         if pub_date < cutoff:
-                            print(f'  [DuckDuckGo] Skip old: {r.get("title", "")[:40]} ({pub_date.date()})')
                             continue
                     except Exception:
                         pass
@@ -254,15 +249,14 @@ def fetch_from_duckduckgo(query, max_items=15, max_age_days=3):
                     'snippet': r.get('body', ''),
                     'displayLink': r.get('source', ''),
                 })
-        print(f'  [ENGINE=DuckDuckGo] {len(results)} fresh results (≤{max_age_days}d) for: {query[:60]}')
+        print(f'  [DuckDuckGo] {len(results)} fresh (≤{max_age_days}d) for: {query[:60]}')
         return results
     except Exception as e:
-        print(f"  [DuckDuckGo] Error fetching query '{query}': {e}")
+        print(f"  [DuckDuckGo] Error: {e}")
         return []
 
 def fetch_from_google_news_rss(query, max_items=100, max_age_days=3):
     if not _feedparser_available:
-        print('  [RSS] feedparser not available; skipping RSS fallback.')
         return []
     feed_url = 'https://news.google.com/rss/search?q={}&hl=ja&gl=JP&ceid=JP:ja'.format(
         requests.utils.quote(query)
@@ -276,7 +270,6 @@ def fetch_from_google_news_rss(query, max_items=100, max_age_days=3):
             if published:
                 pub_date = datetime.fromtimestamp(time.mktime(published), tz=timezone.utc)
                 if pub_date < cutoff:
-                    print(f'  [RSS] Skip old: {entry.get("title", "")[:40]} ({pub_date.date()})')
                     continue
             title = entry.get('title', '')
             link = entry.get('link', '')
@@ -289,32 +282,29 @@ def fetch_from_google_news_rss(query, max_items=100, max_age_days=3):
                 'snippet': summary,
                 'displayLink': source,
             })
-        print(f'  [ENGINE=Google-RSS] {len(items)} fresh results (≤{max_age_days}d) for: {query[:60]}')
+        print(f'  [Google-RSS] {len(items)} fresh (≤{max_age_days}d) for: {query[:60]}')
         return items
     except Exception as e:
-        print(f'  [RSS] Fetch error for query \'{query}\': {e}')
+        print(f'  [RSS] Error: {e}')
         return []
 
 def _fetch_with_fallback(query, api_key, cse_id, use_google_cse, use_ddgs, restrict_days, max_age_days):
-    """优先使用 CSE，失败则依次尝试 DDG 和 RSS。返回 (items, use_google_cse, use_ddgs)"""
-    if use_google_cse:
+    if use_google_cse and api_key and cse_id:
         cse_items = fetch_from_google_cse(query, api_key, cse_id, date_restrict_days=restrict_days)
         if cse_items is not None:
             return cse_items, True, use_ddgs
-        print('  [FALLBACK] Google CSE failed; switching to DuckDuckGo for remaining queries.')
+        print('  [FALLBACK] Google CSE failed; switching to DuckDuckGo.')
         use_google_cse = False
-
     if use_ddgs:
         ddg_items = fetch_from_duckduckgo(query, max_age_days=max_age_days)
         if ddg_items:
             return ddg_items, False, True
-        print('  [FALLBACK] DuckDuckGo returned no results; trying Google News RSS.')
-
+        print('  [FALLBACK] DuckDuckGo failed; trying RSS.')
     rss_items = fetch_from_google_news_rss(query, max_age_days=max_age_days)
     return rss_items, False, use_ddgs
 
 # ============================================================
-# 抓取主函数（支持动态窗口和硬过滤）
+# 抓取主函数（行业新闻）
 # ============================================================
 def fetch_news(existing_urls=None, use_rss_fallback=False, date_restrict_days=None, max_age_days=None):
     api_key = os.environ.get('GOOGLE_API_KEY', '')
@@ -324,39 +314,29 @@ def fetch_news(existing_urls=None, use_rss_fallback=False, date_restrict_days=No
     _existing = existing_urls or set()
     restrict_days = date_restrict_days or DATE_RESTRICT_DAYS
     if max_age_days is None:
-        max_age_days = 3   # 默认 3 天硬过滤
-
-    # 如果 CSE 可用且未强制 fallback，则启用
+        max_age_days = 3
     use_google_cse = bool(api_key and cse_id) and not use_rss_fallback
     use_ddgs = _ddgs_available
     if not use_google_cse:
-        print('WARNING: GOOGLE_API_KEY or GOOGLE_CSE_ID not set or CSE disabled. Using DuckDuckGo/RSS only.')
-
+        print('WARNING: Google CSE not available (key missing or fallback forced). Using DuckDuckGo/RSS.')
     for query in SEARCH_QUERIES:
-        print(f'  Searching ({restrict_days}d, hard_age≤{max_age_days}d): {query[:80]}')
+        print(f'  Searching ({restrict_days}d, age≤{max_age_days}d): {query[:80]}')
         items, use_google_cse, use_ddgs = _fetch_with_fallback(
             query, api_key, cse_id, use_google_cse, use_ddgs, restrict_days, max_age_days
         )
-
         for item in items:
             title = item.get('title', '')
             url = item.get('link', '')
             snippet = strip_html(item.get('snippet', ''))
             source_name = item.get('displayLink', '')
-
             if url and url in _existing:
-                print(f'  [SKIP existing] {title[:60]}')
                 continue
-
             if not is_industry_relevant(title, snippet):
-                print(f'  [SKIP non-relevant] {title[:60]}')
                 continue
-
             full_text = title + ' ' + snippet
             category_id, category_name = map_category(full_text)
             company = extract_company(full_text)
             info_type = determine_info_type(full_text)
-
             results.append({
                 'title': title,
                 'summary': snippet,
@@ -369,10 +349,12 @@ def fetch_news(existing_urls=None, use_rss_fallback=False, date_restrict_days=No
                 'source_name': source_name,
                 'confidence': '高' if company != '不明' else '中',
             })
-
     rss_fallback_flag = not use_google_cse
     return results, rss_fallback_flag
 
+# ============================================================
+# 抓取学术/专利新闻
+# ============================================================
 def fetch_academic_news(existing_urls=None, date_restrict_days=None, use_rss_fallback=False, max_age_days=None):
     api_key = os.environ.get('GOOGLE_API_KEY', '')
     cse_id = os.environ.get('GOOGLE_CSE_ID', '')
@@ -382,33 +364,24 @@ def fetch_academic_news(existing_urls=None, date_restrict_days=None, use_rss_fal
     restrict_days = date_restrict_days or DATE_RESTRICT_DAYS
     if max_age_days is None:
         max_age_days = 3
-
     use_google_cse = bool(api_key and cse_id) and not use_rss_fallback
     use_ddgs = _ddgs_available
-
     for query in ACADEMIC_QUERIES:
-        print(f'  [ACADEMIC] Searching ({restrict_days}d, hard_age≤{max_age_days}d): {query[:80]}')
+        print(f'  [ACADEMIC] Searching ({restrict_days}d, age≤{max_age_days}d): {query[:80]}')
         items, use_google_cse, use_ddgs = _fetch_with_fallback(
             query, api_key, cse_id, use_google_cse, use_ddgs, restrict_days, max_age_days
         )
-
         for item in items:
             title = item.get('title', '')
             url = item.get('link', '')
             snippet = strip_html(item.get('snippet', ''))
             source_name = item.get('displayLink', '')
-
             if url and url in _existing:
-                print(f'  [SKIP existing] {title[:60]}')
                 continue
-
             if not is_industry_relevant(title, snippet):
-                print(f'  [SKIP non-relevant] {title[:60]}')
                 continue
-
             company = extract_company(title + ' ' + snippet)
             info_type = determine_info_type(title + ' ' + snippet)
-
             results.append({
                 'title': title,
                 'summary': snippet,
@@ -422,7 +395,6 @@ def fetch_academic_news(existing_urls=None, date_restrict_days=None, use_rss_fal
                 'confidence': '高' if company != '不明' else '中',
                 'is_academic': True,
             })
-
     return results
 
 # ============================================================
@@ -479,7 +451,7 @@ def save_data(path, items, highlights=None, patents=None):
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
 # ============================================================
-# 主入口（包含动态调整抓取直到满足最少新闻数）
+# 主入口：动态调整窗口与硬过滤，确保总数 ≥ MIN_TOTAL_NEWS
 # ============================================================
 if __name__ == '__main__':
     data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'news_data.json')
@@ -494,36 +466,25 @@ if __name__ == '__main__':
     cfg = load_search_config()
     deficit = cfg.get('academic_deficit', 0)
     base_restrict_days = academic_date_restrict(deficit)
-    print(f'Academic deficit from previous runs: {deficit}. Base window: {base_restrict_days}d.')
+    print(f'Academic deficit: {deficit}, base window: {base_restrict_days}d.')
 
-    # 动态调整抓取参数，确保每天至少 MIN_TOTAL_NEWS 条新闻
-    total_appended = 0
-    final_appended_a = final_appended_b = final_appended_c = 0
+    # 收集所有新抓取条目（跨尝试）
+    all_new_items = []
     rss_fallback = False
 
-    # 记录当前已抓取的所有新条目（跨多次重试），用于去重和追加
-    all_new_items = []  # 每个元素是 dict（未分类，未应用配额）
-
-    for idx, (window, hard_age) in enumerate(zip(_SEARCH_DATE_WINDOWS, _HARD_AGE_WINDOWS)):
-        if total_appended >= MIN_TOTAL_NEWS and idx > 0:
-            print(f'Already reached {total_appended} items (≥{MIN_TOTAL_NEWS}), stop expanding.')
-            break
-
-        print(f'\n=== Attempt {idx+1}: date window = {window}d, hard age filter = {hard_age}d ===')
-        restrict_days = min(window, base_restrict_days)  # 实际使用，但 base 可能更大，取最小值？这里直接用 window
-        # 为了保持与 deficit 的一致性，如果 academic 需要更大窗口，则使用 max(window, base_restrict_days)
-        # 但 base_restrict_days 已经包含了 deficit，所以我们直接用 max
-        actual_window = max(window, base_restrict_days) if base_restrict_days > window else window
-        print(f'  Using date_restrict={actual_window}d, hard_age={hard_age}d')
-
-        # 抓取行业新闻（Bucket A+B）
+    for idx, (window, hard_age) in enumerate(zip(SEARCH_WINDOWS_DAYS, HARD_AGE_DAYS)):
+        # 实际使用的窗口 = max(基础窗口, 当前窗口) —— deficit 可能已扩大
+        actual_window = max(window, base_restrict_days)
+        # 硬过滤天数使用当前窗口对应的值（但若 actual_window 很大，硬过滤最大30天）
+        # 注意：hard_age 最大为30，已经满足需求
+        print(f'\n=== Attempt {idx+1}: date window = {actual_window}d, hard age filter = {hard_age}d ===')
+        # 抓取行业新闻
         industry_items, rss_fallback = fetch_news(
             existing_urls=existing_urls,
             use_rss_fallback=rss_fallback,
             date_restrict_days=actual_window,
             max_age_days=hard_age,
         )
-        # 抓取学术新闻（Bucket C）
         academic_items = fetch_academic_news(
             existing_urls=existing_urls,
             date_restrict_days=actual_window,
@@ -531,11 +492,11 @@ if __name__ == '__main__':
             max_age_days=hard_age,
         )
 
-        # 合并本次抓取的新条目（去重基于 url）
+        # 合并去重（本次内部去重）
         seen_this_round = set()
         combined = []
         for item in industry_items + academic_items:
-            u = item.get('url', '')
+            u = item.get('url')
             if u and (u in existing_urls or u in seen_this_round):
                 continue
             if u:
@@ -543,40 +504,36 @@ if __name__ == '__main__':
             combined.append(item)
 
         if not combined:
-            print(f'  No new items found in this attempt.')
+            print('  No new items in this attempt.')
             continue
 
-        # 将本次新条目添加到总列表中（后续统一处理配额和分类）
+        # 将本次新条目添加到总列表，并更新 existing_urls 防止后续重复
         all_new_items.extend(combined)
-        # 更新 existing_urls 防止后续窗口重复抓取相同 URL
         for item in combined:
-            u = item.get('url')
-            if u:
-                existing_urls.add(u)
+            if item.get('url'):
+                existing_urls.add(item['url'])
 
-        # 为了统计总数，临时按桶分类计算数量（不需要精确配额，只用来判断是否达到目标）
-        MACHINE_CATEGORY_IDS = {'③', '④'}
-        MACHINE_KEYWORDS = ['zuiko', '瑞光', 'gdm', 'fameccanica', 'optima', 'fanuc', 'ファナック']
-        def is_machine_item(it):
-            if it.get('category_id') in MACHINE_CATEGORY_IDS:
+        # 统计当前累计总数（粗略分类，仅用于计数）
+        MACHINE_CATS = {'③', '④'}
+        def is_machine(it):
+            if it.get('category_id') in MACHINE_CATS:
                 return True
-            text = (it.get('company', '') + ' ' + it.get('title', '')).lower()
-            return any(kw in text for kw in MACHINE_KEYWORDS)
+            txt = (it.get('company', '') + it.get('title', '')).lower()
+            return any(k in txt for k in ['zuiko', '瑞光', 'gdm', 'fameccanica', 'optima', 'fanuc', 'ファナック'])
+        cnt_a = sum(1 for it in all_new_items if not is_machine(it) and it.get('category_id') != '⑦')
+        cnt_b = sum(1 for it in all_new_items if is_machine(it))
+        cnt_c = sum(1 for it in all_new_items if it.get('category_id') == '⑦' or it.get('is_academic'))
+        total_new = cnt_a + cnt_b + cnt_c
+        print(f'  This round: A={cnt_a}, B={cnt_b}, C={cnt_c}; cumulative total={total_new}')
 
-        bucket_a_new = [it for it in combined if not is_machine_item(it) and it.get('category_id') != '⑦']
-        bucket_b_new = [it for it in combined if is_machine_item(it)]
-        bucket_c_new = [it for it in combined if it.get('category_id') == '⑦' or it.get('is_academic')]
+        if total_new >= MIN_TOTAL_NEWS:
+            print(f'  Reached target {MIN_TOTAL_NEWS} items, stopping further expansion.')
+            break
+    else:
+        print(f'WARNING: Only {total_new} new items fetched, below target {MIN_TOTAL_NEWS}.')
 
-        total_appended = len(bucket_a_new) + len(bucket_b_new) + len(bucket_c_new)
-        print(f'  This round: A={len(bucket_a_new)}, B={len(bucket_b_new)}, C={len(bucket_c_new)}; cumulative total={total_appended}')
-
-    # 如果经过所有窗口仍然不足 MIN_TOTAL_NEWS，打印警告
-    if total_appended < MIN_TOTAL_NEWS:
-        print(f'WARNING: Only fetched {total_appended} new items, below target {MIN_TOTAL_NEWS}.')
-
-    # ===== 以下为原有的配额处理、追加、修剪、保存逻辑 =====
-    # 我们需要基于 all_new_items 重新应用配额（因为配额是按天计算的，且不能超过每个桶的上限）
-    # 首先计算今天已经存在的各桶数量
+    # ===== 以下为原有的配额处理、跨桶填充、修剪、保存逻辑 =====
+    # 需要基于 all_new_items 和 existing 数据应用每日配额
     today_str = _today_jst()
     today_existing = [it for it in existing if it.get('date') == today_str]
     today_patents = [it for it in patents if it.get('date') == today_str]
@@ -595,7 +552,7 @@ if __name__ == '__main__':
     cap_b = max(0, QUOTA_MACHINE - existing_b)
     cap_c = max(0, QUOTA_ACADEMIC - existing_c)
 
-    # 对 all_new_items 进行分类并应用配额
+    # 对 all_new_items 分类
     bucket_a_all = [it for it in all_new_items if not is_machine_item(it) and it.get('category_id') != '⑦']
     bucket_b_all = [it for it in all_new_items if is_machine_item(it)]
     bucket_c_all = [it for it in all_new_items if it.get('category_id') == '⑦' or it.get('is_academic')]
