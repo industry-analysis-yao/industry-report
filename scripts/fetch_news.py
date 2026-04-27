@@ -3,6 +3,7 @@ import requests
 from datetime import datetime, timedelta, timezone
 import json
 import os
+import time          # 重要：必须导入 time 模块
 
 try:
     import pytz
@@ -17,12 +18,6 @@ except ImportError:
     _feedparser_available = False
 
 try:
-    from duckduckgo_search import DDGS
-    _ddgs_available = True
-except ImportError:
-    _ddgs_available = False
-
-try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
@@ -31,14 +26,12 @@ except ImportError:
 # ============================================================
 # 配置常量
 # ============================================================
-DATE_RESTRICT_DAYS = 60           # Google CSE 日期窗口（但一般用不到，因为 CSE 失效）
-MAX_AGE_DAYS = 30                 # 硬过滤：只保留最近30天内的新闻
+MAX_AGE_DAYS = 30        # 只保留最近30天内的新闻
 
 _SCRIPT_DIR = os.path.dirname(__file__)
-SEARCH_CONFIG_PATH = os.path.normpath(os.path.join(_SCRIPT_DIR, '..', 'data', 'search_config.json'))
 
 # ============================================================
-# 搜索查询（和之前一样）
+# 搜索查询（使用 | 代替 OR）
 # ============================================================
 SEARCH_QUERIES = [
     'ユニ・チャーム ティシュー|おむつ|衛生用品|ナプキン|決算|投資',
@@ -76,7 +69,7 @@ ACADEMIC_QUERIES = [
 ]
 
 # ============================================================
-# 相关性过滤关键词（不变）
+# 相关性过滤关键词（保持不变）
 # ============================================================
 TISSUE_CORE_TERMS = [
     '家庭紙', 'ティシュー', 'ティッシュ', 'トイレット', 'ちり紙', 'キッチンペーパー',
@@ -179,7 +172,7 @@ def strip_html(text):
     return re.sub(r'<[^>]+>', '', text or '').strip()
 
 # ============================================================
-# 抓取函数（仅 RSS，因为 Google CSE 和 DuckDuckGo 都失效）
+# RSS 抓取函数（带日期过滤）
 # ============================================================
 def fetch_from_google_news_rss(query, max_items=100, max_age_days=MAX_AGE_DAYS):
     if not _feedparser_available:
@@ -192,7 +185,6 @@ def fetch_from_google_news_rss(query, max_items=100, max_age_days=MAX_AGE_DAYS):
         items = []
         cutoff = datetime.now(timezone.utc) - timedelta(days=max_age_days)
         for entry in feed.entries[:max_items]:
-            # 日期过滤
             published = entry.get('published_parsed')
             if published:
                 pub_date = datetime.fromtimestamp(time.mktime(published), tz=timezone.utc)
@@ -216,7 +208,6 @@ def fetch_from_google_news_rss(query, max_items=100, max_age_days=MAX_AGE_DAYS):
         return []
 
 def fetch_news(existing_urls=None):
-    """直接使用 RSS 抓取，无 fallback"""
     today = _today_jst()
     results = []
     _existing = existing_urls or set()
@@ -318,7 +309,7 @@ def save_data(path, items, highlights=None, patents=None):
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
 # ============================================================
-# 主入口（简化版：一次抓取，直接追加）
+# 主入口
 # ============================================================
 if __name__ == '__main__':
     data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'news_data.json')
@@ -331,12 +322,10 @@ if __name__ == '__main__':
     print(f'Existing items: {len(existing)} regular, {len(patents)} patents')
     print(f'Fetching news (max age = {MAX_AGE_DAYS} days) ...')
 
-    # 抓取行业新闻
     industry_items = fetch_news(existing_urls=existing_urls)
-    # 抓取学术新闻
     academic_items = fetch_academic_news(existing_urls=existing_urls)
 
-    # 合并去重（基于 URL）
+    # 合并去重
     all_new = []
     seen_urls = set()
     for item in industry_items + academic_items:
@@ -348,7 +337,6 @@ if __name__ == '__main__':
         seen_urls.add(u)
         all_new.append(item)
 
-    # 追加到 existing
     appended = 0
     for item in all_new:
         existing.append(item)
