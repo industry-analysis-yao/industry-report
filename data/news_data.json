@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-27T04:12:30Z",
+  "last_updated": "2026-04-27T04:41:24Z",
   "highlights": [
     {
       "rank": 1,
@@ -176,20 +176,6 @@
         "confidence": "中",
         "score": 5,
         "impact_analysis": "マスク製品は大王製紙のコア事業（家庭紙・衛生用品）と直接関連せず、技術的インパクトも限定的。ただし、ユニチャームの吸収体材料開発動向は間接的にモニタリング価値あり。"
-      },
-      {
-        "title": "政府が生理用品支援拡大案を推進する中で、生活用品業界では「半額生理用品」の発売が続いている。 - 매일경제",
-        "summary": "IRRELEVANT  \n\n（理由：タイトルとスニペットに具体的な企業名・製品技術・数値がなく、家庭紙・衛生用品業界に特化した情報が含まれていないため）",
-        "company": "不明",
-        "date": "2026-04-27",
-        "category_id": "①",
-        "category_name": "日用品・衛生用品メーカー",
-        "info_type": "其他",
-        "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1wWkpyZUNsYzNtSC1sS1o4WlY0NkJqZDJxX2s1enNpbDFvd1B2MDVJUGxSTmtld0FLZlI0SUhjT1Q3Z1BDdFRqXzhZUkd0eWFTV1BB?oc=5",
-        "source_name": "매일경제",
-        "confidence": "中",
-        "score": 10,
-        "impact_analysis": "政府の生理用品支援拡大案は市場規模拡大の可能性を示唆するが、大王製紙のR&D戦略に直接的な影響を与える具体的な技術・製品情報が欠如している。競合他社の動向や自社技術へのインパクトを評価できない。"
       },
       {
         "title": "『ライフリー お肌に低刺激であんしん尿とりパッド』を新発売 ～世界初※1の技術でお肌のこすれを30％※2低減 - unicharm.co.jp",
@@ -512,6 +498,20 @@
         "confidence": "中",
         "score": 28,
         "impact_analysis": "生理用品提供プロジェクトは市場需要の可視化に寄与するが、大王製紙の直接的なR&D戦略へのインパクトは限定的。競合他社の社会的貢献活動としての動向把握は必要だが、技術開発・特許戦略への影響は見込めない。"
+      },
+      {
+        "title": "超高齢社会における新しい動物福祉モデル 「アニドネ シニア for シニア基金」の設立を支援-ユニ・チャーム - unicharm.co.jp",
+        "summary": "IRRELEVANT  \n\n（注：提供されたスニペットの内容は「動物福祉モデル」に関するものであり、家庭紙・衛生用品業界（ティッシュ、おむつ、ナプキン等）や関連製造技術とは直接の関連性が認められないため）",
+        "company": "ユニ・チャーム",
+        "date": "2026-04-27",
+        "category_id": "①",
+        "category_name": "日用品・衛生用品メーカー",
+        "info_type": "其他",
+        "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9LQjVmdWxBaTRHLWNaVVhIdHFsV1pPUXU1VTg4RUZQSTR3eUFyRUtvaURXNGQtYXp1WWRJcHVqOEVpRU9SZ1hCZkFsa084TmJZQ1RPSTFiODI4b215eVdEMGFCRFIxeERLek94bg?oc=5",
+        "source_name": "unicharm.co.jp",
+        "confidence": "高",
+        "score": 5,
+        "impact_analysis": "動物福祉モデルは大王製紙のコア事業（家庭紙・衛生材料）と技術開発に直接関連せず、R&D戦略への影響は限定的。業界構造変化や競合優位性への波及効果も見込めない。"
       }
     ],
     "2026-04-23": [
