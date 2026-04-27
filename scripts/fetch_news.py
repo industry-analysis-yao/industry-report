@@ -26,68 +26,50 @@ except ImportError:
 # ============================================================
 # 配置常量
 # ============================================================
-MAX_AGE_DAYS = 50          # 放宽到50天（保留相对较新的新闻，后续AI会评分）
+MAX_AGE_DAYS = 50               # 普通新闻放宽到50天
+PATENT_MAX_AGE_DAYS = 30        # 专利严格限制30天
 
 _SCRIPT_DIR = os.path.dirname(__file__)
 
 # ============================================================
-# 拆分后的搜索查询（避免使用 |，每条查询短而精准）
+# 拆分后的搜索查询（普通行业 + 设备专项）
 # ============================================================
-SEARCH_QUERIES = [
+SEARCH_QUERIES_GENERAL = [
     # ユニ・チャーム
-    'ユニ・チャーム 決算',
-    'ユニ・チャーム 投資',
-    'ユニ・チャーム 新製品',
-    'ユニ・チャーム ティシュー',
-    'ユニ・チャーム おむつ',
-    'ユニ・チャーム 衛生用品',
-    'ユニ・チャーム ナプキン',
+    'ユニ・チャーム 決算', 'ユニ・チャーム 投資', 'ユニ・チャーム 新製品',
+    'ユニ・チャーム ティシュー', 'ユニ・チャーム おむつ', 'ユニ・チャーム 衛生用品', 'ユニ・チャーム ナプキン',
     # 花王
-    '花王 決算',
-    '花王 投資',
-    '花王 研究開発',
-    '花王 ティシュー',
-    '花王 おむつ',
-    '花王 衛生用品',
-    '花王 家庭紙',
+    '花王 決算', '花王 投資', '花王 研究開発', '花王 ティシュー', '花王 おむつ', '花王 衛生用品', '花王 家庭紙',
     # P&G Japan
-    'P&G Japan おむつ',
-    'P&G Japan ナプキン',
-    'P&G Japan ティシュー',
-    'P&G Japan 衛生用品',
+    'P&G Japan おむつ', 'P&G Japan ナプキン', 'P&G Japan ティシュー', 'P&G Japan 衛生用品',
     # ライオン
-    'ライオン トイレット',
-    'ライオン 衛生用品',
-    'ライオン 新製品',
-    'ライオン 投資',
+    'ライオン トイレット', 'ライオン 衛生用品', 'ライオン 新製品', 'ライオン 投資',
     # 製紙会社
-    '大王製紙 家庭紙',
-    '王子ホールディングス トイレット',
-    '日本製紙 家庭紙',
-    '丸富製紙 ティシュー',
-    'カミ商事 ティシュー',
+    '大王製紙 家庭紙', '王子ホールディングス トイレット', '日本製紙 家庭紙', '丸富製紙 ティシュー', 'カミ商事 ティシュー',
     # 国際企業
-    'Essity 衛生用品',
-    'Kimberly-Clark おむつ',
+    'Essity 衛生用品', 'Kimberly-Clark おむつ',
     # 業界全般
-    '家庭紙 トイレットペーパー 規制',
-    '家庭紙 値上げ',
-    'おむつ 技術 素材',
-    'オムツ 不織布 吸収体',
-    'ナプキン 生理用品 技術',
-    '生理用品 環境 サステナ',
-    'ウェットティッシュ 市場',
-    '不織布 製造 加工機',
+    '家庭紙 トイレットペーパー 規制', '家庭紙 値上げ',
+    'おむつ 技術 素材', 'オムツ 不織布 吸収体',
+    'ナプキン 生理用品 技術', '生理用品 環境 サステナ',
+    'ウェットティッシュ 市場', '不織布 製造 加工機',
     # 中国企業
-    'Vinda ティシュー',
-    'Hengan おむつ',
-    '中顺洁柔 家庭紙',
-    # 機械メーカー
-    '瑞光 加工機',
-    'GDM 吸収体 加工機',
-    'OPTIMA 包装機',
-    'ファナック パレタイザー',
+    'Vinda ティシュー', 'Hengan おむつ', '中顺洁柔 家庭紙',
 ]
+
+# 专项解决设备新闻缺失
+SEARCH_QUERIES_MACHINE = [
+    '加工機 包装機 衛生用品',
+    '不織布 製造 設備',
+    '吸収体 加工機 技術',
+    'パレタイザー 自動化 包装',
+    'ファナック パレタイザー',
+    '瑞光 加工機',
+    'GDM 吸収体',
+    'OPTIMA 包装機',
+]
+
+SEARCH_QUERIES = SEARCH_QUERIES_GENERAL + SEARCH_QUERIES_MACHINE
 
 ACADEMIC_QUERIES = [
     'site:jstage.jst.go.jp 王子ホールディングス 特許',
@@ -101,13 +83,13 @@ ACADEMIC_QUERIES = [
 ]
 
 # ============================================================
-# 相关性过滤关键词（不变）
+# 相关性过滤关键词
 # ============================================================
 TISSUE_CORE_TERMS = [
     '家庭紙', 'ティシュー', 'ティッシュ', 'トイレット', 'ちり紙', 'キッチンペーパー',
     'おむつ', 'オムツ', 'ナプキン', '生理用', '失禁', '衛生用品', '衛生用紙',
     'ウェットティシュ', 'ウェットティッシュ', '不織布', '吸収体', 'パルプ',
-    '抽紙', '衛生紙',
+    '抽紙', '衛生紙', '加工機', '包装機', 'パレタイザー',
 ]
 
 TISSUE_INDUSTRY_COMPANIES = [
@@ -123,12 +105,14 @@ OFFTOPIC_TERMS = [
     '食品', '飲料', 'コーヒー', 'ビール', '菓子', 'サプリ',
 ]
 
+# ============================================================
+# 分类映射（修正，保证设备新闻归入正确分类）
+# ============================================================
 CATEGORY_KEYWORDS = {
+    '③': ['加工機', '包装機', 'パレタイザー', '設備', 'マシン', 'GDM', 'Fameccanica', '瑞光', 'Zuiko', 'ファナック', 'FANUC', 'OPTIMA'],
     '①': ['ユニ・チャーム', '花王', 'P&G', 'ライオン', 'キンバリー', 'Kimberly', 'Essity',
            '衛生用品', 'おむつ', 'オムツ', 'ナプキン', '生理用', 'Vinda', '维达', 'Hengan', '恒安', '中顺洁柔'],
     '②': ['製紙', 'パルプ', '王子', '日本製紙', 'Essity', '大王製紙'],
-    '③': ['瑞光', 'Zuiko', 'GDM', 'Fameccanica', '加工機', '不織布', '吸収体'],
-    '④': ['OPTIMA', 'ファナック', 'FANUC', '包装機', 'パレタイ', 'ロボット'],
     '⑤': ['ウェット', 'Winner Medical', '稳健'],
     '⑥': ['ティシュー', 'ティッシュ', 'トイレット', '家庭紙', '衛生用紙'],
     '⑦': ['jstage', 'patents.google', 'scholar.google', '特許', '論文', '学会', 'jst.go.jp'],
@@ -138,7 +122,7 @@ CATEGORY_NAMES = {
     '①': '日用品・衛生用品メーカー',
     '②': '製紙・パルプメーカー',
     '③': '不織布・吸収体加工機メーカー',
-    '④': '包装機・パレタイジング設備メーカー',
+    '④': '包装機・パレタイジング設備メーカー',  # 备用
     '⑤': 'ウェットティッシュ製造メーカー',
     '⑥': 'ティッシュペーパー・家庭紙専業メーカー',
     '⑦': '学術論文・特許情報',
@@ -169,10 +153,12 @@ def is_industry_relevant(title, snippet):
     return has_core or has_company
 
 def map_category(text):
+    # 优先匹配设备类，避免误归入其他类
     for cat_id, keywords in CATEGORY_KEYWORDS.items():
         for kw in keywords:
             if kw.lower() in text.lower():
                 return cat_id, CATEGORY_NAMES[cat_id]
+    # 默认归入家庭纸类（避免出现未分类）
     return '⑥', CATEGORY_NAMES['⑥']
 
 def extract_company(text):
@@ -204,7 +190,7 @@ def strip_html(text):
     return re.sub(r'<[^>]+>', '', text or '').strip()
 
 # ============================================================
-# RSS 抓取函数（带日期过滤）
+# RSS 抓取（主源 + 备用源）
 # ============================================================
 def fetch_from_google_news_rss(query, max_items=100, max_age_days=MAX_AGE_DAYS):
     if not _feedparser_available:
@@ -239,6 +225,40 @@ def fetch_from_google_news_rss(query, max_items=100, max_age_days=MAX_AGE_DAYS):
         print(f'  [RSS] Error: {e}')
         return []
 
+def fetch_from_second_rss(query, max_items=100, max_age_days=MAX_AGE_DAYS):
+    """备用 RSS 源，用于补充设备新闻"""
+    if not _feedparser_available:
+        return []
+    # 使用 feed.informer 示例（实际可用任何免费 RSS 聚合器）
+    feed_url = 'https://feed.informer.com/atom/custom/1qgfq6pyjm.atom?q={}'.format(
+        requests.utils.quote(query)
+    )
+    try:
+        feed = feedparser.parse(feed_url)
+        items = []
+        cutoff = datetime.now(timezone.utc) - timedelta(days=max_age_days)
+        for entry in feed.entries[:max_items]:
+            published = entry.get('published_parsed')
+            if published:
+                pub_date = datetime.fromtimestamp(time.mktime(published), tz=timezone.utc)
+                if pub_date < cutoff:
+                    continue
+            title = entry.get('title', '')
+            link = entry.get('link', '')
+            summary = entry.get('summary', '')
+            source = entry.get('source', {}).get('title', '') if isinstance(entry.get('source'), dict) else ''
+            items.append({
+                'title': title,
+                'link': link,
+                'snippet': summary,
+                'displayLink': source,
+            })
+        print(f'  [Backup-RSS] {len(items)} fresh (≤{max_age_days}d) for: {query[:60]}')
+        return items
+    except Exception as e:
+        print(f'  [Backup-RSS] Error: {e}')
+        return []
+
 def fetch_news(existing_urls=None):
     today = _today_jst()
     results = []
@@ -246,6 +266,18 @@ def fetch_news(existing_urls=None):
     for query in SEARCH_QUERIES:
         print(f'  Searching (RSS, age≤{MAX_AGE_DAYS}d): {query[:80]}')
         items = fetch_from_google_news_rss(query, max_age_days=MAX_AGE_DAYS)
+        if len(items) < 3:
+            backup = fetch_from_second_rss(query, max_age_days=MAX_AGE_DAYS)
+            items.extend(backup)
+            # 基于标题+摘要去重
+            seen = set()
+            deduped = []
+            for it in items:
+                key = (it['title'], it['snippet'][:120])
+                if key not in seen:
+                    seen.add(key)
+                    deduped.append(it)
+            items = deduped
         for item in items:
             title = item.get('title', '')
             url = item.get('link', '')
@@ -278,8 +310,8 @@ def fetch_academic_news(existing_urls=None):
     results = []
     _existing = existing_urls or set()
     for query in ACADEMIC_QUERIES:
-        print(f'  [ACADEMIC] Searching (RSS, age≤{MAX_AGE_DAYS}d): {query[:80]}')
-        items = fetch_from_google_news_rss(query, max_age_days=MAX_AGE_DAYS)
+        print(f'  [ACADEMIC] Searching (RSS, age≤{PATENT_MAX_AGE_DAYS}d): {query[:80]}')
+        items = fetch_from_google_news_rss(query, max_age_days=PATENT_MAX_AGE_DAYS)
         for item in items:
             title = item.get('title', '')
             url = item.get('link', '')
@@ -291,6 +323,7 @@ def fetch_academic_news(existing_urls=None):
                 continue
             company = extract_company(title + ' ' + snippet)
             info_type = determine_info_type(title + ' ' + snippet)
+            # 学术内容强制标记为专利/论文分类
             results.append({
                 'title': title,
                 'summary': snippet,
@@ -307,7 +340,7 @@ def fetch_academic_news(existing_urls=None):
     return results
 
 # ============================================================
-# 数据持久化（直接追加）
+# 数据持久化
 # ============================================================
 def load_existing(path):
     if os.path.exists(path):
@@ -352,12 +385,12 @@ if __name__ == '__main__':
     existing_urls.update(item['url'] for item in patents if item.get('url'))
 
     print(f'Existing items: {len(existing)} regular, {len(patents)} patents')
-    print(f'Fetching news (max age = {MAX_AGE_DAYS} days) ...')
+    print(f'Fetching news (general max age = {MAX_AGE_DAYS} days, patent max age = {PATENT_MAX_AGE_DAYS} days) ...')
 
     industry_items = fetch_news(existing_urls=existing_urls)
     academic_items = fetch_academic_news(existing_urls=existing_urls)
 
-    # ===== 去重：基于标题+摘要前120字符（解决转载重复） =====
+    # 去重：标题+摘要前120字符
     def dedupe_by_title_summary(items):
         seen = set()
         deduped = []
@@ -371,7 +404,7 @@ if __name__ == '__main__':
     industry_items = dedupe_by_title_summary(industry_items)
     academic_items = dedupe_by_title_summary(academic_items)
 
-    # 合并并基于 URL 最终去重
+    # 最终合并去重（基于URL）
     all_new = []
     seen_urls = set()
     for item in industry_items + academic_items:
