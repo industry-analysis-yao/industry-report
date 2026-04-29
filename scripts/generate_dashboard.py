@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 修复版本 - GENERATE_DASHBOARD.PY
-包含所有修复：日期过滤、AI验证、动态降分
+包含所有修复：日期过滤、AI验证、动态降分、每日快照生成
 """
 
 import json
@@ -370,11 +370,12 @@ def save_data(path, items, highlights=None, last_updated=None):
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
 # ============================================================
-# Main Entry Point
+# Main Entry Point (修复：添加每日快照、日期索引、永久保险库)
 # ============================================================
 def main():
     data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'news_data.json')
     data_path = os.path.normpath(data_path)
+    data_dir = os.path.dirname(data_path)
 
     jst = pytz.timezone('Asia/Tokyo')
     today = datetime.now(jst).strftime('%Y-%m-%d')
@@ -441,18 +442,22 @@ def main():
         else:
             updated += 1
 
+    # 移除不相关的条目
     data = [it for it in data if it not in irrelevant_items]
+    today_items = [it for it in today_items if it not in irrelevant_items]  # 同步更新
 
+    # 生成今天的高亮（用于主文件和每日快照）
     today_highlights = generate_highlights(
         today_items,
         excluded_urls={h['url'] for h in existing_highlights[-3:]},
         today_str=today
     )
     
+    # 合并所有高亮（保留最近30个）
     all_highlights = existing_highlights + today_highlights
     all_highlights = all_highlights[-30:]
 
-    # Prune old
+    # 修剪超过30天的旧新闻（保留永久专利）
     cutoff = datetime.now(timezone.utc) - timedelta(days=30)
     cutoff_str = cutoff.strftime('%Y-%m-%d')
     kept = []
@@ -465,6 +470,74 @@ def main():
 
     data.sort(key=lambda x: x.get('date', ''), reverse=True)
     save_data(data_path, data, highlights=all_highlights, last_updated=last_updated)
+
+    # ===== 修复：生成每日快照文件 =====
+    today_file = os.path.join(data_dir, f'{today}.json')
+    try:
+        # 重新获取当天的最终项目列表（确保最新）
+        final_today_items = [it for it in data if it.get('date') == today]
+        date_payload = {
+            'date': today,
+            'items': final_today_items,
+            'highlights': today_highlights,
+        }
+        with open(today_file, 'w', encoding='utf-8') as f:
+            json.dump(date_payload, f, ensure_ascii=False, indent=2)
+        print(f'  [DATE-FILE] Wrote {today_file} ({len(final_today_items)} items)')
+    except Exception as e:
+        print(f'  [ERROR] Failed to write date file: {e}')
+
+    # ===== 修复：更新日期索引 =====
+    index_path = os.path.join(data_dir, 'dates_index.json')
+    existing_index = []
+    if os.path.exists(index_path):
+        try:
+            with open(index_path, 'r', encoding='utf-8') as f:
+                existing_index = json.load(f)
+        except Exception:
+            pass
+    unique_dates = set(existing_index)
+    # 从主数据的常规条目中收集所有日期
+    for item in data:
+        if not item.get('permanent_record'):
+            d = item.get('date', '')
+            if d and d != 'unknown':
+                unique_dates.add(d)
+    merged_dates = sorted(unique_dates, reverse=True)
+    try:
+        with open(index_path, 'w', encoding='utf-8') as f:
+            json.dump(merged_dates, f, ensure_ascii=False, indent=2)
+        print(f'  [INDEX] dates_index.json updated: {merged_dates[:5]}{"..." if len(merged_dates) > 5 else ""}')
+    except Exception as e:
+        print(f'  [ERROR] Failed to write dates index: {e}')
+
+    # ===== 修复：更新永久保险库 =====
+    def is_bucket_c(item):
+        return item.get('category_id') == '⑦' or bool(item.get('is_academic'))
+    
+    vault_path = os.path.join(data_dir, 'permanent_vault.json')
+    existing_vault = []
+    if os.path.exists(vault_path):
+        try:
+            with open(vault_path, 'r', encoding='utf-8') as f:
+                existing_vault = json.load(f)
+        except Exception:
+            pass
+    vault_urls = {item.get('url') for item in existing_vault if item.get('url')}
+    new_vault_items = [
+        item for item in final_today_items
+        if is_bucket_c(item) and item.get('url') and item.get('url') not in vault_urls
+    ]
+    if new_vault_items:
+        updated_vault = existing_vault + new_vault_items
+        try:
+            with open(vault_path, 'w', encoding='utf-8') as f:
+                json.dump(updated_vault, f, ensure_ascii=False, indent=2)
+            print(f'  [VAULT] Added {len(new_vault_items)} items to permanent_vault.json (total: {len(updated_vault)})')
+        except Exception as e:
+            print(f'  [ERROR] Failed to write vault: {e}')
+    else:
+        print(f'  [VAULT] No new Bucket C items (existing vault: {len(existing_vault)})')
 
     print(f'[DONE] Updated {updated} items')
 
