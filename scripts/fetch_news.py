@@ -1,520 +1,750 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-修复版本 - FETCHNEWS.PY
-包含所有修复：设备查询、分类逻辑、日期检查
+"""Collect recent, relevant industry news from Google News RSS.
+
+Google News is used only as a discovery feed. The RSS publication timestamp is
+preserved as ``published_at``; ``collected_at`` records when this job saw the
+article. An article without a trustworthy publication timestamp is rejected
+instead of being labelled as today's news.
 """
 
-import re
-import requests
-from datetime import datetime, timedelta, timezone
+from __future__ import annotations
+
+import argparse
+import base64
+import calendar
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import hashlib
+import html
 import json
 import os
+import re
 import time
+import unicodedata
+from difflib import SequenceMatcher
+from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
+from typing import Any, Iterable
+from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 try:
-    import pytz
-    _PYTZ_AVAILABLE = True
-except ImportError:
-    _PYTZ_AVAILABLE = False
+    import requests
+    from bs4 import BeautifulSoup
+except ImportError:  # URL enrichment is optional in unit tests.
+    requests = None
+    BeautifulSoup = None
 
 try:
     import feedparser
-    _feedparser_available = True
-except ImportError:
-    _feedparser_available = False
+except ImportError:  # Unit tests can inject a parser without this dependency.
+    feedparser = None
 
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass
 
-# ============================================================
-# 配置常量
-# ============================================================
-MAX_AGE_DAYS = 50               # 普通新闻放宽到50天
-PATENT_MAX_AGE_DAYS = 30        # 专利严格限制30天
+JST = timezone(timedelta(hours=9))
+MAX_AGE_DAYS = int(os.getenv("NEWS_MAX_AGE_DAYS", "14"))
+PATENT_MAX_AGE_DAYS = int(os.getenv("PATENT_MAX_AGE_DAYS", "30"))
+MAX_ITEMS_PER_QUERY = int(os.getenv("NEWS_MAX_ITEMS_PER_QUERY", "25"))
+MAX_ENRICH_ARTICLES = int(os.getenv("NEWS_MAX_ENRICH_ARTICLES", "30"))
+HTTP_TIMEOUT_SECONDS = int(os.getenv("NEWS_HTTP_TIMEOUT_SECONDS", "15"))
 
-_SCRIPT_DIR = os.path.dirname(__file__)
-
-# ============================================================
-# 增强的搜索查询
-# ============================================================
+# Fewer, broader queries reduce duplicate results and RSS traffic. The
+# ``when:Nd`` clause is appended in build_feed_url(), so Google is asked for
+# recent results before our own strict timestamp check runs.
 SEARCH_QUERIES_GENERAL = [
-    'ユニ・チャーム 決算', 'ユニ・チャーム 投資', 'ユニ・チャーム 新製品',
-    'ユニ・チャーム ティシュー', 'ユニ・チャーム おむつ', 'ユニ・チャーム 衛生用品', 'ユニ・チャーム ナプキン',
-    '花王 決算', '花王 投資', '花王 研究開発', '花王 ティシュー', '花王 おむつ', '花王 衛生用品', '花王 家庭紙',
-    'P&G Japan おむつ', 'P&G Japan ナプキン', 'P&G Japan ティシュー', 'P&G Japan 衛生用品',
-    'ライオン トイレット', 'ライオン 衛生用品', 'ライオン 新製品', 'ライオン 投資',
-    '大王製紙 家庭紙', '王子ホールディングス トイレット', '日本製紙 家庭紙', '丸富製紙 ティシュー', 'カミ商事 ティシュー',
-    'Essity 衛生用品', 'Kimberly-Clark おむつ',
-    '家庭紙 トイレットペーパー 規制', '家庭紙 値上げ', '家庭紙 価格',
-    'おむつ 技術 素材', 'おむつ 新製品 発売',
-    'ナプキン 生理用品 技術', 'ナプキン 新製品', '生理用品 環境 サステナ',
-    'ウェットティッシュ 市場', 'ウェットティッシュ 新製品',
-    '不織布 製造 材料', '不織布 技術 素材',
-    'パルプ 製造 技術', 'パルプ 価格 相場',
-    'Vinda ティシュー', 'Vinda おむつ',
-    'Hengan おむつ', 'Hengan ナプキン',
-    '中顺洁柔 家庭紙', '中顺洁柔 衛生用品',
+    '"ユニ・チャーム" (おむつ OR 生理用品 OR 衛生用品 OR 新製品 OR 決算 OR 投資)',
+    '"花王" (おむつ OR 生理用品 OR 衛生用品 OR 家庭紙 OR 研究開発)',
+    '("P&G Japan" OR "Kimberly-Clark" OR Essity) (diaper OR tissue OR hygiene OR おむつ)',
+    '(大王製紙 OR 王子ホールディングス OR 日本製紙) (家庭紙 OR パルプ OR 衛生用品 OR 投資)',
+    '(Vinda OR Hengan OR 中顺洁柔 OR 维达 OR 恒安) (ティシュー OR おむつ OR 衛生用品)',
+    '(家庭紙 OR トイレットペーパー OR ティシュー) (価格 OR 値上げ OR 規制 OR 市場)',
+    '(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)',
+    '(不織布 OR 吸収体 OR パルプ) (新技術 OR 原料価格 OR 生産設備 OR サステナビリティ)',
+    '(ウェットティッシュ OR ウェットワイプ) (新製品 OR 市場 OR 技術)',
 ]
 
-# 增强的设备查询
 SEARCH_QUERIES_MACHINE = [
-    '瑞光 Zuiko 加工機',
-    'GDM Fameccanica 吸収体',
-    'OPTIMA 包装機',
-    'ファナック FANUC パレタイザー',
-    '加工機 不織布 製造',
-    '加工機 吸収体 製造',
-    '包装機 自動化 衛生用品',
-    'パレタイザー 自動化 包装',
-    'パレタイザー 衛生用品',
-    '衛生用品 製造 設備',
-    '衛生用品 製造 自動化',
-    '不織布 製造 機械',
-    'おむつ 製造 機械',
-    'おむつ 製造 設備',
-    'ナプキン 加工 機械',
-    'ナプキン 製造 技術',
-    '充填機 衛生用品',
-    '全自動包装機 衛生',
-    '産業用ロボット パレタイザー',
-    '包装ライン 衛生用品',
-    '国際不織布会議 2026',
-    'テックスフォーラム 衛生用品',
-    'テックスアシア 2026',
+    '(瑞光 OR Zuiko OR GDM OR Fameccanica) (おむつ OR ナプキン OR 吸収体) (加工機 OR 製造設備)',
+    '(OPTIMA OR FANUC OR ファナック) (衛生用品 OR 不織布) (包装機 OR パレタイザー OR 自動化)',
+    '(衛生用品 OR おむつ OR ナプキン) (製造機械 OR 包装ライン OR パレタイザー)',
+]
+
+ACADEMIC_QUERIES = [
+    'site:patents.google.com (ユニ・チャーム OR 花王 OR 大王製紙 OR 王子製紙) (おむつ OR 吸収体 OR 衛生用品)',
+    'site:jstage.jst.go.jp (家庭紙 OR 衛生用品 OR 不織布 OR 吸収体)',
 ]
 
 SEARCH_QUERIES = SEARCH_QUERIES_GENERAL + SEARCH_QUERIES_MACHINE
 
-ACADEMIC_QUERIES = [
-    'site:jstage.jst.go.jp 王子ホールディングス 特許',
-    'site:jstage.jst.go.jp 日本製紙 特許',
-    'site:jstage.jst.go.jp ユニ・チャーム 特許',
-    'site:jstage.jst.go.jp 花王 特許',
-    'site:patents.google.com 王子ホールディングス 特許',
-    'site:patents.google.com 日本製紙 特許',
-    'site:patents.google.com ユニ・チャーム 特許',
-    'site:patents.google.com 花王 特許',
-]
-
-# ============================================================
-# 修复的分类映射
-# ============================================================
-CATEGORY_KEYWORDS = {
-    '③': [
-        '加工機', '包装機', 'パレタイザー', '設備', 'マシン', 
-        'GDM', 'Fameccanica', '瑞光', 'Zuiko', 'ファナック', 'FANUC', 'OPTIMA',
-        '自動化', 'automation', 'packaging machinery', 'machinery', '機械',
-        '充填機', '産業用ロボット', 'robot',
-    ],
-    '⑥': [
-        'ティシュー', 'ティッシュ', 'トイレット', 'トイレットペーパー',
-        '家庭紙', '衛生用紙', 'ペーパータオル', 'キッチンペーパー', 
-        'ティシューペーパー', 'toilet paper', 'tissue'
-    ],
-    '①': [
-        'ユニ・チャーム', '花王', 'P&G', 'ライオン', 'キンバリー', 'Kimberly', 'Essity',
-        'おむつ', 'オムツ', 'ナプキン', '生理用', '生理用品', 
-        '衛生用品', '衛生ナプキン', '失禁', 'sanitary napkin', 'diaper',
-        'Vinda', '维达', 'Hengan', '恒安', '中顺洁柔'
-    ],
-    '②': ['製紙', 'パルプ', '王子', '日本製紙', '大王製紙', '紙製品'],
-    '⑤': ['ウェット', 'wet tissue', 'Winner Medical', '稳健', 'wet wipe'],
-    '⑦': ['jstage', 'patents.google', 'scholar.google', '特許', '論文', '学会', 'patent', 'thesis'],
-}
-
 CATEGORY_NAMES = {
-    '①': '日用品・衛生用品メーカー',
-    '②': '製紙・パルプメーカー',
-    '③': '不織布・吸収体加工機メーカー',
-    '④': '包装機・パレタイジング設備メーカー',
-    '⑤': 'ウェットティッシュ製造メーカー',
-    '⑥': 'ティッシュペーパー・家庭紙専業メーカー',
-    '⑦': '学術論文・特許情報',
+    "①": "日用品・衛生用品メーカー",
+    "②": "製紙・パルプメーカー",
+    "③": "不織布・吸収体加工機メーカー",
+    "④": "包装機・パレタイジング設備メーカー",
+    "⑤": "ウェットティッシュ製造メーカー",
+    "⑥": "ティッシュペーパー・家庭紙専業メーカー",
+    "⑦": "学術論文・特許情報",
 }
 
 KNOWN_COMPANIES = [
-    'ユニ・チャーム', '花王', 'P&G Japan', 'P&G', 'ライオン', 'キンバリー・クラーク',
-    'Kimberly-Clark', '大王製紙', '王子ホールディングス', '日本製紙', 'Essity',
-    '株式会社瑞光（Zuiko）', '瑞光', 'GDM', 'Fameccanica', 'OPTIMA Packaging', 'ファナック',
-    'Winner Medical（稳健医疗）', '丸富製紙', 'カミ商事', 'Vinda（维达）', 'Hengan（恒安）', '中顺洁柔', 'C&S Paper',
+    "ユニ・チャーム", "花王", "P&G Japan", "P&G", "ライオン",
+    "Kimberly-Clark", "キンバリー・クラーク", "Essity", "大王製紙",
+    "王子ホールディングス", "王子製紙", "日本製紙", "瑞光", "Zuiko",
+    "GDM", "Fameccanica", "OPTIMA", "ファナック", "FANUC", "Vinda",
+    "维达", "Hengan", "恒安", "中顺洁柔", "Winner Medical", "稳健医疗",
 ]
 
-TISSUE_CORE_TERMS = [
-    '家庭紙', 'ティシュー', 'ティッシュ', 'トイレット', 'ちり紙', 'キッチンペーパー',
-    'おむつ', 'オムツ', 'ナプキン', '生理用', '失禁', '衛生用品', '衛生用紙',
-    'ウェットティシュ', 'ウェットティッシュ', '不織布', '吸収体', 'パルプ',
-    '抽紙', '衛生紙', '加工機', '包装機', 'パレタイザー',
+CORE_TERMS = [
+    "家庭紙", "ティシュー", "ティッシュ", "トイレットペーパー", "衛生用紙",
+    "ペーパータオル", "キッチンペーパー", "おむつ", "オムツ", "ナプキン",
+    "生理用品", "月経", "ロリエ", "失禁", "ウェットティッシュ", "ウェットワイプ", "不織布",
+    "吸収体", "パルプ", "衛生用品", "diaper", "tissue", "hygiene",
+    "sanitary napkin", "nonwoven", "absorbent core", "wet wipe",
 ]
 
-TISSUE_INDUSTRY_COMPANIES = [
-    'ユニ・チャーム', 'unicharm', '大王製紙', '王子製紙', '王子ホールディングス', '日本製紙', '丸富製紙',
-    '瑞光', 'zuiko', 'gdm', 'fameccanica', 'winner medical', '稳健', 'essity', 'kimberly-clark',
-    'キンバリー', 'カミ商事', 'vinda', '维达', 'hengan', '恒安', '中顺洁柔', 'c&s paper',
+MACHINE_TERMS = [
+    "加工機", "包装機", "パレタイザー", "製造設備", "製造機械", "包装ライン",
+    "充填機", "産業用ロボット", "自動化", "machinery", "packaging machine",
 ]
 
 OFFTOPIC_TERMS = [
-    '洗剤', '柔軟剤', '洗濯洗剤', 'アリエール', 'レノア', 'ボールド', 'ジョイ',
-    'ファブリーズ', '漂白剤', '洗濯槽', 'シャンプー', 'リンス', 'コンディショナー', 'ボディソープ',
-    '化粧品', 'リップ', 'ファンデーション', '美容液', 'スキンケア', '口紅',
-    '食品', '飲料', 'コーヒー', 'ビール', '菓子', 'サプリ',
+    "洗濯洗剤", "柔軟剤", "シャンプー", "コンディショナー", "ボディソープ",
+    "化粧品", "ファンデーション", "ハミガキ", "歯磨き", "歯ブラシ", "口腔",
+    "ペットフード", "ドッグフード", "キャットフード", "コーヒー", "ビール", "サプリメント",
 ]
 
-# ============================================================
-# 辅助函数
-# ============================================================
-def _today_jst():
-    if _PYTZ_AVAILABLE:
-        return datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%Y-%m-%d')
-    return (datetime.now(timezone.utc) + timedelta(hours=9)).strftime('%Y-%m-%d')
+MARKET_REPORT_SPAM_TERMS = [
+    "市場調査レポートを発表", "市場調査レポート販売", "世界市場予測",
+    "市場規模、シェア、成長", "調査レポートの販売を開始", "2030年までの予測",
+    "2031年までの予測", "2032年までの予測", "2033年までの予測",
+    "おすすめ人気ランキング", "徹底比較", "口コミ・評判",
+]
 
-def is_industry_relevant(title, snippet):
-    text = (title + ' ' + snippet).lower()
-    has_core = any(term.lower() in text for term in TISSUE_CORE_TERMS)
-    has_company = any(name.lower() in text for name in TISSUE_INDUSTRY_COMPANIES)
-    has_offtopic = any(term.lower() in text for term in OFFTOPIC_TERMS)
-    if has_offtopic and not has_core:
-        return False
-    return has_core or has_company
+LOW_TRUST_SOURCES = [
+    "Fortune Business Insights", "Report Ocean", "Research Nester",
+    "Global Information", "Dream News", "NEWSCAST", "newscast.jp",
+    "ドリームニュース", "Spherical Insights", "ねとらぼ", "ウォーカープラス",
+    "LIMO", "au Webポータル",
+]
 
-def map_category(text):
-    """修复的分类逻辑：确保正确优先级"""
-    text_lower = text.lower()
-    
-    # 优先级 1：设备类（③）
-    for kw in CATEGORY_KEYWORDS.get('③', []):
-        if kw.lower() in text_lower:
-            return '③', CATEGORY_NAMES['③']
-    
-    # 优先级 2：ウェット（⑤）
-    for kw in CATEGORY_KEYWORDS.get('⑤', []):
-        if kw.lower() in text_lower:
-            return '⑤', CATEGORY_NAMES['⑤']
-    
-    # 优先级 3：製紙（②）
-    for kw in CATEGORY_KEYWORDS.get('②', []):
-        if kw.lower() in text_lower:
-            return '②', CATEGORY_NAMES['②']
-    
-    # 优先级 4：學術（⑦）
-    for kw in CATEGORY_KEYWORDS.get('⑦', []):
-        if kw.lower() in text_lower:
-            return '⑦', CATEGORY_NAMES['⑦']
-    
-    # 优先级 5：トイレット（⑥），但排除おむつ/ナプキン
-    has_toilet_paper = any(kw.lower() in text_lower for kw in CATEGORY_KEYWORDS.get('⑥', []))
-    has_diaper_or_napkin = any(kw.lower() in text_lower for kw in ['おむつ', 'オムツ', 'ナプキン', '生理用品', 'diaper', 'napkin'])
-    
-    if has_toilet_paper and not has_diaper_or_napkin:
-        return '⑥', CATEGORY_NAMES['⑥']
-    
-    # 优先级 6：衛生用品（①）
-    for kw in CATEGORY_KEYWORDS.get('①', []):
-        if kw.lower() in text_lower:
-            return '①', CATEGORY_NAMES['①']
-    
-    return '①', CATEGORY_NAMES['①']
+CLICKBAIT_TERMS = [
+    "作者に聞く", "おすすめ人気", "口コミ", "ライフスタイル", "収納ボックス",
+    "トイレットペーパーケース", "無印アイテム", "かわいすぎる", "わんちゃん",
+    "前場コメント", "後場コメント", "クロワッサン化", "芯に重ねて",
+]
 
-def extract_company(text):
-    for company in KNOWN_COMPANIES:
-        if company.lower() in text.lower():
-            return company
-    return '不明'
+HIGH_TRUST_SOURCES = [
+    "日本経済新聞", "Reuters", "ロイター", "Bloomberg", "NHK", "共同通信",
+    "時事通信", "日刊工業新聞", "化学工業日報", "日本食糧新聞",
+]
 
-def determine_info_type(text):
-    if any(k in text for k in ['投資', '買収', '出資', 'M&A', '資金', 'acquisition', '決算', '株価']):
-        return '投資'
-    if any(k in text for k in ['特許', 'patent', '知的']):
-        return '特許'
-    if any(k in text for k in ['研究', '論文', '学会', '技術開発', 'research', 'development', 'NEDO']):
-        return '研究開発'
-    if any(k in text for k in ['加工機', 'マシン', '設備', 'machine']):
-        return '加工機技術'
-    if any(k in text for k in ['包装機', 'パッケージ', '充填', 'packaging']):
-        return '包装機技術'
-    if any(k in text for k in ['新製品', '新商品', '新発売', 'new product', 'launch', 'リニューアル']):
-        return '新製品'
-    if any(k in text for k in ['環境', 'エコ', 'サステナ', 'sustainability', 'eco', 'carbon', 'CDP']):
-        return '環境'
-    if any(k in text for k in ['規制', 'law', '法律', 'regulation', '値上げ', '施行']):
-        return '規制'
-    return '其他'
 
-def strip_html(text):
-    return re.sub(r'<[^>]+>', '', text or '').strip()
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
 
-# ============================================================
-# RSS 抓取
-# ============================================================
-def fetch_from_google_news_rss(query, max_items=100, max_age_days=MAX_AGE_DAYS):
-    if not _feedparser_available:
-        return []
-    feed_url = 'https://news.google.com/rss/search?q={}&hl=ja&gl=JP&ceid=JP:ja'.format(
-        requests.utils.quote(query)
-    )
-    try:
-        feed = feedparser.parse(feed_url)
-        items = []
-        cutoff = datetime.now(timezone.utc) - timedelta(days=max_age_days)
-        for entry in feed.entries[:max_items]:
-            published = entry.get('published_parsed')
-            if published:
-                pub_date = datetime.fromtimestamp(time.mktime(published), tz=timezone.utc)
-                if pub_date < cutoff:
-                    continue
-            title = entry.get('title', '')
-            link = entry.get('link', '')
-            summary = entry.get('summary', '')
-            source_info = entry.get('source')
-            source = source_info.get('title', '') if isinstance(source_info, dict) else ''
-            items.append({
-                'title': title,
-                'link': link,
-                'snippet': summary,
-                'displayLink': source,
-            })
-        print(f'  [Google-RSS] {len(items)} fresh (≤{max_age_days}d) for: {query[:60]}')
-        return items
-    except Exception as e:
-        print(f'  [RSS] Error: {e}')
-        return []
 
-# ============================================================
-# 爬虫函数
-# ============================================================
-def fetch_news(existing_urls=None):
-    if not _feedparser_available:
-        return []
-    
-    _existing = existing_urls or set()
-    all_articles = []
-    
-    for query in SEARCH_QUERIES:
-        items = fetch_from_google_news_rss(query)
-        for item in items:
-            url = item.get('link', '')
-            if url and url not in _existing:
-                title = item.get('title', '')
-                snippet = item.get('snippet', '')
-                if is_industry_relevant(title, snippet):
-                    company = extract_company(title + ' ' + snippet)
-                    category_id, category_name = map_category(title + ' ' + snippet)
-                    info_type = determine_info_type(title + ' ' + snippet)
-                    all_articles.append({
-                        'title': title,
-                        'summary': snippet,
-                        'company': company,
-                        'date': _today_jst(),
-                        'category_id': category_id,
-                        'category_name': category_name,
-                        'info_type': info_type,
-                        'url': url,
-                        'source_name': item.get('displayLink', ''),
-                        'confidence': '高' if company != '不明' else '中',
-                    })
-    
-    return all_articles
+def isoformat_utc(value: datetime) -> str:
+    return value.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
-def fetch_academic_news(existing_urls=None, max_age_days=PATENT_MAX_AGE_DAYS):
-    """只保留30天内的专利/学术条目"""
-    if not _feedparser_available:
-        return []
-    
-    _existing = existing_urls or set()
-    results = []
-    today = _today_jst()
-    cutoff = datetime.now(timezone.utc) - timedelta(days=max_age_days)
-    
-    print(f'\n[ACADEMIC FETCH] Strict patent filter: only {max_age_days} days')
-    
-    for source_name, feed_url in [
-        ('J-STAGE', 'https://www.jstage.jst.go.jp/browse/-char/ja'),
-        ('Google Patents', 'https://patents.google.com/?q=tissue OR diaper OR napkin'),
-    ]:
+
+def strip_html(value: str | None) -> str:
+    text = re.sub(r"<[^>]+>", " ", value or "")
+    return re.sub(r"\s+", " ", html.unescape(text)).strip()
+
+
+def normalize_text(value: str | None) -> str:
+    text = unicodedata.normalize("NFKC", value or "").lower()
+    return re.sub(r"[\W_]+", "", text, flags=re.UNICODE)
+
+
+def title_without_source(title: str, source_name: str = "") -> str:
+    cleaned = strip_html(title)
+    if source_name:
+        cleaned = re.sub(rf"\s+(?:-\s*)?{re.escape(source_name)}\s*$", "", cleaned, flags=re.IGNORECASE)
+    return cleaned.strip()
+
+
+def canonicalize_url(url: str) -> str:
+    if not url:
+        return ""
+    parts = urlsplit(url.strip())
+    keep = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True)
+            if not k.lower().startswith("utm_") and k.lower() not in {"fbclid", "gclid"}]
+    path = parts.path.rstrip("/") or "/"
+    return urlunsplit((parts.scheme.lower(), parts.netloc.lower(), path, urlencode(keep), ""))
+
+
+def parse_published_at(entry: Any) -> datetime | None:
+    """Return a timezone-aware UTC timestamp from a feed entry."""
+    for key in ("published_parsed", "updated_parsed", "created_parsed"):
+        parsed = entry.get(key)
+        if parsed:
+            try:
+                return datetime.fromtimestamp(calendar.timegm(parsed), tz=timezone.utc)
+            except (TypeError, ValueError, OverflowError):
+                pass
+    for key in ("published", "updated", "created"):
+        raw = entry.get(key)
+        if not raw:
+            continue
         try:
-            feed = feedparser.parse(feed_url)
-            added = 0
-            skipped_age = 0
-            
-            for entry in feed.entries[:100]:
-                published = entry.get('published_parsed')
-                pub_date_str = None
-                
-                if published:
-                    try:
-                        pub_date = datetime.fromtimestamp(time.mktime(published), tz=timezone.utc)
-                        pub_date_str = pub_date.strftime('%Y-%m-%d')
-                        
-                        if pub_date < cutoff:
-                            skipped_age += 1
-                            continue
-                    except:
-                        pass
-                
-                title = entry.get('title', '')
-                link = entry.get('link', '')
-                snippet = entry.get('summary', '')
-                
-                if not title or not link or link in _existing:
-                    continue
-                if not is_industry_relevant(title, snippet):
-                    continue
-                
-                company = extract_company(title + ' ' + snippet)
-                info_type = determine_info_type(title + ' ' + snippet)
-                
-                results.append({
-                    'title': title,
-                    'summary': snippet,
-                    'company': company,
-                    'date': pub_date_str or today,
-                    'category_id': '⑦',
-                    'category_name': CATEGORY_NAMES['⑦'],
-                    'info_type': info_type or '特許',
-                    'url': link,
-                    'source_name': source_name,
-                    'confidence': '高' if company != '不明' else '中',
-                    'is_academic': True,
-                    'permanent_record': True,
-                })
-                added += 1
-            
-            print(f'  [{source_name}] Added: {added}, Skipped (too old): {skipped_age}')
-        
-        except Exception as e:
-            print(f'  [ERROR] Fetching {source_name}: {e}')
-    
+            parsed = parsedate_to_datetime(raw)
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            return parsed.astimezone(timezone.utc)
+        except (TypeError, ValueError, OverflowError):
+            pass
+    return None
+
+
+def extract_source(entry: Any) -> tuple[str, str]:
+    source = entry.get("source") or {}
+    if isinstance(source, dict):
+        name = strip_html(source.get("title") or source.get("value") or "")
+        url = source.get("href") or source.get("url") or ""
+        return name, canonicalize_url(url)
+    return strip_html(str(source)), ""
+
+
+def extract_company(text: str) -> str:
+    normalized = normalize_text(text)
+    for company in KNOWN_COMPANIES:
+        if normalize_text(company) in normalized:
+            return company
+    return "不明"
+
+
+def determine_info_type(text: str) -> str:
+    lowered = unicodedata.normalize("NFKC", text).lower()
+    checks = [
+        ("特許", ["特許", "patent"]),
+        ("研究開発", ["研究", "論文", "学会", "技術開発", "research", "development"]),
+        ("包装機技術", ["包装機", "包装ライン", "packaging machine", "パレタイザー"]),
+        ("加工機技術", ["加工機", "製造機械", "製造設備", "machinery"]),
+        ("新製品", ["新製品", "新商品", "新発売", "launch", "リニューアル"]),
+        ("投資", ["投資", "買収", "出資", "m&a", "決算", "業績"]),
+        ("環境", ["環境", "サステナ", "リサイクル", "carbon", "eco"]),
+        ("規制", ["規制", "法律", "regulation", "値上げ", "価格改定"]),
+    ]
+    for label, terms in checks:
+        if any(term in lowered for term in terms):
+            return label
+    return "其他"
+
+
+def map_category(text: str, *, academic: bool = False) -> tuple[str, str]:
+    lowered = unicodedata.normalize("NFKC", text).lower()
+    if academic or any(term in lowered for term in ("特許", "論文", "j-stage", "patent")):
+        category = "⑦"
+    elif any(term.lower() in lowered for term in ("包装機", "パレタイザー", "包装ライン", "optima", "fanuc", "ファナック")):
+        category = "④"
+    elif any(term.lower() in lowered for term in ("加工機", "製造機械", "製造設備", "瑞光", "zuiko", "fameccanica", "gdm")):
+        category = "③"
+    elif any(term in lowered for term in ("ウェットティッシュ", "ウェットワイプ", "wet wipe")):
+        category = "⑤"
+    elif any(term in lowered for term in ("パルプ", "製紙", "王子ホールディングス", "日本製紙", "大王製紙")):
+        category = "②"
+    elif any(term in lowered for term in ("トイレットペーパー", "ティシュー", "ティッシュ", "家庭紙")):
+        category = "⑥"
+    else:
+        category = "①"
+    return category, CATEGORY_NAMES[category]
+
+
+def assess_relevance(title: str, snippet: str, source_name: str = "", *, academic: bool = False) -> tuple[bool, list[str]]:
+    text = f"{title} {snippet}"
+    lowered = unicodedata.normalize("NFKC", text).lower()
+    flags: list[str] = []
+    if any(term.lower() in lowered for term in MARKET_REPORT_SPAM_TERMS):
+        return False, ["market_report_spam"]
+    if "市場" in lowered and "レポート" in lowered:
+        return False, ["market_report_spam"]
+    if any(term.lower() in lowered for term in CLICKBAIT_TERMS):
+        return False, ["consumer_or_market_noise"]
+    has_core = any(term.lower() in lowered for term in CORE_TERMS)
+    has_machine = any(term.lower() in lowered for term in MACHINE_TERMS)
+    has_company = extract_company(text) != "不明"
+    has_offtopic = any(term.lower() in lowered for term in OFFTOPIC_TERMS)
+    business_signals = (
+        "決算", "業績", "投資", "買収", "出資", "m&a", "工場", "生産能力",
+        "研究開発", "特許", "中期経営", "事業再編", "提携", "規制", "価格改定",
+    )
+    has_business_signal = any(term in lowered for term in business_signals)
+    if has_offtopic:
+        return False, ["off_topic"]
+    if academic:
+        relevant = (has_core or has_company) and any(k in lowered for k in ("特許", "論文", "patent", "研究"))
+    else:
+        relevant = has_core or has_machine or (has_company and has_business_signal)
+    if not relevant:
+        return False, ["no_industry_signal"]
+    low_trust = any(name.lower() in source_name.lower() for name in LOW_TRUST_SOURCES)
+    if low_trust and ("市場" in lowered or not has_company):
+        return False, ["low_trust_source"]
+    if low_trust:
+        flags.append("low_trust_source")
+    return True, flags
+
+
+def source_confidence(source_name: str, source_url: str, flags: Iterable[str]) -> str:
+    if "low_trust_source" in flags:
+        return "低"
+    host = urlsplit(source_url).netloc.lower()
+    if any(name.lower() in source_name.lower() for name in HIGH_TRUST_SOURCES):
+        return "高"
+    if any(domain in host for domain in (
+        "unicharm.co.jp", "kao.com", "daio-paper.co.jp", "ojiholdings.co.jp",
+        "nipponpapergroup.com", "zuiko.co.jp", "essity.com", "kimberly-clark.com",
+        "jstage.jst.go.jp", "patents.google.com",
+    )):
+        return "高"
+    return "中"
+
+
+def article_fingerprint(item: dict[str, Any]) -> str:
+    title = title_without_source(item.get("title", ""), item.get("source_name", ""))
+    raw = "|".join((normalize_text(title), normalize_text(item.get("source_name", "")), item.get("date", "")))
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:24]
+
+
+def build_feed_url(query: str, max_age_days: int) -> str:
+    dated_query = query if re.search(r"\bwhen:\d+[dhm]\b", query) else f"{query} when:{max_age_days}d"
+    return f"https://news.google.com/rss/search?q={quote(dated_query)}&hl=ja&gl=JP&ceid=JP:ja"
+
+
+def _legacy_google_news_decode(article_id: str) -> str | None:
+    """Decode old Google News IDs that directly contain the source URL."""
+    try:
+        raw = base64.urlsafe_b64decode(article_id + "=" * (-len(article_id) % 4))
+    except (ValueError, TypeError):
+        return None
+    if raw.startswith(b"\x08\x13\x22"):
+        raw = raw[3:]
+    if raw.endswith(b"\xd2\x01\x00"):
+        raw = raw[:-3]
+    if not raw:
+        return None
+    length = raw[0]
+    offset = 1
+    if length >= 0x80 and len(raw) > 1:
+        length = (length & 0x7F) | (raw[1] << 7)
+        offset = 2
+    candidate = raw[offset:offset + length].decode("utf-8", errors="ignore")
+    return candidate if candidate.startswith(("http://", "https://")) else None
+
+
+def _find_external_url(value: Any) -> str | None:
+    if isinstance(value, str):
+        if value.startswith(("http://", "https://")) and "news.google.com" not in value:
+            return value.replace("\\u003d", "=").replace("\\u0026", "&")
+        try:
+            decoded = json.loads(value)
+        except (json.JSONDecodeError, TypeError):
+            return None
+        return _find_external_url(decoded)
+    if isinstance(value, list):
+        for part in value:
+            found = _find_external_url(part)
+            if found:
+                return found
+    if isinstance(value, dict):
+        for part in value.values():
+            found = _find_external_url(part)
+            if found:
+                return found
+    return None
+
+
+def resolve_google_news_url(url: str, *, session: Any = None) -> str:
+    """Best-effort resolution of a Google News RSS URL to the publisher URL.
+
+    Google does not document this redirect protocol, so resolution failure is
+    non-fatal and the original discovery URL remains usable in a browser.
+    """
+    parts = urlsplit(url)
+    if not parts.netloc.endswith("news.google.com") or "/articles/" not in parts.path:
+        return canonicalize_url(url)
+    article_id = parts.path.rsplit("/", 1)[-1]
+    legacy = _legacy_google_news_decode(article_id)
+    if legacy:
+        return canonicalize_url(legacy)
+    if requests is None:
+        return canonicalize_url(url)
+
+    client = session or requests.Session()
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; industry-report/2.0)", "Accept-Language": "ja,en;q=0.8"}
+    try:
+        page = client.get(url, headers=headers, timeout=HTTP_TIMEOUT_SECONDS)
+        page.raise_for_status()
+        timestamp_match = re.search(r'data-n-a-ts="([^"]+)"', page.text)
+        signature_match = re.search(r'data-n-a-sg="([^"]+)"', page.text)
+        if not timestamp_match or not signature_match:
+            return canonicalize_url(url)
+        timestamp = int(timestamp_match.group(1))
+        signature = signature_match.group(1)
+        request_data = [
+            "garturlreq",
+            [["X", "X", ["X", "X"], None, None, 1, 1, "JP:ja", None, 1, None, None, None, None, None, 0, 1],
+             "X", "X", 1, [1, 1, 1], 1, 1, None, 0, 0, None, 0],
+            article_id,
+            timestamp,
+            signature,
+        ]
+        rpc = [[[
+            "Fbv4je", json.dumps(request_data, ensure_ascii=False, separators=(",", ":")), None, "1"
+        ]]]
+        response = client.post(
+            "https://news.google.com/_/DotsSplashUi/data/batchexecute",
+            params={"rpcids": "Fbv4je"},
+            headers={"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8", "Referer": "https://news.google.com/"},
+            data={"f.req": json.dumps(rpc, ensure_ascii=False, separators=(",", ":"))},
+            timeout=HTTP_TIMEOUT_SECONDS,
+        )
+        response.raise_for_status()
+        for line in response.text.splitlines():
+            if not line.startswith("["):
+                continue
+            try:
+                decoded = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            resolved = _find_external_url(decoded)
+            if resolved:
+                return canonicalize_url(resolved)
+    except Exception:
+        pass
+    return canonicalize_url(url)
+
+
+def fetch_article_excerpt(url: str, *, session: Any = None) -> str:
+    """Extract a short factual text excerpt from an accessible publisher page."""
+    if requests is None or BeautifulSoup is None or not url or "news.google.com" in urlsplit(url).netloc:
+        return ""
+    client = session or requests.Session()
+    try:
+        response = client.get(
+            url,
+            headers={"User-Agent": "Mozilla/5.0 (compatible; industry-report/2.0)", "Accept-Language": "ja,en;q=0.8"},
+            timeout=HTTP_TIMEOUT_SECONDS,
+            allow_redirects=True,
+        )
+        response.raise_for_status()
+        if "html" not in response.headers.get("Content-Type", "").lower():
+            return ""
+        if len(response.content) > 3_000_000:
+            return ""
+        # A number of Japanese corporate sites omit charset or are incorrectly
+        # interpreted as ISO-8859-1 by requests. Prefer detected encoding in
+        # those cases to avoid storing mojibake in the dashboard.
+        if not response.encoding or response.encoding.lower() in {"iso-8859-1", "latin-1"}:
+            response.encoding = response.apparent_encoding or "utf-8"
+        soup = BeautifulSoup(response.text, "html.parser")
+        candidates = []
+        for attrs in (
+            {"property": "og:description"}, {"name": "description"},
+            {"name": "twitter:description"},
+        ):
+            tag = soup.find("meta", attrs=attrs)
+            if tag and tag.get("content"):
+                candidates.append(strip_html(tag.get("content")))
+        for unwanted in soup(["script", "style", "nav", "footer", "aside", "form", "noscript"]):
+            unwanted.decompose()
+        container = soup.find("article") or soup.find("main")
+        if container:
+            paragraphs = [strip_html(node.get_text(" ", strip=True)) for node in container.find_all("p")]
+            body = " ".join(part for part in paragraphs if len(part) >= 30)
+            if body:
+                candidates.append(body[:1800])
+        candidates = [text for text in candidates if len(text) >= 60]
+        return max(candidates, key=len)[:1800] if candidates else ""
+    except Exception:
+        return ""
+
+
+def enrich_item(item: dict[str, Any]) -> dict[str, Any]:
+    discovery_url = item.get("url", "")
+    resolved = resolve_google_news_url(discovery_url)
+    flags = set(item.get("quality_flags", []))
+    if resolved and "news.google.com" not in urlsplit(resolved).netloc:
+        item["discovery_url"] = discovery_url
+        item["url"] = resolved
+        flags.discard("aggregator_url")
+        excerpt = fetch_article_excerpt(resolved)
+        if excerpt and normalize_text(excerpt) != normalize_text(item.get("title", "")):
+            item["summary"] = excerpt
+            flags.discard("title_only_summary")
+            item["fulltext_status"] = "excerpt_extracted"
+        else:
+            flags.add("fulltext_unavailable")
+            item["fulltext_status"] = "unavailable"
+    else:
+        flags.add("original_url_unresolved")
+        item["fulltext_status"] = "unavailable"
+    item["quality_flags"] = sorted(flags)
+    item["fingerprint"] = article_fingerprint(item)
+    return item
+
+
+def enrich_items(items: list[dict[str, Any]], limit: int = MAX_ENRICH_ARTICLES) -> list[dict[str, Any]]:
+    if not items or limit <= 0:
+        return items
+    selected = items[:limit]
+    enriched: dict[int, dict[str, Any]] = {}
+    with ThreadPoolExecutor(max_workers=min(5, len(selected))) as executor:
+        futures = {executor.submit(enrich_item, item.copy()): index for index, item in enumerate(selected)}
+        for future in as_completed(futures):
+            index = futures[future]
+            try:
+                enriched[index] = future.result()
+            except Exception:
+                fallback = selected[index]
+                fallback["quality_flags"] = sorted(set(fallback.get("quality_flags", [])) | {"enrichment_error"})
+                enriched[index] = fallback
+    return [enriched.get(index, item) for index, item in enumerate(items)]
+
+
+def fetch_google_news_rss(
+    query: str,
+    *,
+    max_items: int = MAX_ITEMS_PER_QUERY,
+    max_age_days: int = MAX_AGE_DAYS,
+    academic: bool = False,
+    now: datetime | None = None,
+    feed_parser: Any = None,
+) -> list[dict[str, Any]]:
+    parser = feed_parser or feedparser
+    if parser is None:
+        raise RuntimeError("feedparser is not installed; run: pip install -r requirements.txt")
+
+    reference_time = (now or utc_now()).astimezone(timezone.utc)
+    cutoff = reference_time - timedelta(days=max_age_days)
+    feed_url = build_feed_url(query, max_age_days)
+    feed = parser.parse(feed_url, request_headers={"User-Agent": "industry-report/2.0 (+GitHub Actions)"})
+    if getattr(feed, "bozo", False) and not getattr(feed, "entries", []):
+        raise RuntimeError(f"RSS parse failed for query: {query}")
+
+    results: list[dict[str, Any]] = []
+    for entry in list(getattr(feed, "entries", []))[:max_items]:
+        published = parse_published_at(entry)
+        if published is None:
+            continue
+        if published < cutoff or published > reference_time + timedelta(hours=12):
+            continue
+
+        source_name, source_url = extract_source(entry)
+        title = title_without_source(entry.get("title", ""), source_name)
+        if not title:
+            continue
+        raw_summary = strip_html(entry.get("summary") or entry.get("description") or "")
+        summary = title_without_source(raw_summary, source_name)
+        relevant, flags = assess_relevance(title, summary, source_name, academic=academic)
+        if not relevant:
+            continue
+
+        if normalize_text(summary) == normalize_text(title) or len(summary) < 20:
+            summary = title
+            flags.append("title_only_summary")
+
+        discovery_url = canonicalize_url(entry.get("link", ""))
+        if urlsplit(discovery_url).netloc.endswith("news.google.com"):
+            flags.append("aggregator_url")
+
+        text = f"{title} {summary}"
+        company = extract_company(text)
+        category_id, category_name = map_category(text, academic=academic)
+        published_jst = published.astimezone(JST)
+        item = {
+            "title": title,
+            "summary": summary,
+            "company": company,
+            "date": published_jst.strftime("%Y-%m-%d"),
+            "published_at": isoformat_utc(published),
+            "collected_at": isoformat_utc(reference_time),
+            "category_id": category_id,
+            "category_name": category_name,
+            "info_type": "特許" if academic and "特許" in text else determine_info_type(text),
+            "url": discovery_url,
+            "source_name": source_name or urlsplit(source_url).netloc or "Google News",
+            "source_url": source_url,
+            "discovery_provider": "Google News RSS",
+            "discovery_query": query,
+            "confidence": source_confidence(source_name, source_url, flags),
+            "quality_flags": sorted(set(flags)),
+        }
+        if academic:
+            item.update({"is_academic": True, "permanent_record": True})
+        item["fingerprint"] = article_fingerprint(item)
+        results.append(item)
     return results
 
-def clean_old_patents_from_existing(items, max_age_days=30):
-    """清理旧专利"""
-    cutoff = datetime.now(timezone.utc) - timedelta(days=max_age_days)
-    cutoff_str = cutoff.strftime('%Y-%m-%d')
-    
-    kept = []
-    removed = 0
-    
+
+# Backwards-compatible name used by earlier code/tests.
+fetch_from_google_news_rss = fetch_google_news_rss
+
+
+def deduplicate(items: Iterable[dict[str, Any]], existing: Iterable[dict[str, Any]] = ()) -> list[dict[str, Any]]:
+    existing_urls = {canonicalize_url(item.get("url", "")) for item in existing if item.get("url")}
+    existing_fingerprints = {item.get("fingerprint") or article_fingerprint(item) for item in existing}
+    chosen: dict[str, dict[str, Any]] = {}
+    confidence_rank = {"低": 0, "中": 1, "高": 2}
+
+    def quality(item: dict[str, Any]) -> tuple[int, int, int]:
+        return (
+            confidence_rank.get(item.get("confidence", ""), 0),
+            1 if item.get("fulltext_status") == "excerpt_extracted" else 0,
+            len(item.get("summary", "")),
+        )
+
     for item in items:
-        if item.get('permanent_record'):
-            try:
-                item_date_str = item.get('date', '9999-99-99')
-                if item_date_str >= cutoff_str:
-                    kept.append(item)
-                else:
-                    removed += 1
-                    print(f'  [CLEAN-OLD-PATENT] Removed: {item.get("title", "")[:60]} ({item_date_str})')
-            except:
-                kept.append(item)
-        else:
+        url = canonicalize_url(item.get("url", ""))
+        fingerprint = item.get("fingerprint") or article_fingerprint(item)
+        if (url and url in existing_urls) or fingerprint in existing_fingerprints:
+            continue
+        old_key = fingerprint
+        normalized_title = normalize_text(title_without_source(item.get("title", ""), item.get("source_name", "")))
+        for candidate_key, candidate in chosen.items():
+            if candidate.get("date") != item.get("date"):
+                continue
+            candidate_title = normalize_text(title_without_source(candidate.get("title", ""), candidate.get("source_name", "")))
+            if min(len(normalized_title), len(candidate_title)) >= 18 and SequenceMatcher(None, normalized_title, candidate_title).ratio() >= 0.84:
+                old_key = candidate_key
+                break
+        old = chosen.get(old_key)
+        if old is None or quality(item) > quality(old):
+            if old is not None and old_key != fingerprint:
+                chosen.pop(old_key, None)
+            chosen[fingerprint] = item
+    return sorted(chosen.values(), key=lambda item: item.get("published_at", ""), reverse=True)
+
+
+def collect_news(
+    *,
+    query_limit: int | None = None,
+    max_items: int = MAX_ITEMS_PER_QUERY,
+    now: datetime | None = None,
+    feed_parser: Any = None,
+    enrich: bool = True,
+    enrich_limit: int = MAX_ENRICH_ARTICLES,
+) -> tuple[list[dict[str, Any]], list[str]]:
+    jobs = [(query, MAX_AGE_DAYS, False) for query in SEARCH_QUERIES]
+    jobs += [(query, PATENT_MAX_AGE_DAYS, True) for query in ACADEMIC_QUERIES]
+    if query_limit is not None:
+        jobs = jobs[:query_limit]
+    collected: list[dict[str, Any]] = []
+    errors: list[str] = []
+    for index, (query, age, academic) in enumerate(jobs, start=1):
+        try:
+            rows = fetch_google_news_rss(
+                query, max_items=max_items, max_age_days=age, academic=academic,
+                now=now, feed_parser=feed_parser,
+            )
+            collected.extend(rows)
+            print(f"[{index:02d}/{len(jobs):02d}] {len(rows):2d} accepted: {query[:72]}")
+        except Exception as exc:  # One failed feed must not abort the full daily run.
+            message = f"{query}: {exc}"
+            errors.append(message)
+            print(f"[{index:02d}/{len(jobs):02d}] ERROR: {message}")
+        time.sleep(0.1)
+    unique = deduplicate(collected)
+    if enrich:
+        print(f"Enriching up to {min(enrich_limit, len(unique))} unique articles with publisher URLs/text...")
+        unique = enrich_items(unique, limit=enrich_limit)
+        unique = deduplicate(unique)
+    return unique, errors
+
+
+def load_existing(path: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    if not os.path.exists(path):
+        return [], [], []
+    with open(path, "r", encoding="utf-8") as handle:
+        raw = json.load(handle)
+    if isinstance(raw, list):
+        return raw, [], []
+    if "dates" in raw:
+        regular = [item for bucket in raw.get("dates", {}).values() for item in bucket]
+        return regular, raw.get("patents", []), raw.get("highlights", [])
+    return raw.get("items", []), [], raw.get("highlights", [])
+
+
+def prune_items(items: Iterable[dict[str, Any]], *, days: int, now: datetime | None = None) -> list[dict[str, Any]]:
+    cutoff = (now or utc_now()).astimezone(JST).date() - timedelta(days=days)
+    kept = []
+    for item in items:
+        try:
+            item_date = datetime.strptime(item.get("date", ""), "%Y-%m-%d").date()
+        except (TypeError, ValueError):
+            continue
+        if item_date >= cutoff:
             kept.append(item)
-    
-    if removed > 0:
-        print(f'[CLEANUP] Removed {removed} old patents from existing data')
-    
     return kept
 
-# ============================================================
-# 数据持久化
-# ============================================================
-def load_existing(path):
-    if os.path.exists(path):
-        with open(path, 'r', encoding='utf-8') as f:
-            raw = json.load(f)
-        if isinstance(raw, list):
-            return raw, None, [], []
-        if 'dates' in raw:
-            items = []
-            for date_items in raw.get('dates', {}).values():
-                items.extend(date_items)
-            patents = raw.get('patents', [])
-            return items, raw.get('last_updated'), raw.get('highlights', []), patents
-        return raw.get('items', []), raw.get('last_updated'), raw.get('highlights', []), []
-    return [], None, [], []
 
-def save_data(path, items, highlights=None, patents=None):
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    now = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-    dates = {}
-    for item in items:
-        d = item.get('date', 'unknown')
-        dates.setdefault(d, []).append(item)
+def save_data(path: str, regular: list[dict[str, Any]], patents: list[dict[str, Any]], highlights: list[dict[str, Any]]) -> None:
+    dates: dict[str, list[dict[str, Any]]] = {}
+    for item in sorted(regular, key=lambda row: row.get("published_at", row.get("date", "")), reverse=True):
+        dates.setdefault(item["date"], []).append(item)
     payload = {
-        'last_updated': now,
-        'highlights': highlights or [],
-        'dates': dates,
-        'patents': patents or [],
+        "schema_version": 2,
+        "last_updated": isoformat_utc(utc_now()),
+        "highlights": highlights,
+        "dates": dates,
+        "patents": patents,
     }
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    temp_path = f"{path}.tmp"
+    with open(temp_path, "w", encoding="utf-8") as handle:
+        json.dump(payload, handle, ensure_ascii=False, indent=2)
+    os.replace(temp_path, path)
 
-# ============================================================
-# 主入口
-# ============================================================
-if __name__ == '__main__':
-    data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'news_data.json')
-    data_path = os.path.normpath(data_path)
 
-    existing, _, highlights, patents = load_existing(data_path)
-    existing = clean_old_patents_from_existing(existing, max_age_days=PATENT_MAX_AGE_DAYS)
-    
-    existing_urls = {item['url'] for item in existing if item.get('url')}
-    existing_urls.update(item['url'] for item in patents if item.get('url'))
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Fetch recent tissue and hygiene industry news")
+    parser.add_argument("--dry-run", action="store_true", help="fetch and print results without modifying data")
+    parser.add_argument("--query-limit", type=int, default=None, help="run only the first N queries")
+    parser.add_argument("--max-items", type=int, default=MAX_ITEMS_PER_QUERY, help="maximum RSS entries inspected per query")
+    parser.add_argument("--no-enrich", action="store_true", help="skip publisher URL and article excerpt extraction")
+    parser.add_argument("--enrich-limit", type=int, default=MAX_ENRICH_ARTICLES, help="maximum articles enriched per run")
+    parser.add_argument("--json-output", help="write dry-run results to this JSON file")
+    return parser.parse_args()
 
-    print(f'Existing items: {len(existing)} regular, {len(patents)} patents')
-    print(f'Fetching news (general max age = {MAX_AGE_DAYS} days, patent max age = {PATENT_MAX_AGE_DAYS} days) ...')
 
-    industry_items = fetch_news(existing_urls=existing_urls)
-    academic_items = fetch_academic_news(existing_urls=existing_urls)
+def main() -> int:
+    args = parse_args()
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.normpath(os.path.join(script_dir, "..", "data", "news_data.json"))
+    regular, patents, highlights = load_existing(data_path)
+    fresh, errors = collect_news(
+        query_limit=args.query_limit,
+        max_items=args.max_items,
+        enrich=not args.no_enrich,
+        enrich_limit=args.enrich_limit,
+    )
+    fresh = deduplicate(fresh, regular + patents)
 
-    def dedupe_by_title_summary(items):
-        seen = set()
-        deduped = []
-        for it in items:
-            key = (it['title'], it['summary'][:120])
-            if key not in seen:
-                seen.add(key)
-                deduped.append(it)
-        return deduped
+    if args.json_output:
+        output_path = os.path.abspath(args.json_output)
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, "w", encoding="utf-8") as handle:
+            json.dump({"items": fresh, "errors": errors}, handle, ensure_ascii=False, indent=2)
 
-    industry_items = dedupe_by_title_summary(industry_items)
-    academic_items = dedupe_by_title_summary(academic_items)
+    print(f"Accepted {len(fresh)} new unique articles; feed errors: {len(errors)}")
+    for item in fresh[:10]:
+        print(f"  {item['date']} [{item['confidence']}] {item['source_name']}: {item['title'][:90]}")
 
-    all_new = []
-    seen_urls = set()
-    for item in industry_items + academic_items:
-        u = item.get('url')
-        if not u:
-            continue
-        if u in existing_urls or u in seen_urls:
-            continue
-        seen_urls.add(u)
-        all_new.append(item)
+    if args.dry_run:
+        print("Dry run: data/news_data.json was not modified.")
+        return 0 if fresh or not errors else 1
 
-    appended = 0
-    for item in all_new:
-        existing.append(item)
-        appended += 1
-        print(f'  [NEW] {item["title"][:60]}')
+    if errors and not fresh:
+        print("All usable feed results failed; existing data was left unchanged.")
+        return 1
 
-    cutoff = datetime.now(timezone.utc) - timedelta(days=30)
-    cutoff_str = cutoff.strftime('%Y-%m-%d')
-    kept = []
-    for item in existing:
-        if item.get('permanent_record'):
-            kept.append(item)
-        elif item.get('date', '9999-99-99') >= cutoff_str:
-            kept.append(item)
-        else:
-            print(f'  [PRUNED-OLD-NEWS] {item.get("title", "")[:60]} ({item.get("date", "")})')
-    pruned = len(existing) - len(kept)
-    if pruned:
-        print(f'Pruned {pruned} items older than 30 days.')
-    existing = kept
+    new_regular = [item for item in fresh if not item.get("permanent_record")]
+    new_patents = [item for item in fresh if item.get("permanent_record")]
+    regular = prune_items(regular + new_regular, days=30)
+    patents = prune_items(patents + new_patents, days=PATENT_MAX_AGE_DAYS)
+    save_data(data_path, deduplicate(regular), deduplicate(patents), highlights)
+    print(f"Saved {len(regular)} regular articles and {len(patents)} academic/patent articles.")
+    return 0
 
-    existing.sort(key=lambda x: x.get('date', ''), reverse=True)
-    save_data(data_path, existing, highlights=highlights, patents=patents)
 
-    print(f'Appended {appended} new items. Total: {len(existing)} regular + {len(patents)} patents saved to {data_path}')
+if __name__ == "__main__":
+    raise SystemExit(main())

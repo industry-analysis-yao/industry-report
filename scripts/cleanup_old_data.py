@@ -43,6 +43,7 @@ def main():
                 new_dates[date_str] = items
 
         payload = {
+            'schema_version': 2,
             'last_updated': last_updated or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
             'highlights': highlights,
             'dates': new_dates,
@@ -81,6 +82,7 @@ def main():
                 dates_dict.setdefault(d, []).append(item)
 
         payload = {
+            'schema_version': 2,
             'last_updated': last_updated or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
             'highlights': highlights,
             'dates': dates_dict,

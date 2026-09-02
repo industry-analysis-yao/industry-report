@@ -33,8 +33,7 @@ _LENIENT_THRESHOLD_DEFAULT = 15
 # ============================================================
 def filter_old_patents_from_items(items, max_age_days=30):
     """严格过滤超过max_age_days的专利/学术条目"""
-    cutoff = datetime.now(timezone.utc) - timedelta(days=max_age_days)
-    cutoff_date = cutoff.date()
+    today_date = datetime.now(timezone.utc).date()
     
     filtered = []
     removed_count = 0
@@ -58,9 +57,9 @@ def filter_old_patents_from_items(items, max_age_days=30):
         
         try:
             item_date = datetime.strptime(date_str[:10], '%Y-%m-%d').date()
-            days_old = (cutoff_date - item_date).days
+            days_old = (today_date - item_date).days
             
-            if days_old <= 0:
+            if -1 <= days_old <= max_age_days:
                 filtered.append(item)
             else:
                 removed_count += 1
@@ -361,6 +360,7 @@ def save_data(path, items, highlights=None, last_updated=None):
         d = item.get('date', 'unknown')
         dates.setdefault(d, []).append(item)
     payload = {
+        'schema_version': 2,
         'last_updated': last_updated or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
         'highlights': highlights or [],
         'dates': dates,
@@ -377,9 +377,6 @@ def main():
     data_path = os.path.normpath(data_path)
     data_dir = os.path.dirname(data_path)
 
-    jst = pytz.timezone('Asia/Tokyo')
-    today = datetime.now(jst).strftime('%Y-%m-%d')
-    
     data, last_updated, existing_highlights = load_data(data_path)
     if not data:
         print('No data found. Run fetch_news.py first.')
@@ -401,21 +398,28 @@ def main():
             url_map[url] = item
     data = list(url_map.values()) + no_url_items
 
-    # Score today's items
-    today_items = [it for it in data if it.get('date') == today]
-    unscored_today = [
-        it for it in today_items
+    # Score every newly collected item, regardless of its publication day. A
+    # daily run often discovers articles published late on the previous day.
+    # Title-only RSS records are kept for transparency but are not sent to the
+    # model as though the article body had been read.
+    pending_items = [
+        it for it in data
         if not ((it.get('score') or 0) > 0 and it.get('impact_analysis'))
+        and 'title_only_summary' not in it.get('quality_flags', [])
+        and it.get('fulltext_status') != 'unavailable'
     ]
+    max_ai_items = int(os.environ.get('MAX_AI_ITEMS_PER_RUN', '50'))
+    pending_items.sort(key=lambda it: it.get('published_at', it.get('date', '')), reverse=True)
+    pending_items = pending_items[:max_ai_items]
 
-    lenient_mode = len(unscored_today) < _LENIENT_THRESHOLD_DEFAULT
-    if lenient_mode and unscored_today:
-        print(f'[LENIENT-MODE] Only {len(unscored_today)} items — lowering threshold')
+    lenient_mode = len(pending_items) < _LENIENT_THRESHOLD_DEFAULT
+    if lenient_mode and pending_items:
+        print(f'[LENIENT-MODE] Only {len(pending_items)} processable items — lowering threshold')
 
     updated = 0
     irrelevant_items = []
 
-    for item in today_items:
+    for item in pending_items:
         summary = strip_html(item.get('summary', ''))
         if item.get('summary', '') != summary:
             item['summary'] = summary
@@ -444,18 +448,6 @@ def main():
 
     # 移除不相关的条目
     data = [it for it in data if it not in irrelevant_items]
-    today_items = [it for it in today_items if it not in irrelevant_items]  # 同步更新
-
-    # 生成今天的高亮（用于主文件和每日快照）
-    today_highlights = generate_highlights(
-        today_items,
-        excluded_urls={h['url'] for h in existing_highlights[-3:]},
-        today_str=today
-    )
-    
-    # 合并所有高亮（保留最近30个）
-    all_highlights = existing_highlights + today_highlights
-    all_highlights = all_highlights[-30:]
 
     # 修剪超过30天的旧新闻（保留永久专利）
     cutoff = datetime.now(timezone.utc) - timedelta(days=30)
@@ -468,42 +460,37 @@ def main():
             kept.append(item)
     data = kept
 
-    data.sort(key=lambda x: x.get('date', ''), reverse=True)
-    save_data(data_path, data, highlights=all_highlights, last_updated=last_updated)
+    data.sort(key=lambda x: x.get('published_at', x.get('date', '')), reverse=True)
 
-    # ===== 修复：生成每日快照文件 =====
-    today_file = os.path.join(data_dir, f'{today}.json')
-    try:
-        # 重新获取当天的最终项目列表（确保最新）
-        final_today_items = [it for it in data if it.get('date') == today]
-        date_payload = {
-            'date': today,
-            'items': final_today_items,
-            'highlights': today_highlights,
-        }
-        with open(today_file, 'w', encoding='utf-8') as f:
-            json.dump(date_payload, f, ensure_ascii=False, indent=2)
-        print(f'  [DATE-FILE] Wrote {today_file} ({len(final_today_items)} items)')
-    except Exception as e:
-        print(f'  [ERROR] Failed to write date file: {e}')
-
-    # ===== 修复：更新日期索引 =====
-    index_path = os.path.join(data_dir, 'dates_index.json')
-    existing_index = []
-    if os.path.exists(index_path):
-        try:
-            with open(index_path, 'r', encoding='utf-8') as f:
-                existing_index = json.load(f)
-        except Exception:
-            pass
-    unique_dates = set(existing_index)
-    # 从主数据的常规条目中收集所有日期
+    # Build every retained per-publication-date snapshot. This prevents a late
+    # article (published yesterday, collected today) from disappearing because
+    # only today's snapshot was regenerated.
+    date_items = {}
+    patent_items = []
     for item in data:
-        if not item.get('permanent_record'):
-            d = item.get('date', '')
-            if d and d != 'unknown':
-                unique_dates.add(d)
-    merged_dates = sorted(unique_dates, reverse=True)
+        if item.get('permanent_record'):
+            patent_items.append(item)
+        else:
+            date_items.setdefault(item.get('date', 'unknown'), []).append(item)
+
+    date_highlights = {}
+    for date_str, items in date_items.items():
+        items.sort(key=lambda it: (it.get('score', 0), it.get('published_at', '')), reverse=True)
+        date_highlights[date_str] = generate_highlights(items, today_str=date_str)
+        date_file = os.path.join(data_dir, f'{date_str}.json')
+        with open(date_file, 'w', encoding='utf-8') as f:
+            json.dump({'date': date_str, 'items': items, 'highlights': date_highlights[date_str]}, f, ensure_ascii=False, indent=2)
+        print(f'  [DATE-FILE] Wrote {date_file} ({len(items)} items)')
+
+    merged_dates = sorted(date_items.keys(), reverse=True)
+    all_highlights = []
+    for date_str in merged_dates[:10]:
+        all_highlights.extend(date_highlights.get(date_str, []))
+    all_highlights = all_highlights[:30]
+    save_data(data_path, data, highlights=all_highlights, last_updated=None)
+
+    # dates_index contains only snapshots that exist in the retained data.
+    index_path = os.path.join(data_dir, 'dates_index.json')
     try:
         with open(index_path, 'w', encoding='utf-8') as f:
             json.dump(merged_dates, f, ensure_ascii=False, indent=2)
@@ -523,21 +510,17 @@ def main():
                 existing_vault = json.load(f)
         except Exception:
             pass
-    vault_urls = {item.get('url') for item in existing_vault if item.get('url')}
-    new_vault_items = [
-        item for item in final_today_items
-        if is_bucket_c(item) and item.get('url') and item.get('url') not in vault_urls
-    ]
-    if new_vault_items:
-        updated_vault = existing_vault + new_vault_items
-        try:
-            with open(vault_path, 'w', encoding='utf-8') as f:
-                json.dump(updated_vault, f, ensure_ascii=False, indent=2)
-            print(f'  [VAULT] Added {len(new_vault_items)} items to permanent_vault.json (total: {len(updated_vault)})')
-        except Exception as e:
-            print(f'  [ERROR] Failed to write vault: {e}')
-    else:
-        print(f'  [VAULT] No new Bucket C items (existing vault: {len(existing_vault)})')
+    vault_by_url = {item.get('url'): item for item in existing_vault if item.get('url')}
+    for item in patent_items:
+        if is_bucket_c(item) and item.get('url'):
+            vault_by_url[item['url']] = item
+    updated_vault = sorted(vault_by_url.values(), key=lambda it: it.get('published_at', it.get('date', '')), reverse=True)
+    try:
+        with open(vault_path, 'w', encoding='utf-8') as f:
+            json.dump(updated_vault, f, ensure_ascii=False, indent=2)
+        print(f'  [VAULT] Stored {len(updated_vault)} Bucket C items')
+    except Exception as e:
+        print(f'  [ERROR] Failed to write vault: {e}')
 
     print(f'[DONE] Updated {updated} items')
 
