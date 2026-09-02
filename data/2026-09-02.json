@@ -1,0 +1,77 @@
+{
+  "date": "2026-09-02",
+  "items": [
+    {
+      "title": "佐賀市、市役所など4カ所に「生理用品ディスペンサー」を導入 県内自治体で初",
+      "summary": "佐賀市、市役所など4カ所に「生理用品ディスペンサー」を導入 県内自治体で初",
+      "company": "不明",
+      "date": "2026-09-02",
+      "published_at": "2026-09-02T05:00:00Z",
+      "collected_at": "2026-09-02T22:01:28Z",
+      "category_id": "①",
+      "category_name": "日用品・衛生用品メーカー",
+      "info_type": "其他",
+      "url": "http://www.excite.co.jp/news/article/AMP_507433",
+      "source_name": "Excite エキサイト",
+      "source_url": "http://www.excite.co.jp/",
+      "discovery_provider": "Google News RSS",
+      "discovery_query": "(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)",
+      "confidence": "中",
+      "quality_flags": [
+        "fulltext_unavailable",
+        "title_only_summary"
+      ],
+      "fingerprint": "1d70016ce99ec8500eadf3cf",
+      "discovery_url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5qSUtNbThrMUdEc1BWT0wzRmVVZFRFcXI5RVhlWU1oQ2FzRjNCWmZFTXg4cGR3eWl4dG1nZVZwemRCblFOZkRiU0dhRWlaSGFSeUdKd2NHYzJIYmdZ?oc=5",
+      "fulltext_status": "unavailable"
+    },
+    {
+      "title": "生理用品の開発販売 モナカンパニー 「月経ディスク」に新商品 長時間使用が可能に",
+      "summary": "生理用品の開発販売 モナカンパニー 「月経ディスク」に新商品 長時間使用が可能に",
+      "company": "不明",
+      "date": "2026-09-02",
+      "published_at": "2026-09-01T20:14:48Z",
+      "collected_at": "2026-09-02T22:01:28Z",
+      "category_id": "①",
+      "category_name": "日用品・衛生用品メーカー",
+      "info_type": "新製品",
+      "url": "https://www.chukei-news.co.jp/news/2026/09/02/OK0002609020401_01",
+      "source_name": "中部経済新聞",
+      "source_url": "https://www.chukei-news.co.jp/",
+      "discovery_provider": "Google News RSS",
+      "discovery_query": "(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)",
+      "confidence": "中",
+      "quality_flags": [
+        "fulltext_unavailable",
+        "title_only_summary"
+      ],
+      "fingerprint": "e6c816009f4c1013060248af",
+      "discovery_url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE5SaFR0SVg5SUl4QWZ0aVFMbHBSUVZJOUdHTHlJN2hLUkg0ZkZPbUxOcjdfUjQ2QlkxRGFGOTBVX3F6U0x6bUE0dWJCUk1sMGV5TWVmTVRRQ0pseTNjZ3ZwQVhiRld3dWR4Z212SHFxTU9DcHc?oc=5",
+      "fulltext_status": "unavailable"
+    }
+  ],
+  "highlights": [
+    {
+      "rank": 1,
+      "title": "佐賀市、市役所など4カ所に「生理用品ディスペンサー」を導入 県内自治体で初",
+      "url": "http://www.excite.co.jp/news/article/AMP_507433",
+      "company": "不明",
+      "category": "日用品・衛生用品メーカー / 其他",
+      "date": "2026-09-02",
+      "impact": "佐賀市、市役所など4カ所に「生理用品ディスペンサー」を導入 県内自治体で初",
+      "score": 0,
+      "is_patent": false
+    },
+    {
+      "rank": 2,
+      "title": "生理用品の開発販売 モナカンパニー 「月経ディスク」に新商品 長時間使用が可能に",
+      "url": "https://www.chukei-news.co.jp/news/2026/09/02/OK0002609020401_01",
+      "company": "不明",
+      "category": "日用品・衛生用品メーカー / 新製品",
+      "date": "2026-09-02",
+      "impact": "生理用品の開発販売 モナカンパニー 「月経ディスク」に新商品 長時間使用が可能に",
+      "score": 0,
+      "is_patent": false
+    }
+  ]
+}

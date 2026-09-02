@@ -1,0 +1,42 @@
+{
+  "date": "2026-08-30",
+  "items": [
+    {
+      "title": "ユニ・チャーム、ケニア・キベラで月経衛生教育！品川女子学院とUN Womenが協働",
+      "summary": "ユニ・チャーム、ケニア・キベラで月経衛生教育！品川女子学院とUN Womenが協働",
+      "company": "ユニ・チャーム",
+      "date": "2026-08-30",
+      "published_at": "2026-08-29T16:00:00Z",
+      "collected_at": "2026-09-02T22:01:25Z",
+      "category_id": "①",
+      "category_name": "日用品・衛生用品メーカー",
+      "info_type": "其他",
+      "url": "https://afri-quest.com/archives/45474",
+      "source_name": "Africa Quest.com",
+      "source_url": "https://afri-quest.com/",
+      "discovery_provider": "Google News RSS",
+      "discovery_query": "\"ユニ・チャーム\" (おむつ OR 生理用品 OR 衛生用品 OR 新製品 OR 決算 OR 投資)",
+      "confidence": "中",
+      "quality_flags": [
+        "fulltext_unavailable",
+        "title_only_summary"
+      ],
+      "fingerprint": "3873952e19b079e63804d857",
+      "discovery_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE12ckdwODZrMUVQUTRWMlhrMG9faVlSLXRuYmNHLTd0c3pCcEo0bDJPUGZsdFZhNUUwa01tMWlDODNwZ1FXbWNmazBYRjg3dw?oc=5",
+      "fulltext_status": "unavailable"
+    }
+  ],
+  "highlights": [
+    {
+      "rank": 1,
+      "title": "ユニ・チャーム、ケニア・キベラで月経衛生教育！品川女子学院とUN Womenが協働",
+      "url": "https://afri-quest.com/archives/45474",
+      "company": "ユニ・チャーム",
+      "category": "日用品・衛生用品メーカー / 其他",
+      "date": "2026-08-30",
+      "impact": "ユニ・チャーム、ケニア・キベラで月経衛生教育！品川女子学院とUN Womenが協働",
+      "score": 0,
+      "is_patent": false
+    }
+  ]
+}

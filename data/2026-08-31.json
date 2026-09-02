@@ -1,0 +1,89 @@
+{
+  "date": "2026-08-31",
+  "items": [
+    {
+      "title": "0歳児家庭を見守り訪問、おむつやミルクも無償配達 茨城・取手市が9月から県内初の事業（産経新聞）",
+      "summary": "サマリー: 茨城県取手市は9月より、0歳児がいる家庭を月1回訪問し、おむつやミルクなどの子育て用品を無償で届ける「とりでっ子見守りおむつ定期便」を開始する。生活協同組合パルシステム茨城 栃木が受託し、子育て経験者を派遣し、育児相談に応じる。対象は生後5カ月から1歳までで最大8回訪問、月3000円相当の用品を提供する。市内住民で希望者が対象で、所得制限はない。県内初の取り組みとなる。",
+      "company": "不明",
+      "date": "2026-08-31",
+      "published_at": "2026-08-30T23:29:35Z",
+      "collected_at": "2026-09-02T22:01:28Z",
+      "category_id": "①",
+      "category_name": "日用品・衛生用品メーカー",
+      "info_type": "其他",
+      "url": "https://news.yahoo.co.jp/articles/b19567c68c2f0ebc3e79cb2444b4656e06137115",
+      "source_name": "Yahoo!ニュース",
+      "source_url": "https://news.yahoo.co.jp/",
+      "discovery_provider": "Google News RSS",
+      "discovery_query": "(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)",
+      "confidence": "中",
+      "quality_flags": [],
+      "fingerprint": "9199b8f88825ba28a2c80f15",
+      "discovery_url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFA4ZVBEU1RfTkVscEM2bXZGc1J5TEtvRzdoVXZfa0ZXUVJUdWYyMVhCWHllODNpQmdyWUlXSWw0QmhhMjJQdXU1VjhIT0tTcGZ2ZTgyU1NZb1BMdVRUZC1IcWFMTHNFTGlySjZ2bjJ2ZFRtT1ZhYU5MdWlidGt4a00?oc=5",
+      "fulltext_status": "excerpt_extracted",
+      "score": 35,
+      "impact_analysis": "このニュースは、大王製紙のR&D戦略に直接的なインパクトは少ないが、市場・業界構造への影響度として、子育て支援事業の拡大によるおむつ需要の安定化や、地域社会との関わりを強化する可能性がある。情報は具体的で信頼性が高く、緊急性は低いが、将来的に類似事業が他地域でも展開される可能性を考慮すると、一定の戦略的含意がある。"
+    },
+    {
+      "title": "米国でトイレットペーパーが高騰する見通し、カナダとの貿易戦争が影響",
+      "summary": "米国でトイレットペーパーが高騰する見通し、カナダとの貿易戦争が影響",
+      "company": "不明",
+      "date": "2026-08-31",
+      "published_at": "2026-08-31T08:05:35Z",
+      "collected_at": "2026-09-02T22:01:27Z",
+      "category_id": "⑥",
+      "category_name": "ティッシュペーパー・家庭紙専業メーカー",
+      "info_type": "其他",
+      "url": "https://switch-news.com/politics/post-138232",
+      "source_name": "switch-news.com",
+      "source_url": "https://switch-news.com/",
+      "discovery_provider": "Google News RSS",
+      "discovery_query": "(家庭紙 OR トイレットペーパー OR ティシュー) (価格 OR 値上げ OR 規制 OR 市場)",
+      "confidence": "中",
+      "quality_flags": [
+        "fulltext_unavailable",
+        "title_only_summary"
+      ],
+      "fingerprint": "4084d4d56ebac0ceded02577",
+      "discovery_url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5xZF9XRkxxOGdhUEctaW43SnJBUmloNDZFdHZuMTJyOWtLOWp5X1FrSnU5ZDZrRWtvSnkzYmc1ajh5bmZQOW02eUtJbjdLYzVIVjl0R1Nzby0?oc=5",
+      "fulltext_status": "unavailable"
+    },
+    {
+      "title": "ローソン、レジ前「不要レシート」をトイレットペーパーに再生",
+      "summary": "ローソン、レジ前「不要レシート」をトイレットペーパーに再生",
+      "company": "不明",
+      "date": "2026-08-31",
+      "published_at": "2026-08-31T05:04:00Z",
+      "collected_at": "2026-09-02T22:01:27Z",
+      "category_id": "⑥",
+      "category_name": "ティッシュペーパー・家庭紙専業メーカー",
+      "info_type": "其他",
+      "url": "http://www.excite.co.jp/news/article/impress_watch_1467022663166886256",
+      "source_name": "Excite エキサイト",
+      "source_url": "http://www.excite.co.jp/",
+      "discovery_provider": "Google News RSS",
+      "discovery_query": "(家庭紙 OR トイレットペーパー OR ティシュー) (価格 OR 値上げ OR 規制 OR 市場)",
+      "confidence": "中",
+      "quality_flags": [
+        "fulltext_unavailable",
+        "title_only_summary"
+      ],
+      "fingerprint": "76afe626ca7aa425c11f44ac",
+      "discovery_url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE8tUDYxTjFHOWgxLTZQQmJZQjNwbHNYaWlnN2tBbWx0Y0RZbEp1TDExWFhkRjNxVm9KLU13aTgta1pDcklueUNTUjU2WG1GeDlzWGIzMW1xSnRfYUVDUWVPTDRBWktJMklYVERtemJnTS0wS0M2ekg0Q2JmTQ?oc=5",
+      "fulltext_status": "unavailable"
+    }
+  ],
+  "highlights": [
+    {
+      "rank": 1,
+      "title": "0歳児家庭を見守り訪問、おむつやミルクも無償配達 茨城・取手市が9月から県内初の事業（産経新聞）",
+      "url": "https://news.yahoo.co.jp/articles/b19567c68c2f0ebc3e79cb2444b4656e06137115",
+      "company": "不明",
+      "category": "日用品・衛生用品メーカー / 其他",
+      "date": "2026-08-31",
+      "impact": "このニュースは、大王製紙のR&D戦略に直接的なインパクトは少ないが、市場・業界構造への影響度として、子育て支援事業の拡大によるおむつ需要の安定化や、地域社会との関わりを強化する可能性がある。情報は具体的で信頼性が高く、緊急性は低いが、将来的に類似事業が他地域でも展開される可能性を考慮すると、一定の戦略的含意がある。",
+      "score": 35,
+      "is_patent": false
+    }
+  ]
+}
