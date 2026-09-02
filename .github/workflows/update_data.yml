@@ -33,12 +33,24 @@ jobs:
       - name: Run collector tests
         run: python -m unittest discover -s tests -v
 
-      - name: Fetch news
+      - name: Fetch news and patents
+        env:
+          NEWS_MAX_ENRICH_ARTICLES: '50'
+          SPECIALTY_MAX_AGE_DAYS: '60'
+          ACADEMIC_MAX_AGE_DAYS: '90'
+          PATENT_MAX_AGE_DAYS: '365'
+          MAX_PATENTS_TOTAL: '30'
         run: python scripts/fetch_news.py
 
       - name: Generate summaries and highlights
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          PATENT_MAX_AGE_DAYS: '365'
+          DAILY_DIGEST_MIN: '15'
+          DAILY_DIGEST_TARGET: '18'
+          DAILY_DIGEST_MAX: '20'
+          DAILY_DIGEST_LOOKBACK_DAYS: '14'
+          SPECIALTY_MAX_AGE_DAYS: '60'
         run: python scripts/generate_dashboard.py
 
       - name: Cleanup data older than 90 days

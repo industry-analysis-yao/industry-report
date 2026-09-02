@@ -18,6 +18,7 @@ import html
 import json
 import os
 import re
+import sys
 import time
 import unicodedata
 from difflib import SequenceMatcher
@@ -25,6 +26,11 @@ from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from typing import Any, Iterable
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 try:
     import requests
@@ -41,9 +47,12 @@ except ImportError:  # Unit tests can inject a parser without this dependency.
 
 JST = timezone(timedelta(hours=9))
 MAX_AGE_DAYS = int(os.getenv("NEWS_MAX_AGE_DAYS", "14"))
-PATENT_MAX_AGE_DAYS = int(os.getenv("PATENT_MAX_AGE_DAYS", "30"))
+SPECIALTY_MAX_AGE_DAYS = int(os.getenv("SPECIALTY_MAX_AGE_DAYS", "60"))
+ACADEMIC_MAX_AGE_DAYS = int(os.getenv("ACADEMIC_MAX_AGE_DAYS", "90"))
+PATENT_MAX_AGE_DAYS = int(os.getenv("PATENT_MAX_AGE_DAYS", "365"))
 MAX_ITEMS_PER_QUERY = int(os.getenv("NEWS_MAX_ITEMS_PER_QUERY", "25"))
-MAX_ENRICH_ARTICLES = int(os.getenv("NEWS_MAX_ENRICH_ARTICLES", "30"))
+MAX_ENRICH_ARTICLES = int(os.getenv("NEWS_MAX_ENRICH_ARTICLES", "50"))
+MAX_PATENTS_TOTAL = int(os.getenv("MAX_PATENTS_TOTAL", "30"))
 HTTP_TIMEOUT_SECONDS = int(os.getenv("NEWS_HTTP_TIMEOUT_SECONDS", "15"))
 
 # Fewer, broader queries reduce duplicate results and RSS traffic. The
@@ -57,6 +66,16 @@ SEARCH_QUERIES_GENERAL = [
     '(Vinda OR Hengan OR 中顺洁柔 OR 维达 OR 恒安) (ティシュー OR おむつ OR 衛生用品)',
     '(家庭紙 OR トイレットペーパー OR ティシュー) (価格 OR 値上げ OR 規制 OR 市場)',
     '(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)',
+    '(衛生用品 OR 紙おむつ OR 生理用品) (企業 OR 工場 OR 生産 OR 発売 OR 技術)',
+    '(家庭紙 OR 衛生用紙 OR ティッシュ) (メーカー OR 工場 OR 生産 OR 価格)',
+    '(紙パルプ OR 古紙 OR セルロース) (価格 OR 技術 OR 投資 OR 生産)',
+    '(吸水性樹脂 OR SAP OR エアレイド OR 不織布) (衛生用品 OR おむつ OR 生理用品)',
+    '(介護用おむつ OR 大人用おむつ OR 失禁用品) (新製品 OR 市場 OR 技術)',
+    '(生理用品 OR フェムケア OR 月経) (素材 OR 新製品 OR 企業 OR 技術)',
+    '(tissue OR toilet paper OR diaper OR hygiene) (Japan OR Asia) (launch OR investment OR plant OR technology)',
+]
+
+SEARCH_QUERIES_SPECIALTY = [
     '(不織布 OR 吸収体 OR パルプ) (新技術 OR 原料価格 OR 生産設備 OR サステナビリティ)',
     '(ウェットティッシュ OR ウェットワイプ) (新製品 OR 市場 OR 技術)',
 ]
@@ -65,14 +84,22 @@ SEARCH_QUERIES_MACHINE = [
     '(瑞光 OR Zuiko OR GDM OR Fameccanica) (おむつ OR ナプキン OR 吸収体) (加工機 OR 製造設備)',
     '(OPTIMA OR FANUC OR ファナック) (衛生用品 OR 不織布) (包装機 OR パレタイザー OR 自動化)',
     '(衛生用品 OR おむつ OR ナプキン) (製造機械 OR 包装ライン OR パレタイザー)',
+    '("diaper machine" OR "sanitary napkin machine" OR "absorbent hygiene") (Fameccanica OR GDM OR Zuiko)',
+    '("case packer" OR palletizer OR "packaging automation") (tissue OR diaper OR hygiene)',
 ]
 
 ACADEMIC_QUERIES = [
-    'site:patents.google.com (ユニ・チャーム OR 花王 OR 大王製紙 OR 王子製紙) (おむつ OR 吸収体 OR 衛生用品)',
     'site:jstage.jst.go.jp (家庭紙 OR 衛生用品 OR 不織布 OR 吸収体)',
 ]
 
-SEARCH_QUERIES = SEARCH_QUERIES_GENERAL + SEARCH_QUERIES_MACHINE
+# One broad direct query avoids Google Patents rate limiting and can discover
+# both known competitors and previously unknown assignees.
+PATENT_SEARCH_QUERY = (
+    '("absorbent article" OR "disposable diaper" OR "sanitary napkin" OR '
+    '"tissue paper" OR "wet wipe" OR "absorbent sheet" OR "diaper manufacturing")'
+)
+
+SEARCH_QUERIES = SEARCH_QUERIES_GENERAL + SEARCH_QUERIES_SPECIALTY + SEARCH_QUERIES_MACHINE
 
 CATEGORY_NAMES = {
     "①": "日用品・衛生用品メーカー",
@@ -105,6 +132,12 @@ MACHINE_TERMS = [
     "充填機", "産業用ロボット", "自動化", "machinery", "packaging machine",
 ]
 
+PATENT_DOMAIN_TERMS = CORE_TERMS + MACHINE_TERMS + [
+    "吸水性樹脂", "高吸水性", "セルロース", "エアレイド", "紙製品", "抄紙",
+    "absorbent article", "absorbent sheet", "superabsorbent", "incontinence",
+    "menstrual", "paper product", "papermaking", "cellulose", "airlaid",
+]
+
 OFFTOPIC_TERMS = [
     "洗濯洗剤", "柔軟剤", "シャンプー", "コンディショナー", "ボディソープ",
     "化粧品", "ファンデーション", "ハミガキ", "歯磨き", "歯ブラシ", "口腔",
@@ -122,12 +155,14 @@ LOW_TRUST_SOURCES = [
     "Fortune Business Insights", "Report Ocean", "Research Nester",
     "Global Information", "Dream News", "NEWSCAST", "newscast.jp",
     "ドリームニュース", "Spherical Insights", "ねとらぼ", "ウォーカープラス",
-    "LIMO", "au Webポータル",
+    "LIMO", "au Webポータル", "news.nicovideo.jp", "ニコニコニュース",
+    "ニュースメディアVOIX",
 ]
 
 CLICKBAIT_TERMS = [
     "作者に聞く", "おすすめ人気", "口コミ", "ライフスタイル", "収納ボックス",
-    "トイレットペーパーケース", "無印アイテム", "かわいすぎる", "わんちゃん",
+    "トイレットペーパーケース", "ティッシュケース", "無印アイテム", "かわいすぎる", "わんちゃん",
+    "絵本が発売", "1歳の日常",
     "前場コメント", "後場コメント", "クロワッサン化", "芯に重ねて",
 ]
 
@@ -257,6 +292,8 @@ def assess_relevance(title: str, snippet: str, source_name: str = "", *, academi
         return False, ["market_report_spam"]
     if "市場" in lowered and "レポート" in lowered:
         return False, ["market_report_spam"]
+    if re.search(r"市場.{0,45}(?:20\d{2}年|cagr|収益構造).{0,30}(?:予測|見通し|成長|分析)", lowered):
+        return False, ["market_report_spam"]
     if any(term.lower() in lowered for term in CLICKBAIT_TERMS):
         return False, ["consumer_or_market_noise"]
     has_core = any(term.lower() in lowered for term in CORE_TERMS)
@@ -308,6 +345,210 @@ def article_fingerprint(item: dict[str, Any]) -> str:
 def build_feed_url(query: str, max_age_days: int) -> str:
     dated_query = query if re.search(r"\bwhen:\d+[dhm]\b", query) else f"{query} when:{max_age_days}d"
     return f"https://news.google.com/rss/search?q={quote(dated_query)}&hl=ja&gl=JP&ceid=JP:ja"
+
+
+def _patent_is_relevant(title: str, abstract: str) -> bool:
+    text = unicodedata.normalize("NFKC", f"{title} {abstract}").lower()
+    has_domain_term = any(term.lower() in text for term in PATENT_DOMAIN_TERMS)
+    animal_only = any(term in text for term in ("animal litter", "animal toilet", "pet food", "猫砂", "ペットフード"))
+    has_human_hygiene = any(term in text for term in (
+        "diaper", "sanitary", "menstrual", "incontinence", "おむつ", "生理", "ナプキン", "失禁",
+    ))
+    return has_domain_term and (not animal_only or has_human_hygiene)
+
+
+def parse_google_patents_html(
+    page_html: str,
+    *,
+    company: str,
+    now: datetime | None = None,
+    max_age_days: int = PATENT_MAX_AGE_DAYS,
+    max_results: int = MAX_PATENTS_TOTAL,
+) -> list[dict[str, Any]]:
+    """Parse visible Google Patents search-result cards into report records."""
+    if BeautifulSoup is None:
+        raise RuntimeError("beautifulsoup4 is required for direct patent collection")
+    reference_time = (now or utc_now()).astimezone(timezone.utc)
+    cutoff_date = reference_time.date() - timedelta(days=max_age_days)
+    soup = BeautifulSoup(page_html, "html.parser")
+    results: list[dict[str, Any]] = []
+
+    for article in soup.select("article.result"):
+        result_link = article.select_one("state-modifier[data-result]")
+        result_path = result_link.get("data-result", "") if result_link else ""
+        path_match = re.search(r"patent/([^/]+)/([a-z]{2})", result_path)
+        if not path_match:
+            continue
+        publication_number, language = path_match.groups()
+
+        title_node = article.select_one("h3")
+        title = strip_html(title_node.get_text(" ", strip=True) if title_node else "")
+        dates_node = article.select_one("h4.dates")
+        dates_text = strip_html(dates_node.get_text(" ", strip=True) if dates_node else "")
+        published_match = re.search(r"Published\s+(\d{4}-\d{2}-\d{2})", dates_text)
+        if not title or not published_match:
+            continue
+        published_date = datetime.strptime(published_match.group(1), "%Y-%m-%d").date()
+        if published_date < cutoff_date or published_date > reference_time.date() + timedelta(days=1):
+            continue
+
+        abstract_nodes = article.select("div.abstract raw-html")
+        abstract = strip_html(abstract_nodes[-1].get_text(" ", strip=True)) if abstract_nodes else ""
+        if not _patent_is_relevant(title, abstract):
+            continue
+
+        patent_url = f"https://patents.google.com/patent/{publication_number}/{language}"
+        published = datetime.combine(published_date, datetime.min.time(), tzinfo=timezone.utc)
+        flags = ["direct_patent_source"]
+        if len(abstract) < 60:
+            abstract = title
+            flags.append("title_only_summary")
+            fulltext_status = "unavailable"
+        else:
+            fulltext_status = "excerpt_extracted"
+        item = {
+            "title": title,
+            "summary": abstract[:1800],
+            "company": company,
+            "date": published_date.isoformat(),
+            "published_at": isoformat_utc(published),
+            "collected_at": isoformat_utc(reference_time),
+            "category_id": "⑦",
+            "category_name": CATEGORY_NAMES["⑦"],
+            "info_type": "特許",
+            "url": patent_url,
+            "source_name": "Google Patents",
+            "source_url": "https://patents.google.com/",
+            "discovery_provider": "Google Patents direct",
+            "discovery_query": company,
+            "confidence": "高",
+            "quality_flags": flags,
+            "fulltext_status": fulltext_status,
+            "patent_number": publication_number,
+            "is_academic": True,
+            "permanent_record": True,
+        }
+        item["fingerprint"] = article_fingerprint(item)
+        results.append(item)
+        if len(results) >= max_results:
+            break
+    return results
+
+
+def parse_google_patents_payload(
+    payload: dict[str, Any],
+    *,
+    company: str = "",
+    now: datetime | None = None,
+    max_age_days: int = PATENT_MAX_AGE_DAYS,
+    max_results: int = MAX_PATENTS_TOTAL,
+) -> list[dict[str, Any]]:
+    """Parse the structured result used by the Google Patents search page."""
+    reference_time = (now or utc_now()).astimezone(timezone.utc)
+    cutoff_date = reference_time.date() - timedelta(days=max_age_days)
+    clusters = payload.get("results", {}).get("cluster", [])
+    rows = [row for cluster in clusters for row in cluster.get("result", [])]
+    results: list[dict[str, Any]] = []
+
+    for row in rows:
+        patent = row.get("patent") or {}
+        publication_number = strip_html(patent.get("publication_number") or "")
+        # This report monitors Japanese publications. International family data
+        # remains available on the linked patent detail page.
+        if not publication_number.startswith("JP"):
+            continue
+        title = strip_html(patent.get("title") or "")
+        abstract = strip_html(patent.get("snippet") or "")
+        publication_date = patent.get("publication_date") or ""
+        try:
+            published_date = datetime.strptime(publication_date, "%Y-%m-%d").date()
+        except (TypeError, ValueError):
+            continue
+        if published_date < cutoff_date or published_date > reference_time.date() + timedelta(days=1):
+            continue
+        if not _patent_is_relevant(title, abstract):
+            continue
+
+        language = patent.get("language") or "en"
+        published = datetime.combine(published_date, datetime.min.time(), tzinfo=timezone.utc)
+        flags = ["direct_patent_source"]
+        if len(abstract) < 60:
+            abstract = title
+            flags.append("title_only_summary")
+            fulltext_status = "unavailable"
+        else:
+            fulltext_status = "excerpt_extracted"
+        raw_assignee = strip_html(patent.get("assignee") or "")
+        detected_company = company or extract_company(raw_assignee)
+        if detected_company == "不明" and raw_assignee:
+            detected_company = raw_assignee[:80]
+        item = {
+            "title": title,
+            "summary": abstract[:1800],
+            "company": detected_company or "不明",
+            "date": published_date.isoformat(),
+            "published_at": isoformat_utc(published),
+            "collected_at": isoformat_utc(reference_time),
+            "category_id": "⑦",
+            "category_name": CATEGORY_NAMES["⑦"],
+            "info_type": "特許",
+            "url": f"https://patents.google.com/patent/{publication_number}/{language}",
+            "source_name": "Google Patents",
+            "source_url": "https://patents.google.com/",
+            "discovery_provider": "Google Patents direct",
+            "discovery_query": PATENT_SEARCH_QUERY,
+            "confidence": "高",
+            "quality_flags": flags,
+            "fulltext_status": fulltext_status,
+            "patent_number": publication_number,
+            "is_academic": True,
+            "permanent_record": True,
+        }
+        item["fingerprint"] = article_fingerprint(item)
+        results.append(item)
+        if len(results) >= max_results:
+            break
+    return results
+
+
+def fetch_google_patents(
+    *,
+    now: datetime | None = None,
+    max_age_days: int = PATENT_MAX_AGE_DAYS,
+    max_results: int = MAX_PATENTS_TOTAL,
+    session: Any = None,
+) -> list[dict[str, Any]]:
+    """Collect newest patent publications directly from Google Patents."""
+    if requests is None or BeautifulSoup is None:
+        raise RuntimeError("requests and beautifulsoup4 are required for patent collection")
+    client = session or requests.Session()
+    response = None
+    for attempt in range(3):
+        response = client.get(
+            "https://patents.google.com/xhr/query",
+            params={
+                "url": f"q={PATENT_SEARCH_QUERY}&country=JP&num=100&sort=new",
+                "exp": "",
+            },
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36",
+                "Accept": "application/json,text/plain,*/*",
+                "Accept-Language": "ja,en;q=0.8",
+                "Referer": "https://patents.google.com/",
+            },
+            timeout=HTTP_TIMEOUT_SECONDS,
+        )
+        if response.status_code != 503:
+            break
+        retry_after = response.headers.get("Retry-After")
+        delay = int(retry_after) if retry_after and retry_after.isdigit() else 3 * (attempt + 1)
+        time.sleep(delay)
+    if response is None:
+        raise RuntimeError("Google Patents returned no response")
+    response.raise_for_status()
+    return parse_google_patents_payload(
+        response.json(), now=now, max_age_days=max_age_days, max_results=max_results,
+    )
 
 
 def _legacy_google_news_decode(article_id: str) -> str | None:
@@ -624,8 +865,10 @@ def collect_news(
     enrich: bool = True,
     enrich_limit: int = MAX_ENRICH_ARTICLES,
 ) -> tuple[list[dict[str, Any]], list[str]]:
-    jobs = [(query, MAX_AGE_DAYS, False) for query in SEARCH_QUERIES]
-    jobs += [(query, PATENT_MAX_AGE_DAYS, True) for query in ACADEMIC_QUERIES]
+    jobs = [(query, MAX_AGE_DAYS, False) for query in SEARCH_QUERIES_GENERAL]
+    jobs += [(query, SPECIALTY_MAX_AGE_DAYS, False) for query in SEARCH_QUERIES_SPECIALTY]
+    jobs += [(query, SPECIALTY_MAX_AGE_DAYS, False) for query in SEARCH_QUERIES_MACHINE]
+    jobs += [(query, ACADEMIC_MAX_AGE_DAYS, True) for query in ACADEMIC_QUERIES]
     if query_limit is not None:
         jobs = jobs[:query_limit]
     collected: list[dict[str, Any]] = []
@@ -648,6 +891,17 @@ def collect_news(
         print(f"Enriching up to {min(enrich_limit, len(unique))} unique articles with publisher URLs/text...")
         unique = enrich_items(unique, limit=enrich_limit)
         unique = deduplicate(unique)
+
+    patent_rows: list[dict[str, Any]] = []
+    try:
+        patent_rows = fetch_google_patents(now=now)
+        print(f"[PATENT] {len(patent_rows):2d} accepted from the direct domain query")
+    except Exception as exc:
+        message = f"Google Patents direct query: {exc}"
+        errors.append(message)
+        print(f"[PATENT] ERROR: {message}")
+    patent_rows = deduplicate(patent_rows)[:MAX_PATENTS_TOTAL]
+    unique = deduplicate(unique + patent_rows)
     return unique, errors
 
 
@@ -725,7 +979,11 @@ def main() -> int:
         with open(output_path, "w", encoding="utf-8") as handle:
             json.dump({"items": fresh, "errors": errors}, handle, ensure_ascii=False, indent=2)
 
-    print(f"Accepted {len(fresh)} new unique articles; feed errors: {len(errors)}")
+    fresh_patents = sum(1 for item in fresh if item.get("info_type") == "特許")
+    print(
+        f"Accepted {len(fresh)} new unique records "
+        f"({len(fresh) - fresh_patents} news/research, {fresh_patents} patents); source errors: {len(errors)}"
+    )
     for item in fresh[:10]:
         print(f"  {item['date']} [{item['confidence']}] {item['source_name']}: {item['title'][:90]}")
 
@@ -739,7 +997,7 @@ def main() -> int:
 
     new_regular = [item for item in fresh if not item.get("permanent_record")]
     new_patents = [item for item in fresh if item.get("permanent_record")]
-    regular = prune_items(regular + new_regular, days=30)
+    regular = prune_items(regular + new_regular, days=SPECIALTY_MAX_AGE_DAYS)
     patents = prune_items(patents + new_patents, days=PATENT_MAX_AGE_DAYS)
     save_data(data_path, deduplicate(regular), deduplicate(patents), highlights)
     print(f"Saved {len(regular)} regular articles and {len(patents)} academic/patent articles.")

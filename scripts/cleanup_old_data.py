@@ -9,6 +9,7 @@ except ImportError:
     pass
 
 CUTOFF_DAYS = 90
+PATENT_CUTOFF_DAYS = int(os.environ.get('PATENT_MAX_AGE_DAYS', '365'))
 
 
 def main():
@@ -96,22 +97,27 @@ def main():
     print(f'Removed {removed} items older than {CUTOFF_DAYS} days (before {cutoff_str}).')
     print(f'Regular items remaining: {total_regular}. Patents preserved: {len(payload["patents"])} (permanent_record).')
 
-    # ── Prune permanent_vault.json (90-day retention) ─────────────────────────
+    # Keep patent monitoring history for one year; non-patent research keeps
+    # the normal 90-day retention window.
     vault_path = os.path.join(os.path.dirname(data_path), 'permanent_vault.json')
     if os.path.exists(vault_path):
         with open(vault_path, 'r', encoding='utf-8') as f:
             vault = json.load(f)
-        vault_kept = [
-            item for item in vault
-            if item.get('date', '9999-99-99') >= cutoff_str
-        ]
+        patent_cutoff = (datetime.now(timezone.utc) - timedelta(days=PATENT_CUTOFF_DAYS)).strftime('%Y-%m-%d')
+        vault_kept = []
+        for item in vault:
+            is_patent = item.get('info_type') == '特許' or item.get('permanent_record')
+            item_cutoff = patent_cutoff if is_patent else cutoff_str
+            if item.get('date', '9999-99-99') >= item_cutoff:
+                vault_kept.append(item)
         vault_removed = len(vault) - len(vault_kept)
         if vault_removed > 0:
             with open(vault_path, 'w', encoding='utf-8') as f:
                 json.dump(vault_kept, f, ensure_ascii=False, indent=2)
             print(
                 f'Pruned {vault_removed} items from permanent_vault.json '
-                f'older than {CUTOFF_DAYS} days ({len(vault_kept)} retained).'
+                f'(news/research>{CUTOFF_DAYS}d, patents>{PATENT_CUTOFF_DAYS}d; '
+                f'{len(vault_kept)} retained).'
             )
         else:
             print(f'permanent_vault.json: {len(vault_kept)} items retained (none pruned).')

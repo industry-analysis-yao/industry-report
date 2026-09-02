@@ -137,6 +137,72 @@ class FetchNewsTests(unittest.TestCase):
 
         self.assertEqual(resolved, "https://publisher.example/news/123")
 
+    def test_parses_recent_relevant_patents_and_rejects_animal_only_results(self):
+        patent_html = """
+        <article class="result">
+          <state-modifier data-result="patent/JP2026069657A/en"></state-modifier>
+          <h3>Absorbent articles</h3>
+          <h4 class="dates">Priority 2021-12-16 • Filed 2026-02-18 • Published 2026-04-23</h4>
+          <div class="abstract"><raw-html>An absorbent article with an improved absorbent core for disposable diapers and sanitary products.</raw-html></div>
+        </article>
+        <article class="result">
+          <state-modifier data-result="patent/JP2026083350A/en"></state-modifier>
+          <h3>Animal litter</h3>
+          <h4 class="dates">Priority 2023-03-10 • Filed 2026-03-12 • Published 2026-05-19</h4>
+          <div class="abstract"><raw-html>Granular litter for cats that suppresses unpleasant odors in an animal toilet.</raw-html></div>
+        </article>
+        <article class="result">
+          <state-modifier data-result="patent/JP2019000001A/en"></state-modifier>
+          <h3>Disposable diaper</h3>
+          <h4 class="dates">Published 2019-01-01</h4>
+          <div class="abstract"><raw-html>An old absorbent article publication.</raw-html></div>
+        </article>
+        """
+
+        rows = fetch_news.parse_google_patents_html(
+            patent_html,
+            company="ユニ・チャーム",
+            now=self.NOW,
+            max_age_days=365,
+        )
+
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["patent_number"], "JP2026069657A")
+        self.assertEqual(rows[0]["date"], "2026-04-23")
+        self.assertEqual(rows[0]["info_type"], "特許")
+        self.assertEqual(rows[0]["category_id"], "⑦")
+        self.assertTrue(rows[0]["permanent_record"])
+        self.assertEqual(rows[0]["url"], "https://patents.google.com/patent/JP2026069657A/en")
+
+    def test_parses_google_patents_structured_payload(self):
+        payload = {
+            "results": {
+                "cluster": [{
+                    "result": [{
+                        "patent": {
+                            "title": " Absorbent article for absorbing menstrual blood",
+                            "snippet": "This absorbent article uses a hydrophilic gradient and absorbent core in a sanitary napkin.",
+                            "publication_date": "2026-02-24",
+                            "publication_number": "JP2026031759A",
+                            "language": "en",
+                            "assignee": "<b>ユニ・チャーム</b>株式会社",
+                        }
+                    }]
+                }]
+            }
+        }
+
+        rows = fetch_news.parse_google_patents_payload(
+            payload,
+            now=self.NOW,
+            max_age_days=365,
+        )
+
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["patent_number"], "JP2026031759A")
+        self.assertEqual(rows[0]["company"], "ユニ・チャーム")
+        self.assertIn("direct_patent_source", rows[0]["quality_flags"])
+
 
 if __name__ == "__main__":
     unittest.main()

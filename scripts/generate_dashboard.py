@@ -11,6 +11,8 @@ import re
 import time
 import requests
 import pytz
+import unicodedata
+from difflib import SequenceMatcher
 from datetime import datetime, timedelta, timezone
 
 try:
@@ -27,11 +29,17 @@ _OPENROUTER_MODEL = 'deepseek/deepseek-chat'
 _OPENROUTER_MAX_RETRIES = 5
 
 _LENIENT_THRESHOLD_DEFAULT = 15
+PATENT_RETENTION_DAYS = int(os.environ.get('PATENT_MAX_AGE_DAYS', '365'))
+DAILY_DIGEST_MIN = int(os.environ.get('DAILY_DIGEST_MIN', '15'))
+DAILY_DIGEST_TARGET = int(os.environ.get('DAILY_DIGEST_TARGET', '18'))
+DAILY_DIGEST_MAX = int(os.environ.get('DAILY_DIGEST_MAX', '20'))
+DAILY_DIGEST_LOOKBACK_DAYS = int(os.environ.get('DAILY_DIGEST_LOOKBACK_DAYS', '14'))
+SPECIALTY_MAX_AGE_DAYS = int(os.environ.get('SPECIALTY_MAX_AGE_DAYS', '60'))
 
 # ============================================================
 # 修复 1：严格的专利日期过滤
 # ============================================================
-def filter_old_patents_from_items(items, max_age_days=30):
+def filter_old_patents_from_items(items, max_age_days=PATENT_RETENTION_DAYS):
     """严格过滤超过max_age_days的专利/学术条目"""
     today_date = datetime.now(timezone.utc).date()
     
@@ -334,6 +342,110 @@ def generate_highlights(items, api_key=None, excluded_urls=None, today_str=None)
         })
     return highlights
 
+
+def select_daily_digest(
+    items,
+    *,
+    reference_date=None,
+    target=DAILY_DIGEST_TARGET,
+    minimum=DAILY_DIGEST_MIN,
+    maximum=DAILY_DIGEST_MAX,
+    lookback_days=DAILY_DIGEST_LOOKBACK_DAYS,
+):
+    """Build a recent, category-balanced news digest without changing article dates."""
+    reference_date = reference_date or datetime.now(pytz.timezone('Asia/Tokyo')).date()
+    target = max(minimum, min(maximum, target))
+
+    def parsed_date(item):
+        try:
+            return datetime.strptime(item.get('date', '')[:10], '%Y-%m-%d').date()
+        except (TypeError, ValueError):
+            return None
+
+    regular = [item for item in items if not item.get('permanent_record')]
+    recent = []
+    fallback = []
+    specialty_fallback = []
+    for item in regular:
+        item_date = parsed_date(item)
+        if item_date is None:
+            continue
+        age = (reference_date - item_date).days
+        if -1 <= age <= lookback_days:
+            recent.append(item)
+        elif lookback_days < age <= 30:
+            fallback.append(item)
+        elif 30 < age <= SPECIALTY_MAX_AGE_DAYS and item.get('category_id') in {'③', '④', '⑤'}:
+            specialty_fallback.append(item)
+
+    confidence_rank = {'高': 2, '中': 1, '低': 0, '要確認': 0}
+
+    def rank(item):
+        return (
+            int(item.get('score') or 0),
+            confidence_rank.get(item.get('confidence', ''), 0),
+            1 if item.get('fulltext_status') == 'excerpt_extracted' else 0,
+            item.get('published_at', item.get('date', '')),
+        )
+
+    recent.sort(key=rank, reverse=True)
+    fallback.sort(key=rank, reverse=True)
+    specialty_fallback.sort(key=rank, reverse=True)
+    if len(recent) < target:
+        recent.extend(fallback[:target - len(recent)])
+
+    # Reserve space for thin but strategically important categories first.
+    minimum_by_category = {'①': 4, '②': 3, '③': 1, '④': 1, '⑤': 1, '⑥': 2}
+    selected = []
+    selected_urls = set()
+
+    def normalize_title(value):
+        value = unicodedata.normalize('NFKC', value or '').lower()
+        return re.sub(r'[\W_]+', '', value, flags=re.UNICODE)
+
+    def same_story(left, right):
+        a = normalize_title(left.get('title'))
+        b = normalize_title(right.get('title'))
+        if min(len(a), len(b)) < 12:
+            return False
+        if SequenceMatcher(None, a, b).ratio() >= 0.68:
+            return True
+        match = SequenceMatcher(None, a, b).find_longest_match(0, len(a), 0, len(b))
+        if match.size / min(len(a), len(b)) >= 0.55:
+            return True
+        a_grams = {a[i:i + 3] for i in range(len(a) - 2)}
+        b_grams = {b[i:i + 3] for i in range(len(b) - 2)}
+        return len(a_grams & b_grams) / min(len(a_grams), len(b_grams)) >= 0.55
+
+    def add(item):
+        key = item.get('url') or item.get('fingerprint') or item.get('title')
+        if key in selected_urls or len(selected) >= target:
+            return False
+        if any(same_story(item, chosen) for chosen in selected):
+            return False
+        selected.append(item)
+        selected_urls.add(key)
+        return True
+
+    for category_id, quota in minimum_by_category.items():
+        count = 0
+        category_pool = recent
+        if category_id in {'③', '④', '⑤'}:
+            category_pool = recent + specialty_fallback
+        for item in category_pool:
+            if item.get('category_id') == category_id and add(item):
+                count += 1
+                if count >= quota:
+                    break
+
+    for item in recent:
+        if len(selected) >= target:
+            break
+        add(item)
+
+    selected.sort(key=rank, reverse=True)
+    return selected[:maximum]
+
 # ============================================================
 # Data Persistence
 # ============================================================
@@ -382,9 +494,10 @@ def main():
         print('No data found. Run fetch_news.py first.')
         return
 
-    # 修复：加载后立即过滤旧专利
-    print('[LOAD] Applying strict 30-day filter for patents...')
-    data = filter_old_patents_from_items(data, max_age_days=30)
+    # Patent publication volume is much lower than news volume, so retain a
+    # one-year monitoring window while always displaying the true publication date.
+    print(f'[LOAD] Applying strict {PATENT_RETENTION_DAYS}-day filter for patents...')
+    data = filter_old_patents_from_items(data, max_age_days=PATENT_RETENTION_DAYS)
     print(f'[LOAD] After filtering: {len(data)} items')
 
     # Deduplicate
@@ -449,8 +562,9 @@ def main():
     # 移除不相关的条目
     data = [it for it in data if it not in irrelevant_items]
 
-    # 修剪超过30天的旧新闻（保留永久专利）
-    cutoff = datetime.now(timezone.utc) - timedelta(days=30)
+    # Keep low-frequency equipment/specialty records for balancing, while the
+    # digest selector limits ordinary fallback content to 30 days.
+    cutoff = datetime.now(timezone.utc) - timedelta(days=SPECIALTY_MAX_AGE_DAYS)
     cutoff_str = cutoff.strftime('%Y-%m-%d')
     kept = []
     for item in data:
@@ -462,36 +576,51 @@ def main():
 
     data.sort(key=lambda x: x.get('published_at', x.get('date', '')), reverse=True)
 
-    # Build every retained per-publication-date snapshot. This prevents a late
-    # article (published yesterday, collected today) from disappearing because
-    # only today's snapshot was regenerated.
-    date_items = {}
-    patent_items = []
-    for item in data:
-        if item.get('permanent_record'):
-            patent_items.append(item)
-        else:
-            date_items.setdefault(item.get('date', 'unknown'), []).append(item)
+    # Create one balanced digest per run. Articles keep their true publication
+    # date, but the snapshot date represents the day the digest was assembled.
+    jst_now = datetime.now(pytz.timezone('Asia/Tokyo'))
+    digest_date = jst_now.strftime('%Y-%m-%d')
+    digest_items = select_daily_digest(data, reference_date=jst_now.date())
+    digest_highlights = generate_highlights(digest_items, today_str=digest_date)
+    digest_file = os.path.join(data_dir, f'{digest_date}.json')
+    with open(digest_file, 'w', encoding='utf-8') as f:
+        json.dump(
+            {
+                'date': digest_date,
+                'digest_window_days': DAILY_DIGEST_LOOKBACK_DAYS,
+                'target_count': DAILY_DIGEST_TARGET,
+                'items': digest_items,
+                'highlights': digest_highlights,
+            },
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
+    print(
+        f'  [DAILY-DIGEST] Wrote {digest_file} '
+        f'({len(digest_items)} items; target {DAILY_DIGEST_MIN}-{DAILY_DIGEST_MAX})'
+    )
 
-    date_highlights = {}
-    for date_str, items in date_items.items():
-        items.sort(key=lambda it: (it.get('score', 0), it.get('published_at', '')), reverse=True)
-        date_highlights[date_str] = generate_highlights(items, today_str=date_str)
-        date_file = os.path.join(data_dir, f'{date_str}.json')
-        with open(date_file, 'w', encoding='utf-8') as f:
-            json.dump({'date': date_str, 'items': items, 'highlights': date_highlights[date_str]}, f, ensure_ascii=False, indent=2)
-        print(f'  [DATE-FILE] Wrote {date_file} ({len(items)} items)')
+    patent_items = [item for item in data if item.get('permanent_record')]
+    save_data(data_path, data, highlights=digest_highlights, last_updated=None)
 
-    merged_dates = sorted(date_items.keys(), reverse=True)
-    all_highlights = []
-    for date_str in merged_dates[:10]:
-        all_highlights.extend(date_highlights.get(date_str, []))
-    all_highlights = all_highlights[:30]
-    save_data(data_path, data, highlights=all_highlights, last_updated=None)
-
-    # dates_index contains only snapshots that exist in the retained data.
+    # Preserve existing daily snapshots and put today's digest first.
     index_path = os.path.join(data_dir, 'dates_index.json')
     try:
+        existing_dates = []
+        if os.path.exists(index_path):
+            with open(index_path, 'r', encoding='utf-8') as f:
+                existing_dates = json.load(f)
+        history_cutoff = jst_now.date() - timedelta(days=90)
+        merged_dates = []
+        for date_str in [digest_date] + list(existing_dates):
+            try:
+                date_value = datetime.strptime(date_str, '%Y-%m-%d').date()
+            except (TypeError, ValueError):
+                continue
+            if history_cutoff <= date_value <= jst_now.date() and date_str not in merged_dates:
+                merged_dates.append(date_str)
+        merged_dates.sort(reverse=True)
         with open(index_path, 'w', encoding='utf-8') as f:
             json.dump(merged_dates, f, ensure_ascii=False, indent=2)
         print(f'  [INDEX] dates_index.json updated: {merged_dates[:5]}{"..." if len(merged_dates) > 5 else ""}')

@@ -1045,12 +1045,12 @@ function init() {
         });
       }
 
-      // Merge dates_index.json — adds any historical date placeholders not in DATES
+      // dates_index.json is the canonical list of daily digest snapshots.
+      // Always load those files instead of treating news_data.json publication
+      // buckets as ready-made daily reports.
       if (datesIndex && Array.isArray(datesIndex)) {
         datesIndex.forEach(function(d) {
-          if (!(d in DATES)) {
-            DATES[d] = null; // placeholder: will be fetched on demand
-          }
+          DATES[d] = null; // placeholder: fetched from data/YYYY-MM-DD.json
         });
         // dates_index is already sorted newest-first; use it as the canonical order
         SORTED_DATES = datesIndex;
@@ -1070,18 +1070,19 @@ function init() {
         }
       });
 
-      // Set DATA to most recent date's items (guaranteed non-null — loaded from news_data.json)
-      DATA = SORTED_DATES.length > 0 ? (DATES[SORTED_DATES[0]] || []) : [];
-
-      // Cache today's highlights so navigating away and back restores them correctly
-      if (SORTED_DATES.length > 0) {
-        DATE_HIGHLIGHTS[SORTED_DATES[0]] = highlights || [];
-      }
-
       buildDateSelect();
       updateDateNav();
-      renderHighlights(highlights);
-      initGrids();
+      if (SORTED_DATES.length > 0) {
+        loadDateData(SORTED_DATES[0], function(items) {
+          DATA = items;
+          updateDateNav();
+          initGrids();
+        });
+      } else {
+        DATA = [];
+        renderHighlights(highlights);
+        initGrids();
+      }
     })
     .catch(function(e) {
       console.error('Error in init:', e);
