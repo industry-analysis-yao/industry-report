@@ -27,6 +27,33 @@
     "impact_analysis": "この情報は大王製紙のR&D戦略に直接的に関連する可能性があるが、135日前の古いデータであり、現在の戦略に即時的に適用することは困難。競合他社の技術革新を理解するための参考資料としての価値はあるが、直接的インパクトは低い。"
   },
   {
+    "title": "Absorbent composite, absorbent article using the absorbent composite, and …",
+    "summary": "ディーエスジー テクノロジー ホールディングスは、新しい吸収体複合材（absorbent core composite）を開発。トップシートとバックシート間に配置されるこの素材は、第1不織布層を含む構造で、前後ウエスト領域の端部マージンを部分的に定義。着用時のユーザーウエスト周りへの適合性を向上させた吸収性物品（absorbent article）向けの技術となる。",
+    "company": "ディーエスジー テクノロジー ホールディングス リミテッド",
+    "date": "2026-03-09",
+    "published_at": "2026-03-09T00:00:00Z",
+    "collected_at": "2026-09-03T00:10:16Z",
+    "category_id": "⑦",
+    "category_name": "学術論文・特許情報",
+    "info_type": "特許",
+    "url": "https://patents.google.com/patent/JP2026040473A/en",
+    "source_name": "Google Patents",
+    "source_url": "https://patents.google.com/",
+    "discovery_provider": "Google Patents direct",
+    "discovery_query": "(\"absorbent article\" OR \"disposable diaper\" OR \"sanitary napkin\" OR \"tissue paper\" OR \"wet wipe\" OR \"absorbent sheet\" OR \"diaper manufacturing\")",
+    "confidence": "高",
+    "quality_flags": [
+      "direct_patent_source"
+    ],
+    "fulltext_status": "excerpt_extracted",
+    "patent_number": "JP2026040473A",
+    "is_academic": true,
+    "permanent_record": true,
+    "fingerprint": "e3de2706257f54c6e27f8f3d",
+    "score": 1,
+    "impact_analysis": "このニュースは178日前のものであり、現在の大王製紙のR&D戦略への直接的インパクトは限定的です。新しい吸収体複合材の開発は吸収性物品市場に関連していますが、この情報の時宜性が低いため、最新の競合状況や技術動向を反映しているとは言えません。市場・業界構造への影響度についても、古い情報であることから評価が下がります。"
+  },
+  {
     "title": "… laminate, and stretchable nonwoven fabric laminate, textile product, absorbent …",
     "summary": "IRRELEVANT  \n  \n※理由: タイトルと本文スニペットからは、具体的な業界ニュースや製品開発、技術革新などの情報が不足しており、直接的な関連性が確認できません。",
     "company": "エム・エーライフマテリアルズ株式会社",
