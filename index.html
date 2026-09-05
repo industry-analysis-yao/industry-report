@@ -929,8 +929,20 @@ function dailyNewsSection(d) {
   return 'rivals';
 }
 
+function normalizeDailyCategory(d) {
+  // Historical snapshots keep their original record, but Wet Tissue cards
+  // should display and filter as category ⑤ instead of a legacy ②/⑥ label.
+  if (dailyNewsSection(d) === 'wet' && d.category_id !== '⑤') {
+    return Object.assign({}, d, {
+      category_id: '⑤',
+      category_name: 'ウェットティッシュ製造メーカー'
+    });
+  }
+  return d;
+}
+
 function initGrids() {
-  var uniqueData = dedupeByUrl(DATA);
+  var uniqueData = dedupeByUrl(DATA).map(normalizeDailyCategory);
   paginateGrid('grid-overview', uniqueData);
 
   // Total count = unique items for selected date
