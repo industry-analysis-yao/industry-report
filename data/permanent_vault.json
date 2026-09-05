@@ -54,6 +54,33 @@
     "impact_analysis": "このニュースは178日前のものであり、現在の大王製紙のR&D戦略への直接的インパクトは限定的です。新しい吸収体複合材の開発は吸収性物品市場に関連していますが、この情報の時宜性が低いため、最新の競合状況や技術動向を反映しているとは言えません。市場・業界構造への影響度についても、古い情報であることから評価が下がります。"
   },
   {
+    "title": "Absorbent paper products with unique physical strength properties",
+    "summary": "**IRRELEVANT**  \nこの記事は家庭紙・衛生用品業界に直接関連するものではなく、素材や技術に関する内容であり、業界ニュースとしての関連性が低いため、対象外とします。",
+    "company": "マーサー インターナショナル インコーポレイテッド",
+    "date": "2026-02-10",
+    "published_at": "2026-02-10T00:00:00Z",
+    "collected_at": "2026-09-04T23:59:11Z",
+    "category_id": "⑦",
+    "category_name": "学術論文・特許情報",
+    "info_type": "特許",
+    "url": "https://patents.google.com/patent/JP2026021419A/en",
+    "source_name": "Google Patents",
+    "source_url": "https://patents.google.com/",
+    "discovery_provider": "Google Patents direct",
+    "discovery_query": "(\"absorbent article\" OR \"disposable diaper\" OR \"sanitary napkin\" OR \"tissue paper\" OR \"wet wipe\" OR \"absorbent sheet\" OR \"diaper manufacturing\")",
+    "confidence": "高",
+    "quality_flags": [
+      "direct_patent_source"
+    ],
+    "fulltext_status": "excerpt_extracted",
+    "patent_number": "JP2026021419A",
+    "is_academic": true,
+    "permanent_record": true,
+    "fingerprint": "2de7351a7e50d33d3846c1be",
+    "score": 1,
+    "impact_analysis": "この記事は大王製紙のR&D戦略に直接的に関連する内容ではなく、素材や技術についての情報も業界ニュースとしての関連性が低い。さらに、情報が207日前のものであり、時宜性や信頼性が著しく低下している。"
+  },
+  {
     "title": "… laminate, and stretchable nonwoven fabric laminate, textile product, absorbent …",
     "summary": "IRRELEVANT  \n  \n※理由: タイトルと本文スニペットからは、具体的な業界ニュースや製品開発、技術革新などの情報が不足しており、直接的な関連性が確認できません。",
     "company": "エム・エーライフマテリアルズ株式会社",
