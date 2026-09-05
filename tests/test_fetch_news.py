@@ -55,6 +55,18 @@ def entry(*, title, published=None, link="https://news.google.com/rss/articles/e
 class FetchNewsTests(unittest.TestCase):
     NOW = datetime(2026, 9, 2, 0, 0, tzinfo=timezone.utc)
 
+    def test_maps_all_wet_tissue_spellings_before_generic_tissue(self):
+        examples = (
+            "ウエットティッシュ新製品",
+            "ウェットティシュー新製品",
+            "New wet tissue product",
+            "New wet wipes product",
+        )
+        for title in examples:
+            with self.subTest(title=title):
+                category_id, _ = fetch_news.map_category(title)
+                self.assertEqual(category_id, "⑤")
+
     def test_preserves_real_publication_time_and_jst_date(self):
         published = datetime(2026, 9, 1, 23, 30, tzinfo=timezone.utc)
         parser = FakeParser([

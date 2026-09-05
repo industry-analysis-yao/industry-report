@@ -34,6 +34,7 @@ DAILY_DIGEST_MIN = int(os.environ.get('DAILY_DIGEST_MIN', '15'))
 DAILY_DIGEST_TARGET = int(os.environ.get('DAILY_DIGEST_TARGET', '20'))
 DAILY_DIGEST_MAX = int(os.environ.get('DAILY_DIGEST_MAX', '20'))
 DAILY_DIGEST_LOOKBACK_DAYS = int(os.environ.get('DAILY_DIGEST_LOOKBACK_DAYS', '14'))
+DAILY_DIGEST_HISTORY_DAYS = int(os.environ.get('DAILY_DIGEST_HISTORY_DAYS', '30'))
 SPECIALTY_MAX_AGE_DAYS = int(os.environ.get('SPECIALTY_MAX_AGE_DAYS', '60'))
 
 
@@ -50,7 +51,14 @@ def assign_daily_section(item):
     if category_id == '④':
         palletizer_terms = ('パレタイ', 'ロボット', 'robot', 'fanuc', 'ファナック', '自動化', 'automation')
         return 'palletizer' if any(term in text for term in palletizer_terms) else 'packaging'
-    wet_terms = ('ウェットティッシュ', 'ウェットティシュー', 'ウェットワイプ', 'wet wipe')
+    # Japanese publishers use both ウェット and ウエット.  Wet-tissue
+    # phrases must be checked before the generic ティシュー/category ⑥ rule.
+    wet_terms = (
+        'ウェットティッシュ', 'ウエットティッシュ',
+        'ウェットティシュー', 'ウエットティシュー',
+        'ウェットワイプ', 'ウエットワイプ',
+        'wet tissue', 'wet tissues', 'wet wipe', 'wet wipes',
+    )
     if category_id == '⑤' or any(term in text for term in wet_terms):
         return 'wet'
     toilet_terms = ('トイレットペーパー', 'toilet paper', 'トイレロール')
@@ -62,6 +70,93 @@ def assign_daily_section(item):
     # Categories ① and ② are manufacturer/competitor news. Unknown regular
     # categories also land here so every digest item is counted exactly once.
     return 'rivals'
+
+
+def _normalize_story_text(value):
+    value = unicodedata.normalize('NFKC', value or '').lower()
+    # Treat the two common Japanese spellings as the same product term.
+    value = value.replace('ウエット', 'ウェット')
+    return re.sub(r'[\W_]+', '', value, flags=re.UNICODE)
+
+
+def _story_date(item):
+    try:
+        return datetime.strptime((item.get('date') or '')[:10], '%Y-%m-%d').date()
+    except (TypeError, ValueError):
+        return None
+
+
+def _ngram_containment(left, right, size=3):
+    if min(len(left), len(right)) < max(12, size):
+        return 0.0
+    left_grams = {left[i:i + size] for i in range(len(left) - size + 1)}
+    right_grams = {right[i:i + size] for i in range(len(right) - size + 1)}
+    if not left_grams or not right_grams:
+        return 0.0
+    return len(left_grams & right_grams) / min(len(left_grams), len(right_grams))
+
+
+def same_news_story(left, right):
+    """Match exact articles and syndicated headlines describing one event."""
+    left_url = (left.get('url') or '').strip()
+    right_url = (right.get('url') or '').strip()
+    if left_url and right_url and left_url == right_url:
+        return True
+
+    left_fingerprint = left.get('fingerprint')
+    right_fingerprint = right.get('fingerprint')
+    if left_fingerprint and right_fingerprint and left_fingerprint == right_fingerprint:
+        return True
+
+    a = _normalize_story_text(left.get('title'))
+    b = _normalize_story_text(right.get('title'))
+    if min(len(a), len(b)) < 12:
+        return False
+    if SequenceMatcher(None, a, b).ratio() >= 0.68:
+        return True
+    match = SequenceMatcher(None, a, b).find_longest_match(0, len(a), 0, len(b))
+    if match.size / min(len(a), len(b)) >= 0.55:
+        return True
+    if _ngram_containment(a, b) >= 0.55:
+        return True
+
+    # Different publishers often rewrite the headline but retain the product
+    # name and event facts in their excerpts. Limit this broader comparison to
+    # near-identical publication dates to avoid suppressing genuine follow-ups.
+    left_date = _story_date(left)
+    right_date = _story_date(right)
+    if left_date and right_date and abs((left_date - right_date).days) <= 3:
+        left_full = _normalize_story_text(' '.join((left.get('title') or '', left.get('summary') or '')))
+        right_full = _normalize_story_text(' '.join((right.get('title') or '', right.get('summary') or '')))
+        if (
+            _ngram_containment(a, right_full) >= 0.34
+            and _ngram_containment(b, left_full) >= 0.34
+        ):
+            return True
+    return False
+
+
+def load_previous_digest_items(data_dir, reference_date, history_days=DAILY_DIGEST_HISTORY_DAYS):
+    """Load prior digest items, excluding today's replaceable snapshot."""
+    cutoff = reference_date - timedelta(days=history_days)
+    previous = []
+    for filename in os.listdir(data_dir):
+        match = re.fullmatch(r'(\d{4}-\d{2}-\d{2})\.json', filename)
+        if not match:
+            continue
+        try:
+            snapshot_date = datetime.strptime(match.group(1), '%Y-%m-%d').date()
+        except ValueError:
+            continue
+        if not (cutoff <= snapshot_date < reference_date):
+            continue
+        try:
+            with open(os.path.join(data_dir, filename), 'r', encoding='utf-8') as f:
+                payload = json.load(f)
+            previous.extend(payload.get('items', []))
+        except (OSError, ValueError, TypeError):
+            continue
+    return previous
 
 # ============================================================
 # 修复 1：严格的专利日期过滤
@@ -373,6 +468,7 @@ def generate_highlights(items, api_key=None, excluded_urls=None, today_str=None)
 def select_daily_digest(
     items,
     *,
+    previous_items=(),
     reference_date=None,
     target=DAILY_DIGEST_TARGET,
     minimum=DAILY_DIGEST_MIN,
@@ -390,9 +486,15 @@ def select_daily_digest(
             return None
 
     regular = [item for item in items if not item.get('permanent_record')]
+    previous_regular = [item for item in previous_items if not item.get('permanent_record')]
+    if previous_regular:
+        regular = [
+            item for item in regular
+            if not any(same_news_story(item, previous) for previous in previous_regular)
+        ]
     recent = []
     fallback = []
-    specialty_fallback = []
+    extended_fallback = []
     for item in regular:
         item_date = parsed_date(item)
         if item_date is None:
@@ -402,8 +504,8 @@ def select_daily_digest(
             recent.append(item)
         elif lookback_days < age <= 30:
             fallback.append(item)
-        elif 30 < age <= SPECIALTY_MAX_AGE_DAYS and item.get('category_id') in {'③', '④', '⑤'}:
-            specialty_fallback.append(item)
+        elif 30 < age <= SPECIALTY_MAX_AGE_DAYS:
+            extended_fallback.append(item)
 
     confidence_rank = {'高': 2, '中': 1, '低': 0, '要確認': 0}
 
@@ -417,38 +519,24 @@ def select_daily_digest(
 
     recent.sort(key=rank, reverse=True)
     fallback.sort(key=rank, reverse=True)
-    specialty_fallback.sort(key=rank, reverse=True)
+    extended_fallback.sort(key=rank, reverse=True)
     if len(recent) < target:
         recent.extend(fallback[:target - len(recent)])
+    if len(recent) < target:
+        # Prefer an older unique article over recycling anything that appeared
+        # in the 30-day digest history. This is the last fill tier only.
+        recent.extend(extended_fallback[:target - len(recent)])
 
     # Reserve space for thin but strategically important categories first.
     minimum_by_category = {'①': 4, '②': 3, '③': 1, '④': 1, '⑤': 1, '⑥': 2}
     selected = []
     selected_urls = set()
 
-    def normalize_title(value):
-        value = unicodedata.normalize('NFKC', value or '').lower()
-        return re.sub(r'[\W_]+', '', value, flags=re.UNICODE)
-
-    def same_story(left, right):
-        a = normalize_title(left.get('title'))
-        b = normalize_title(right.get('title'))
-        if min(len(a), len(b)) < 12:
-            return False
-        if SequenceMatcher(None, a, b).ratio() >= 0.68:
-            return True
-        match = SequenceMatcher(None, a, b).find_longest_match(0, len(a), 0, len(b))
-        if match.size / min(len(a), len(b)) >= 0.55:
-            return True
-        a_grams = {a[i:i + 3] for i in range(len(a) - 2)}
-        b_grams = {b[i:i + 3] for i in range(len(b) - 2)}
-        return len(a_grams & b_grams) / min(len(a_grams), len(b_grams)) >= 0.55
-
     def add(item):
         key = item.get('url') or item.get('fingerprint') or item.get('title')
         if key in selected_urls or len(selected) >= target:
             return False
-        if any(same_story(item, chosen) for chosen in selected):
+        if any(same_news_story(item, chosen) for chosen in selected):
             return False
         selected.append(item)
         selected_urls.add(key)
@@ -456,10 +544,7 @@ def select_daily_digest(
 
     for category_id, quota in minimum_by_category.items():
         count = 0
-        category_pool = recent
-        if category_id in {'③', '④', '⑤'}:
-            category_pool = recent + specialty_fallback
-        for item in category_pool:
+        for item in recent:
             if item.get('category_id') == category_id and add(item):
                 count += 1
                 if count >= quota:
@@ -607,9 +692,16 @@ def main():
     # date, but the snapshot date represents the day the digest was assembled.
     jst_now = datetime.now(pytz.timezone('Asia/Tokyo'))
     digest_date = jst_now.strftime('%Y-%m-%d')
+    previous_digest_items = load_previous_digest_items(
+        data_dir, jst_now.date(), history_days=DAILY_DIGEST_HISTORY_DAYS,
+    )
     digest_items = [
         {**item, 'dashboard_section': assign_daily_section(item)}
-        for item in select_daily_digest(data, reference_date=jst_now.date())
+        for item in select_daily_digest(
+            data,
+            previous_items=previous_digest_items,
+            reference_date=jst_now.date(),
+        )
     ]
     digest_highlights = generate_highlights(digest_items, today_str=digest_date)
     digest_file = os.path.join(data_dir, f'{digest_date}.json')
@@ -628,7 +720,8 @@ def main():
         )
     print(
         f'  [DAILY-DIGEST] Wrote {digest_file} '
-        f'({len(digest_items)} items; target {DAILY_DIGEST_MIN}-{DAILY_DIGEST_MAX})'
+        f'({len(digest_items)} items; target {DAILY_DIGEST_MIN}-{DAILY_DIGEST_MAX}; '
+        f'excluded against {len(previous_digest_items)} prior digest records)'
     )
 
     patent_items = [item for item in data if item.get('permanent_record')]

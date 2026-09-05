@@ -77,7 +77,7 @@ SEARCH_QUERIES_GENERAL = [
 
 SEARCH_QUERIES_SPECIALTY = [
     '(不織布 OR 吸収体 OR パルプ) (新技術 OR 原料価格 OR 生産設備 OR サステナビリティ)',
-    '(ウェットティッシュ OR ウェットワイプ) (新製品 OR 市場 OR 技術)',
+    '(ウェットティッシュ OR ウエットティッシュ OR ウェットワイプ OR "wet tissue" OR "wet wipe") (新製品 OR 市場 OR 技術)',
 ]
 
 SEARCH_QUERIES_MACHINE = [
@@ -122,9 +122,9 @@ KNOWN_COMPANIES = [
 CORE_TERMS = [
     "家庭紙", "ティシュー", "ティッシュ", "トイレットペーパー", "衛生用紙",
     "ペーパータオル", "キッチンペーパー", "おむつ", "オムツ", "ナプキン",
-    "生理用品", "月経", "ロリエ", "失禁", "ウェットティッシュ", "ウェットワイプ", "不織布",
+    "生理用品", "月経", "ロリエ", "失禁", "ウェットティッシュ", "ウエットティッシュ", "ウェットティシュー", "ウエットティシュー", "ウェットワイプ", "ウエットワイプ", "不織布",
     "吸収体", "パルプ", "衛生用品", "diaper", "tissue", "hygiene",
-    "sanitary napkin", "nonwoven", "absorbent core", "wet wipe",
+    "sanitary napkin", "nonwoven", "absorbent core", "wet tissue", "wet wipe",
 ]
 
 MACHINE_TERMS = [
@@ -273,7 +273,12 @@ def map_category(text: str, *, academic: bool = False) -> tuple[str, str]:
         category = "④"
     elif any(term.lower() in lowered for term in ("加工機", "製造機械", "製造設備", "瑞光", "zuiko", "fameccanica", "gdm")):
         category = "③"
-    elif any(term in lowered for term in ("ウェットティッシュ", "ウェットワイプ", "wet wipe")):
+    elif any(term in lowered for term in (
+        "ウェットティッシュ", "ウエットティッシュ",
+        "ウェットティシュー", "ウエットティシュー",
+        "ウェットワイプ", "ウエットワイプ",
+        "wet tissue", "wet tissues", "wet wipe", "wet wipes",
+    )):
         category = "⑤"
     elif any(term in lowered for term in ("パルプ", "製紙", "王子ホールディングス", "日本製紙", "大王製紙")):
         category = "②"

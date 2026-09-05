@@ -35,6 +35,7 @@ jobs:
 
       - name: Fetch news and patents
         env:
+          NEWS_MAX_ITEMS_PER_QUERY: '40'
           NEWS_MAX_ENRICH_ARTICLES: '50'
           SPECIALTY_MAX_AGE_DAYS: '60'
           ACADEMIC_MAX_AGE_DAYS: '90'
@@ -50,6 +51,7 @@ jobs:
           DAILY_DIGEST_TARGET: '20'
           DAILY_DIGEST_MAX: '20'
           DAILY_DIGEST_LOOKBACK_DAYS: '14'
+          DAILY_DIGEST_HISTORY_DAYS: '30'
           SPECIALTY_MAX_AGE_DAYS: '60'
         run: python scripts/generate_dashboard.py
 
