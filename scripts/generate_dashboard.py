@@ -31,10 +31,37 @@ _OPENROUTER_MAX_RETRIES = 5
 _LENIENT_THRESHOLD_DEFAULT = 15
 PATENT_RETENTION_DAYS = int(os.environ.get('PATENT_MAX_AGE_DAYS', '365'))
 DAILY_DIGEST_MIN = int(os.environ.get('DAILY_DIGEST_MIN', '15'))
-DAILY_DIGEST_TARGET = int(os.environ.get('DAILY_DIGEST_TARGET', '18'))
+DAILY_DIGEST_TARGET = int(os.environ.get('DAILY_DIGEST_TARGET', '20'))
 DAILY_DIGEST_MAX = int(os.environ.get('DAILY_DIGEST_MAX', '20'))
 DAILY_DIGEST_LOOKBACK_DAYS = int(os.environ.get('DAILY_DIGEST_LOOKBACK_DAYS', '14'))
 SPECIALTY_MAX_AGE_DAYS = int(os.environ.get('SPECIALTY_MAX_AGE_DAYS', '60'))
+
+
+def assign_daily_section(item):
+    """Assign a digest item to exactly one mutually-exclusive news section."""
+    category_id = item.get('category_id', '')
+    text = unicodedata.normalize(
+        'NFKC',
+        ' '.join(str(item.get(field, '') or '') for field in ('title', 'summary', 'company', 'info_type')),
+    ).lower()
+
+    if category_id == '③':
+        return 'machine'
+    if category_id == '④':
+        palletizer_terms = ('パレタイ', 'ロボット', 'robot', 'fanuc', 'ファナック', '自動化', 'automation')
+        return 'palletizer' if any(term in text for term in palletizer_terms) else 'packaging'
+    wet_terms = ('ウェットティッシュ', 'ウェットティシュー', 'ウェットワイプ', 'wet wipe')
+    if category_id == '⑤' or any(term in text for term in wet_terms):
+        return 'wet'
+    toilet_terms = ('トイレットペーパー', 'toilet paper', 'トイレロール')
+    if any(term in text for term in toilet_terms):
+        return 'toilet'
+    tissue_terms = ('ティッシュペーパー', 'ティシュー', '箱ティッシュ', 'tissue paper', '家庭紙')
+    if category_id == '⑥' or any(term in text for term in tissue_terms):
+        return 'tissue'
+    # Categories ① and ② are manufacturer/competitor news. Unknown regular
+    # categories also land here so every digest item is counted exactly once.
+    return 'rivals'
 
 # ============================================================
 # 修复 1：严格的专利日期过滤
@@ -580,7 +607,10 @@ def main():
     # date, but the snapshot date represents the day the digest was assembled.
     jst_now = datetime.now(pytz.timezone('Asia/Tokyo'))
     digest_date = jst_now.strftime('%Y-%m-%d')
-    digest_items = select_daily_digest(data, reference_date=jst_now.date())
+    digest_items = [
+        {**item, 'dashboard_section': assign_daily_section(item)}
+        for item in select_daily_digest(data, reference_date=jst_now.date())
+    ]
     digest_highlights = generate_highlights(digest_items, today_str=digest_date)
     digest_file = os.path.join(data_dir, f'{digest_date}.json')
     with open(digest_file, 'w', encoding='utf-8') as f:

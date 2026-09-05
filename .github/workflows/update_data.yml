@@ -47,7 +47,7 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           PATENT_MAX_AGE_DAYS: '365'
           DAILY_DIGEST_MIN: '15'
-          DAILY_DIGEST_TARGET: '18'
+          DAILY_DIGEST_TARGET: '20'
           DAILY_DIGEST_MAX: '20'
           DAILY_DIGEST_LOOKBACK_DAYS: '14'
           SPECIALTY_MAX_AGE_DAYS: '60'

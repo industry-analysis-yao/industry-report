@@ -55,6 +55,9 @@
   }
   .sidebar-section { padding: 12px 0 4px; }
   .sidebar-label { font-size: 10px; color: #64748b; padding: 0 16px 4px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .sidebar-group-label { font-size: 10px; color: #94a3b8; padding: 12px 16px 4px; letter-spacing: 0.06em; border-top: 1px solid rgba(148,163,184,0.14); }
+  .sidebar-label + .sidebar-group-label { border-top: 0; padding-top: 4px; }
+  .sidebar-group-note { display: block; color: #64748b; font-size: 9px; letter-spacing: 0; margin-top: 2px; }
   .nav-item {
     display: flex; align-items: center; gap: 10px; padding: 10px 16px;
     color: #94a3b8; cursor: pointer; font-size: 13px; transition: all 0.15s;
@@ -242,6 +245,7 @@
 <aside id="sidebar">
   <div class="sidebar-section">
     <div class="sidebar-label">ナビゲーション</div>
+    <div class="sidebar-group-label">本日のニュース<span class="sidebar-group-note">各項目の合計 ＝ 総合件数</span></div>
     <a class="nav-item active" data-section="s-overview" onclick="showSection('s-overview',this)">
       <span class="nav-icon">🏠</span> 総合（トップ）<span class="nav-count" id="cnt-overview"></span>
     </a>
@@ -266,11 +270,12 @@
     <a class="nav-item" data-section="s-toilet" onclick="showSection('s-toilet',this)">
       <span class="nav-icon">🚿</span> トイレット業界<span class="nav-count" id="cnt-toilet"></span>
     </a>
+    <div class="sidebar-group-label">技術資料ライブラリ<span class="sidebar-group-note">総合件数には含みません</span></div>
     <a class="nav-item" data-section="s-patent" onclick="showSection('s-patent',this)">
       <span class="nav-icon">🔬</span> 競合他社特許<span class="nav-count" id="cnt-patent"></span>
     </a>
     <a class="nav-item" data-section="s-research" onclick="showSection('s-research',this)">
-      <span class="nav-icon">📚</span> 論文情報<span class="nav-count" id="cnt-research"></span>
+      <span class="nav-icon">📚</span> メーカー技術・共同研究<span class="nav-count" id="cnt-research"></span>
     </a>
   </div>
 </aside>
@@ -472,8 +477,8 @@
   <!-- ⑩ RESEARCH -->
   <div class="section" id="s-research">
     <div class="section-header">
-      <div class="section-title">📚 論文情報</div>
-      <div class="section-desc">全カテゴリーから研究開発・論文・学会発表情報を横断収集・表示</div>
+      <div class="section-title">📚 メーカー技術・共同研究</div>
+      <div class="section-desc">競合・設備・材料メーカーが関与する技術発表と共同研究のみを表示</div>
     </div>
     <div class="filter-bar">
       <label>🔍 キーワード:</label>
@@ -483,7 +488,7 @@
     <div class="news-grid" id="grid-research"></div>
     <div class="empty-state" id="empty-research" style="display:none;">
       <div class="empty-state-icon">📚</div>
-      <div class="empty-state-text">現時点で「研究開発・論文」に分類された情報はありません。<br>直近の技術・設備情報をご参照ください。</div>
+      <div class="empty-state-text">現時点でメーカーが関与する技術発表・共同研究はありません。<br>大学単独の一般研究は対象外です。</div>
     </div>
   </div>
 
@@ -899,6 +904,25 @@ function dedupeByUrl(arr) {
   });
 }
 
+// Every item in the selected daily digest belongs to exactly one news section.
+// This keeps the seven sidebar news counts additive and equal to the overview.
+function dailyNewsSection(d) {
+  if (d.dashboard_section) return d.dashboard_section;
+  var text = [d.title, d.summary, d.company, d.info_type].filter(Boolean).join(' ').toLowerCase();
+  if (d.category_id === '③') return 'machine';
+  if (d.category_id === '④') {
+    var palletizerKw = ['パレタイ', 'ロボット', 'robot', 'fanuc', 'ファナック', '自動化', 'automation'];
+    return palletizerKw.some(function(k) { return text.includes(k); }) ? 'palletizer' : 'packaging';
+  }
+  var wetKw = ['ウェットティッシュ', 'ウェットティシュー', 'ウェットワイプ', 'wet wipe'];
+  if (d.category_id === '⑤' || wetKw.some(function(k) { return text.includes(k); })) return 'wet';
+  var toiletKw = ['トイレットペーパー', 'toilet paper', 'トイレロール'];
+  if (toiletKw.some(function(k) { return text.includes(k); })) return 'toilet';
+  var tissueKw = ['ティッシュペーパー', 'ティシュー', '箱ティッシュ', 'tissue paper', '家庭紙'];
+  if (d.category_id === '⑥' || tissueKw.some(function(k) { return text.includes(k); })) return 'tissue';
+  return 'rivals';
+}
+
 function initGrids() {
   var uniqueData = dedupeByUrl(DATA);
   paginateGrid('grid-overview', uniqueData);
@@ -915,47 +939,50 @@ function initGrids() {
   var cntOverview = document.getElementById('cnt-overview');
   if (cntOverview) cntOverview.textContent = uniqueTotal;
 
-  var rivals = dedupeByUrl(DATA.filter(function(d) { return d.category_id === '①' || d.category_id === '②'; }));
+  var dailyGroups = {
+    rivals: [], machine: [], packaging: [], palletizer: [], tissue: [], wet: [], toilet: []
+  };
+  uniqueData.forEach(function(d) { dailyGroups[dailyNewsSection(d)].push(d); });
+  var dailySectionTotal = Object.keys(dailyGroups).reduce(function(sum, key) {
+    return sum + dailyGroups[key].length;
+  }, 0);
+  if (dailySectionTotal !== uniqueTotal) {
+    console.error('Daily section count mismatch:', dailySectionTotal, uniqueTotal);
+  }
+
+  var rivals = dailyGroups.rivals;
   paginateGrid('grid-rivals', rivals);
   document.getElementById('cnt-rivals').textContent = rivals.length;
 
-  var machine = dedupeByUrl(DATA.filter(function(d) { return d.category_id === '③'; }));
+  var machine = dailyGroups.machine;
   paginateGrid('grid-machine', machine);
   document.getElementById('cnt-machine').textContent = machine.length;
 
-  var packagingKw = ['包装', 'パッケージ', 'フィル', 'OPTIMA', 'optima', '充填', '袋', 'ライン'];
-  var packaging = dedupeByUrl(DATA.filter(function(d) {
-    return d.category_id === '④' && (d.info_type === '包装機技術' || packagingKw.some(function(k) { return d.title.includes(k) || d.summary.includes(k); }));
-  }));
+  var packaging = dailyGroups.packaging;
   paginateGrid('grid-packaging', packaging);
   document.getElementById('cnt-packaging').textContent = packaging.length;
 
-  var palletizerKw = ['パレタイ', 'ロボット', 'robot', 'ファナック', 'FANUC', '自動化', 'automation'];
-  var palletizer = dedupeByUrl(DATA.filter(function(d) {
-    return d.category_id === '④' && (palletizerKw.some(function(k) { return d.title.toLowerCase().includes(k.toLowerCase()) || d.summary.toLowerCase().includes(k.toLowerCase()); }) || d.company === 'ファナック');
-  }));
+  var palletizer = dailyGroups.palletizer;
   paginateGrid('grid-palletizer', palletizer);
   document.getElementById('cnt-palletizer').textContent = palletizer.length;
 
-  var tissue = dedupeByUrl(DATA.filter(function(d) { return d.category_id === '⑥'; }));
+  var tissue = dailyGroups.tissue;
   paginateGrid('grid-tissue', tissue);
   document.getElementById('cnt-tissue').textContent = tissue.length;
 
-  var wet = dedupeByUrl(DATA.filter(function(d) { return d.category_id === '⑤'; }));
+  var wet = dailyGroups.wet;
   paginateGrid('grid-wet', wet);
   document.getElementById('cnt-wet').textContent = wet.length;
 
-  var toiletKw = ['トイレット', 'トイレ', '家庭紙', 'ティシュ', 'ティッシュ', 'tissue', 'Tissue', '家庭紙工業', '衛生用紙'];
-  var toilet = dedupeByUrl(DATA.filter(function(d) {
-    return toiletKw.some(function(k) { return d.title.includes(k) || d.summary.includes(k) || d.category_name.includes(k); });
-  }));
+  var toilet = dailyGroups.toilet;
   paginateGrid('grid-toilet', toilet);
   document.getElementById('cnt-toilet').textContent = toilet.length;
 
   // Patent section: VAULT (permanent Bucket C archive) merged with any patents in current date
   var datePatents = dedupeByUrl(DATA.filter(function(d) { return d.info_type === '特許'; }));
-  var vaultPatents = dedupeByUrl(VAULT.filter(function(d) { return d.info_type === '特許' || d.permanent_record; }));
-  var allPatents = dedupeByUrl(vaultPatents.concat(PATENTS).concat(datePatents));
+  var storedPatents = dedupeByUrl(PATENTS.filter(function(d) { return d.info_type === '特許'; }));
+  var vaultPatents = dedupeByUrl(VAULT.filter(function(d) { return d.info_type === '特許'; }));
+  var allPatents = dedupeByUrl(vaultPatents.concat(storedPatents).concat(datePatents));
   if (allPatents.length === 0) {
     document.getElementById('empty-patent').style.display = 'block';
     document.getElementById('grid-patent').innerHTML = '';
@@ -967,9 +994,10 @@ function initGrids() {
   updateFilterCount('fc-patent', allPatents.length);
 
   // Research (Academic) section: VAULT academic items merged with current date's research
-  var dateResearch = dedupeByUrl(DATA.filter(function(d) { return d.info_type === '研究開発' || d.is_academic; }));
-  var vaultAcademic = dedupeByUrl(VAULT.filter(function(d) { return d.is_academic || d.category_id === '⑦' || d.info_type === '研究開発'; }));
-  var allResearch = dedupeByUrl(vaultAcademic.concat(dateResearch));
+  var dateResearch = dedupeByUrl(DATA.filter(function(d) { return d.info_type === '研究開発'; }));
+  var storedResearch = dedupeByUrl(PATENTS.filter(function(d) { return d.info_type === '研究開発'; }));
+  var vaultAcademic = dedupeByUrl(VAULT.filter(function(d) { return d.info_type === '研究開発'; }));
+  var allResearch = dedupeByUrl(vaultAcademic.concat(storedResearch).concat(dateResearch));
   if (allResearch.length === 0) {
     document.getElementById('empty-research').style.display = 'block';
     document.getElementById('grid-research').innerHTML = '';
@@ -980,8 +1008,8 @@ function initGrids() {
   document.getElementById('cnt-research').textContent = allResearch.length || '0';
   updateFilterCount('fc-research', allResearch.length);
 
-  var patentRd = dedupeByUrl(DATA.filter(function(d) { return d.info_type === '特許' || d.info_type === '研究開発' || d.is_academic; }));
-  document.getElementById('patent-count').textContent = dedupeByUrl(patentRd.concat(PATENTS).concat(VAULT)).length;
+  var patentRd = dedupeByUrl(DATA.filter(function(d) { return d.info_type === '特許'; }));
+  document.getElementById('patent-count').textContent = dedupeByUrl(patentRd.concat(storedPatents).concat(vaultPatents)).length;
 }
 
 // ============================================================
