@@ -135,6 +135,33 @@
     "impact_analysis": "278日前の古い特許情報であり、大王製紙の現在のR&D戦略への直接的なインパクトは極めて低い。吸収体技術の進化トレンドを遡行分析する補助資料としての価値はあるが、競合優位性構築には活用不可能。"
   },
   {
+    "title": "Automatic closing cap to prevent wet wipes from drying out",
+    "summary": "ギュジン パクは、ウェットティッシュの乾燥を防ぐ自動閉じキャップを開発した。典型的なウェットティッシュは、合成繊維や植物繊維などを薄く織り込んだ不織布を水で湿潤させ殺菌処理したもので、手や顔を拭う用途で広く普及している。新開発のキャップは製品の乾燥を防ぐ機能を有している。",
+    "company": "ギュジン パク",
+    "date": "2025-11-05",
+    "published_at": "2025-11-05T00:00:00Z",
+    "collected_at": "2026-09-06T23:49:05Z",
+    "category_id": "⑦",
+    "category_name": "学術論文・特許情報",
+    "info_type": "特許",
+    "url": "https://patents.google.com/patent/JP7764071B2/en",
+    "source_name": "Google Patents",
+    "source_url": "https://patents.google.com/",
+    "discovery_provider": "Google Patents direct",
+    "discovery_query": "(\"absorbent article\" OR \"disposable diaper\" OR \"sanitary napkin\" OR \"tissue paper\" OR \"wet wipe\" OR \"absorbent sheet\" OR \"diaper manufacturing\")",
+    "confidence": "高",
+    "quality_flags": [
+      "direct_patent_source"
+    ],
+    "fulltext_status": "excerpt_extracted",
+    "patent_number": "JP7764071B2",
+    "is_academic": true,
+    "permanent_record": true,
+    "fingerprint": "d98829a5437ff348f4f15677",
+    "score": 1,
+    "impact_analysis": "開発技術は大王製紙の製品（ウェットティッシュ等）にも応用可能性があるが、305日前の情報であるため現在の戦略的価値は低い。特許期限や類似技術の進展を考慮する必要がある。"
+  },
+  {
     "title": "Absorbent material and systems and methods for making same",
     "summary": "ディーエスジー テクノロジー ホールディングス リミテッドは、吸収性コア複合材を含む吸収性物品の特許を取得した。この物品は、基材、カバー層、およびそれらの間に配置された複数のファイバー-SAP粒子で構成される。ファイバー-SAP粒子は、吸収性と保持性を向上させるために設計されており、おむつやナプキンなどの衛生用品の性能を高めるための新技術を提供する。今後の製品開発への応用が期待される。",
     "company": "ディーエスジー テクノロジー ホールディングス リミテッド",
