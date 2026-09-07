@@ -6,7 +6,7 @@
       "summary": "サマリー: 佐賀県は災害時の活用を想定した「可搬型ベビーケアルーム」を導入した。この移動可能な設備は通常は県庁などに設置され、災害発生時には被災地へ運ばれる。施設内には「mamaro」と書かれたイラストが光る表示があり、授乳だけでなくおむつ替えや離乳食の準備にも利用できる。同様の設備は熊本のMrMax山鹿店にも導入されており、キャスター付きで移動が可能である。",
       "company": "不明",
       "date": "2026-08-21",
-      "published_at": "2026-08-21T07:00:00Z",
+      "published_at": "2026-08-20T21:00:00Z",
       "collected_at": "2026-09-02T22:01:28Z",
       "category_id": "①",
       "category_name": "日用品・衛生用品メーカー",
@@ -22,7 +22,15 @@
       "discovery_url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBlSnZDZkgwN2pLWTZsZkp3V3hZOTd0UU9UY0lPN25zc0QtTV82OWwzZllDdzBXSk1zRmx0clBQWXJ1YVVsTWVrQnNpQWI5MC1QMHVpRlh3?oc=5",
       "fulltext_status": "excerpt_extracted",
       "score": 35,
-      "impact_analysis": "このニュースは大王製紙のR&D戦略に直接的なインパクトを与えるものではありませんが、可搬型ベビーケアルームの普及が進むことで、紙おむつや離乳食用紙製品の需要が増加する可能性があります。しかし、具体的な製品や技術革新には言及されておらず、市場への影響度は限定的です。"
+      "impact_analysis": "このニュースは大王製紙のR&D戦略に直接的なインパクトを与えるものではありませんが、可搬型ベビーケアルームの普及が進むことで、紙おむつや離乳食用紙製品の需要が増加する可能性があります。しかし、具体的な製品や技術革新には言及されておらず、市場への影響度は限定的です。",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-08-20T21:00:00Z",
+      "publisher_date": "2026-08-21",
+      "publication_date_source": "meta:article:published_time",
+      "publication_date_raw": "2026-08-21T06:00:00+09:00",
+      "publication_date_url": "https://www.nishinippon.co.jp/item/1529000/",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-08-21T07:00:00Z"
     }
   ],
   "highlights": [

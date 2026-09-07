@@ -18,12 +18,19 @@
       "discovery_query": "\"ユニ・チャーム\" (おむつ OR 生理用品 OR 衛生用品 OR 新製品 OR 決算 OR 投資)",
       "confidence": "中",
       "quality_flags": [
-        "fulltext_unavailable",
-        "title_only_summary"
+        "fulltext_unavailable"
       ],
       "fingerprint": "3873952e19b079e63804d857",
       "discovery_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE12ckdwODZrMUVQUTRWMlhrMG9faVlSLXRuYmNHLTd0c3pCcEo0bDJPUGZsdFZhNUUwa01tMWlDODNwZ1FXbWNmazBYRjg3dw?oc=5",
-      "fulltext_status": "unavailable"
+      "fulltext_status": "unavailable",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-08-29T16:00:00Z",
+      "publisher_date": "2026-08-30",
+      "publication_date_source": "meta:article:published_time",
+      "publication_date_raw": "2026-08-29T16:00:00+00:00",
+      "publication_date_url": "https://afri-quest.com/archives/45474",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-08-29T16:00:00Z"
     }
   ],
   "highlights": [

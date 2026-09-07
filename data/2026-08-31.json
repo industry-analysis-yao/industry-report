@@ -22,7 +22,15 @@
       "discovery_url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFA4ZVBEU1RfTkVscEM2bXZGc1J5TEtvRzdoVXZfa0ZXUVJUdWYyMVhCWHllODNpQmdyWUlXSWw0QmhhMjJQdXU1VjhIT0tTcGZ2ZTgyU1NZb1BMdVRUZC1IcWFMTHNFTGlySjZ2bjJ2ZFRtT1ZhYU5MdWlidGt4a00?oc=5",
       "fulltext_status": "excerpt_extracted",
       "score": 35,
-      "impact_analysis": "このニュースは、大王製紙のR&D戦略に直接的なインパクトは少ないが、市場・業界構造への影響度として、子育て支援事業の拡大によるおむつ需要の安定化や、地域社会との関わりを強化する可能性がある。情報は具体的で信頼性が高く、緊急性は低いが、将来的に類似事業が他地域でも展開される可能性を考慮すると、一定の戦略的含意がある。"
+      "impact_analysis": "このニュースは、大王製紙のR&D戦略に直接的なインパクトは少ないが、市場・業界構造への影響度として、子育て支援事業の拡大によるおむつ需要の安定化や、地域社会との関わりを強化する可能性がある。情報は具体的で信頼性が高く、緊急性は低いが、将来的に類似事業が他地域でも展開される可能性を考慮すると、一定の戦略的含意がある。",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-08-30T23:29:35Z",
+      "publisher_date": "2026-08-31",
+      "publication_date_source": "meta:pubdate",
+      "publication_date_raw": "2026-08-31T08:29:35+09:00",
+      "publication_date_url": "https://news.yahoo.co.jp/articles/b19567c68c2f0ebc3e79cb2444b4656e06137115",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-08-30T23:29:35Z"
     },
     {
       "title": "米国でトイレットペーパーが高騰する見通し、カナダとの貿易戦争が影響",
@@ -46,7 +54,15 @@
       ],
       "fingerprint": "4084d4d56ebac0ceded02577",
       "discovery_url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5xZF9XRkxxOGdhUEctaW43SnJBUmloNDZFdHZuMTJyOWtLOWp5X1FrSnU5ZDZrRWtvSnkzYmc1ajh5bmZQOW02eUtJbjdLYzVIVjl0R1Nzby0?oc=5",
-      "fulltext_status": "unavailable"
+      "fulltext_status": "unavailable",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-08-31T08:05:35Z",
+      "publisher_date": "2026-08-31",
+      "publication_date_source": "jsonld:datePublished",
+      "publication_date_raw": "2026-08-31T17:05:35+09:00",
+      "publication_date_url": "https://switch-news.com/politics/post-138232/",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-08-31T08:05:35Z"
     },
     {
       "title": "ローソン、レジ前「不要レシート」をトイレットペーパーに再生",

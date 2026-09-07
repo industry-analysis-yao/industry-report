@@ -7,8 +7,8 @@
       "title": "不要な紙おむつが「ペット用品」に生まれ変わる？ アップサイクルの“いま”を有識者が語る",
       "summary": "フジライト工業（兵庫県姫路市）は、紙おむつ製造工程で発生する短繊維パルプや樹脂粉の吸水性を活用し、世界初の固形猫砂へのアップサイクルに成功した。富永高規取締役によれば、再資源化のポイントは「特性を活かした別用途開発」にあり、原料の組成調整や物性制御（熱量・硬さ・密度）を通じて新素材を設計。対象選定基準として「発生量」「価値成分」「素材固有機能」を挙げ、リサイクル困難な廃材でも新価値創造が可能と強調。同技術の次世代継承が今後の課題としている。（取材：2026年8月）",
       "company": "不明",
-      "date": "2026-09-07",
-      "published_at": "2026-09-06T22:07:30Z",
+      "date": "2026-09-06",
+      "published_at": "2026-09-06T12:55:18Z",
       "collected_at": "2026-09-06T23:48:45Z",
       "category_id": "①",
       "category_name": "日用品・衛生用品メーカー",
@@ -19,20 +19,30 @@
       "discovery_provider": "Google News RSS",
       "discovery_query": "(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)",
       "confidence": "中",
-      "quality_flags": [],
-      "fingerprint": "b660c7eae826f7325ef40027",
+      "quality_flags": [
+        "publisher_date_corrected"
+      ],
+      "fingerprint": "0620608d2d625a89600e5f01",
       "discovery_url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBmWmFZSlJ3clFFS3k1c2d2UzVhVjJUQ05fS3JBMUhkXzNybzlBNkdFVE9ZazhHNzNYb2ItUXhoZDNPSEtIMmVxbHdIU1BZWDR2OHhzQ1N3?oc=5",
       "fulltext_status": "excerpt_extracted",
       "score": 78,
       "impact_analysis": "大王製紙のR&D戦略に対して、廃棄物のアップサイクル技術が環境対応と新事業創出の両面で貢献する可能性を示唆。特に紙おむつ関連廃材の高付加価値転換ノウハウは自社のサステナビリティ推進と技術ポートフォリオ拡大に直接活用可能。ただし競合他社の先行事例であるため差別化要素の抽出が必須。",
-      "dashboard_section": "rivals"
+      "dashboard_section": "rivals",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-09-06T12:55:18Z",
+      "publisher_date": "2026-09-06",
+      "publication_date_source": "jsonld:datePublished",
+      "publication_date_raw": "2026-09-06T21:55:18+09:00",
+      "publication_date_url": "https://jocr.jp/raditopi/2026/09/07/704428/",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-09-06T22:07:30Z"
     },
     {
       "title": "「トイレットペーパー」が簡単に持ち運べる？ 災害時にも役立つ“裏技”とは",
       "summary": "大王製紙は9月4日、公式インスタグラムで災害時に役立つトイレットペーパーの携帯方法を公開した。縦20cm以上のジップ袋を使用し、（1）トイレットペーパーを揉んで圧縮（2）芯を回転させて抜き取り（3）袋に入れて空気を抜くことで、体積を半減可能。袋に入れたまま中心から使用でき、避難所での移動時にも便利と提案。防災備蓄の実用術として注目される。【画像解説付き】",
       "company": "不明",
       "date": "2026-09-04",
-      "published_at": "2026-09-04T11:01:43Z",
+      "published_at": "2026-09-04T11:00:00Z",
       "collected_at": "2026-09-06T23:48:44Z",
       "category_id": "⑥",
       "category_name": "ティッシュペーパー・家庭紙専業メーカー",
@@ -49,7 +59,15 @@
       "fulltext_status": "excerpt_extracted",
       "score": 65,
       "impact_analysis": "このニュースは大王製紙のブランドイメージ向上と災害時の有用性を示す具体的な提案として、消費者向けのプレスリリースとして有効である。特に防災備蓄関連製品の市場拡大に寄与する可能性が高い。ただし、直接的には研究開発戦略に影響を与えるものではなく、むしろマーケティング戦略に該当する。",
-      "dashboard_section": "toilet"
+      "dashboard_section": "toilet",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-09-04T11:00:00Z",
+      "publisher_date": "2026-09-04",
+      "publication_date_source": "meta:article:published_time",
+      "publication_date_raw": "2026-09-04T11:00:00+00:00",
+      "publication_date_url": "https://otonanswer.jp/post/390309/",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-09-04T11:01:43Z"
     },
     {
       "title": "イヤイヤ期のおむつ替えをトミカ・プラレールデザインで「楽しい時間」へ 『マミーポコパンツ』『ムーニーおしりふき』でラインナップを拡充",
@@ -73,7 +91,15 @@
       "fulltext_status": "excerpt_extracted",
       "score": 55,
       "impact_analysis": "競合他社であるユニ・チャームの製品革新と市場拡大戦略は、大王製紙のR&D戦略に間接的な影響を与える可能性がある。特に、キャラクターデザインを活用した製品差別化と消費者エンゲージメントの向上は、大王製紙も検討すべき戦術となり得る。ただし、当該ニュースは自社製品の直接的な競合情報や技術革新を含まないため、戦略的インパクトは限定的。",
-      "dashboard_section": "rivals"
+      "dashboard_section": "rivals",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-09-04T02:00:02Z",
+      "publisher_date": "2026-09-04",
+      "publication_date_source": "jsonld:datePublished",
+      "publication_date_raw": "2026-09-04 11:00:02",
+      "publication_date_url": "https://prtimes.jp/main/html/rd/p/000000212.000026351.html",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-09-04T02:00:02Z"
     },
     {
       "title": "【八代の象徴】吹き上がる炎と黒煙 日本製紙八代工場で火事 度重なる被害に市民は（2026年9月4日掲載）｜KKT NEWS NNN",
@@ -97,7 +123,15 @@
       "fulltext_status": "excerpt_extracted",
       "score": 35,
       "impact_analysis": "日本製紙の工場火災は直接的な競合他社の事故ではあるが、大王製紙のR&D戦略には即時的影響なし。ただし、製紙業界全体の安全基準見直しや地域社会との関係構築に関する間接的な示唆を包含。工場解体作業のリスク管理情報として参考価値あり。",
-      "dashboard_section": "rivals"
+      "dashboard_section": "rivals",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-09-04T09:52:00Z",
+      "publisher_date": "2026-09-04",
+      "publication_date_source": "jsonld:datePublished",
+      "publication_date_raw": "2026-09-04T18:52:00+09:00",
+      "publication_date_url": "https://news.ntv.co.jp/n/kkt/category/society/kkea32eb583c984f35b9e081c99c0a09bc",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-09-04T09:52:00Z"
     },
     {
       "title": "「月経カップを使ってみたい。でも不安。」そんな声に応える返金キャンペーンを開始",
@@ -121,14 +155,22 @@
       "fulltext_status": "excerpt_extracted",
       "score": 25,
       "impact_analysis": "大王製紙のR&D戦略への直接的インパクトは限定的。月経カップは大王製紙の主要製品である紙おむつや生理用ナプキンと競合する可能性はあるが、技術開発や特許情報が含まれていないため直接的な影響は不明。市場・業界構造への影響度は中程度で、フェムケア市場のトレンド変化を示唆。情報の具体性・信頼性は一定あるが、特許や技術的な詳細が欠如。緊急性・時宜性は低く、新規技術や市場の劇的変化ではない。",
-      "dashboard_section": "rivals"
+      "dashboard_section": "rivals",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-08-20T01:10:02Z",
+      "publisher_date": "2026-08-20",
+      "publication_date_source": "jsonld:datePublished",
+      "publication_date_raw": "2026-08-20 10:10:02",
+      "publication_date_url": "https://prtimes.jp/main/html/rd/p/000000035.000128537.html",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-08-20T01:10:02Z"
     },
     {
       "title": "ＢＡＳＦ、印に紙おむつ・ＳＡＰラボ新設",
       "summary": "ＢＡＳＦ、印に紙おむつ・ＳＡＰラボ新設",
       "company": "不明",
       "date": "2026-08-21",
-      "published_at": "2026-08-20T20:02:38Z",
+      "published_at": "2026-08-20T19:55:00Z",
       "collected_at": "2026-09-02T22:35:08Z",
       "category_id": "①",
       "category_name": "日用品・衛生用品メーカー",
@@ -146,7 +188,15 @@
       "fingerprint": "f938452bad98a1525a8ec798",
       "discovery_url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5SSmk4eVV4NUl1SWpnakJGNTlEbjZHZG0wM1J2MmhPeFc5dk11VzhoYzYzLWtneDI5R0RRVW1DTTB4X0tHTGZJeFJrXzBoN3FUSkQw?oc=5",
       "fulltext_status": "unavailable",
-      "dashboard_section": "rivals"
+      "dashboard_section": "rivals",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-08-20T19:55:00Z",
+      "publisher_date": "2026-08-21",
+      "publication_date_source": "meta:article:published_time",
+      "publication_date_raw": "2026-08-20T19:55:00+00:00",
+      "publication_date_url": "https://chemicaldaily.com/archives/842582",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-08-20T20:02:38Z"
     },
     {
       "title": "年4%超の配当を受け取りながら「高級ティッシュ」をゲット…家計が助かる日用品・食品・外食系銘柄8選【9月の株主優待】",
@@ -171,7 +221,15 @@
       "fingerprint": "dec12cfcac60c43a2cd0d44c",
       "discovery_url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE51c2tVYTN5VjE3bXlsZGQ2WXRGeTNQbmFDLWJjejhyNTl4aHVlaVg5V2ZZcDk2WXZONjV2LWtVV0laUEJCRDBCcmdmNnFfQWtLcDUwczlSdWRKUXhuRlg3Tg?oc=5",
       "fulltext_status": "unavailable",
-      "dashboard_section": "tissue"
+      "dashboard_section": "tissue",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-09-06T22:30:00Z",
+      "publisher_date": "2026-09-07",
+      "publication_date_source": "jsonld:datePublished",
+      "publication_date_raw": "2026-09-07T07:30:00+09:00",
+      "publication_date_url": "https://news.infoseek.co.jp/article/toushiru_53290/",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-09-06T22:30:00Z"
     },
     {
       "title": "丸めたティッシュをグラスに入れるおじさん。それ…まさか飲むの…!?／恐らく誰の人生にも影響を及ぼすことはない僕のサラリーマン生活 (2026年8月23日掲載)",

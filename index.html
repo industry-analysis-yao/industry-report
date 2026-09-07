@@ -536,6 +536,8 @@ function getCatColor(cid) {
 // CARD BUILDER
 // ============================================================
 function buildCard(item, idx) {
+  const dateLabel = item.permanent_record || item.info_type === '特許'
+    ? '公開日' : item.publication_date_status === 'verified' ? '原文公開日' : '検索日時・原文日付未確認';
   const typeClass = getTypeBadgeClass(item.info_type);
   const catColor = getCatColor(item.category_id);
   const verifyBadge = item.confidence === '要確認' ? '<span class="badge badge-verify">⚠️ 要確認</span>' : '';
@@ -571,7 +573,7 @@ function buildCard(item, idx) {
             ${permanentBadge}
           </div>
         </div>
-        <div class="card-date">📅 ${item.date}</div>
+        <div class="card-date">📅 ${dateLabel}: ${item.date}</div>
       </div>
       <div class="card-body">
         <div class="card-title">${item.title}</div>

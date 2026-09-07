@@ -18,12 +18,19 @@
       "discovery_query": "(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)",
       "confidence": "中",
       "quality_flags": [
-        "fulltext_unavailable",
-        "title_only_summary"
+        "fulltext_unavailable"
       ],
       "fingerprint": "1d70016ce99ec8500eadf3cf",
       "discovery_url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5qSUtNbThrMUdEc1BWT0wzRmVVZFRFcXI5RVhlWU1oQ2FzRjNCWmZFTXg4cGR3eWl4dG1nZVZwemRCblFOZkRiU0dhRWlaSGFSeUdKd2NHYzJIYmdZ?oc=5",
-      "fulltext_status": "unavailable"
+      "fulltext_status": "unavailable",
+      "publication_date_status": "verified",
+      "publisher_published_at": "2026-09-02T05:00:00Z",
+      "publisher_date": "2026-09-02",
+      "publication_date_source": "itemprop:datePublished",
+      "publication_date_raw": "2026-09-02T14:00:00+09:00",
+      "publication_date_url": "https://www.excite.co.jp/news/article/AMP_507433/",
+      "publication_date_version": 1,
+      "rss_published_at": "2026-09-02T05:00:00Z"
     },
     {
       "title": "生理用品の開発販売 モナカンパニー 「月経ディスク」に新商品 長時間使用が可能に",

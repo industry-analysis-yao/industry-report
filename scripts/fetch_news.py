@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Collect recent, relevant industry news from Google News RSS.
 
-Google News is used only as a discovery feed. The RSS publication timestamp is
-preserved as ``published_at``; ``collected_at`` records when this job saw the
-article. An article without a trustworthy publication timestamp is rejected
-instead of being labelled as today's news.
+Google News is used only as a discovery feed. Its timestamp is preserved as
+``rss_published_at``; publisher evidence supplies ``published_at`` and ``date``.
+Only publisher-verified news may enter the daily digest.
 """
 
 from __future__ import annotations
@@ -26,6 +25,7 @@ from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from typing import Any, Iterable
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
+from news_dates import article_url, publication_evidence, verified_news
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -209,14 +209,14 @@ def canonicalize_url(url: str) -> str:
 
 def parse_published_at(entry: Any) -> datetime | None:
     """Return a timezone-aware UTC timestamp from a feed entry."""
-    for key in ("published_parsed", "updated_parsed", "created_parsed"):
+    for key in ("published_parsed",):
         parsed = entry.get(key)
         if parsed:
             try:
                 return datetime.fromtimestamp(calendar.timegm(parsed), tz=timezone.utc)
             except (TypeError, ValueError, OverflowError):
                 pass
-    for key in ("published", "updated", "created"):
+    for key in ("published",):
         raw = entry.get(key)
         if not raw:
             continue
@@ -660,10 +660,10 @@ def resolve_google_news_url(url: str, *, session: Any = None) -> str:
     return canonicalize_url(url)
 
 
-def fetch_article_excerpt(url: str, *, session: Any = None) -> str:
-    """Extract a short factual text excerpt from an accessible publisher page."""
+def fetch_article_details(url: str, *, session: Any = None) -> dict:
+    """Extract publisher publication evidence alongside the article excerpt."""
     if requests is None or BeautifulSoup is None or not url or "news.google.com" in urlsplit(url).netloc:
-        return ""
+        return {}
     client = session or requests.Session()
     try:
         response = client.get(
@@ -674,15 +674,16 @@ def fetch_article_excerpt(url: str, *, session: Any = None) -> str:
         )
         response.raise_for_status()
         if "html" not in response.headers.get("Content-Type", "").lower():
-            return ""
+            return {}
         if len(response.content) > 3_000_000:
-            return ""
+            return {}
         # A number of Japanese corporate sites omit charset or are incorrectly
         # interpreted as ISO-8859-1 by requests. Prefer detected encoding in
         # those cases to avoid storing mojibake in the dashboard.
         if not response.encoding or response.encoding.lower() in {"iso-8859-1", "latin-1"}:
             response.encoding = response.apparent_encoding or "utf-8"
         soup = BeautifulSoup(response.text, "html.parser")
+        details = publication_evidence(soup, response.url)
         candidates = []
         for attrs in (
             {"property": "og:description"}, {"name": "description"},
@@ -700,20 +701,37 @@ def fetch_article_excerpt(url: str, *, session: Any = None) -> str:
             if body:
                 candidates.append(body[:1800])
         candidates = [text for text in candidates if len(text) >= 60]
-        return max(candidates, key=len)[:1800] if candidates else ""
+        details['excerpt'] = max(candidates, key=len)[:1800] if candidates else ''
+        return details
     except Exception:
-        return ""
+        return {}
+
+
+def fetch_article_excerpt(url: str, *, session: Any = None) -> str:
+    return fetch_article_details(url, session=session).get('excerpt', '')
 
 
 def enrich_item(item: dict[str, Any]) -> dict[str, Any]:
     discovery_url = item.get("url", "")
-    resolved = resolve_google_news_url(discovery_url)
+    resolved = article_url(resolve_google_news_url(discovery_url))
     flags = set(item.get("quality_flags", []))
     if resolved and "news.google.com" not in urlsplit(resolved).netloc:
-        item["discovery_url"] = discovery_url
+        item.setdefault("discovery_url", discovery_url)
         item["url"] = resolved
         flags.discard("aggregator_url")
-        excerpt = fetch_article_excerpt(resolved)
+        details = fetch_article_details(resolved)
+        excerpt = details.pop('excerpt', '')
+        item.update(details)
+        item.setdefault('rss_published_at', item.get('published_at'))
+        if details.get('publication_date_status') == 'verified':
+            if item.get('date') != details['publisher_date']:
+                flags.add('publisher_date_corrected')
+            item['date'] = details['publisher_date']
+            item['published_at'] = details['publisher_published_at']
+            flags.discard('publication_date_unverified')
+        else:
+            item['publication_date_status'] = 'unverified'
+            flags.add('publication_date_unverified')
         if excerpt and normalize_text(excerpt) != normalize_text(item.get("title", "")):
             item["summary"] = excerpt
             flags.discard("title_only_summary")
@@ -722,6 +740,8 @@ def enrich_item(item: dict[str, Any]) -> dict[str, Any]:
             flags.add("fulltext_unavailable")
             item["fulltext_status"] = "unavailable"
     else:
+        item['publication_date_status'] = 'unverified'
+        flags.add('publication_date_unverified')
         flags.add("original_url_unresolved")
         item["fulltext_status"] = "unavailable"
     item["quality_flags"] = sorted(flags)
@@ -805,6 +825,8 @@ def fetch_google_news_rss(
             "published_at": isoformat_utc(published),
             "collected_at": isoformat_utc(reference_time),
             "category_id": category_id,
+            "rss_published_at": isoformat_utc(published),
+            "publication_date_status": "unverified",
             "category_name": category_name,
             "info_type": "特許" if academic and "特許" in text else determine_info_type(text),
             "url": discovery_url,
@@ -970,6 +992,12 @@ def main() -> int:
     script_dir = os.path.dirname(os.path.abspath(__file__))
     data_path = os.path.normpath(os.path.join(script_dir, "..", "data", "news_data.json"))
     regular, patents, highlights = load_existing(data_path)
+    if not args.dry_run:
+        # Legacy records have only a search-feed date. Check them before they
+        # can be selected or suppress a newly discovered publisher record.
+        pending = [row for row in regular if not verified_news(row)]
+        checked = enrich_items(pending, limit=len(pending))
+        regular = [row for row in regular if verified_news(row)] + checked
     fresh, errors = collect_news(
         query_limit=args.query_limit,
         max_items=args.max_items,

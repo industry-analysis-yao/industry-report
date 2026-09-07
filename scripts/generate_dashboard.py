@@ -14,6 +14,7 @@ import pytz
 import unicodedata
 from difflib import SequenceMatcher
 from datetime import datetime, timedelta, timezone
+from news_dates import verified_news
 
 try:
     from dotenv import load_dotenv
@@ -485,7 +486,7 @@ def select_daily_digest(
         except (TypeError, ValueError):
             return None
 
-    regular = [item for item in items if not item.get('permanent_record')]
+    regular = [item for item in items if not item.get('permanent_record') and verified_news(item)]
     previous_regular = [item for item in previous_items if not item.get('permanent_record')]
     if previous_regular:
         regular = [
@@ -520,12 +521,6 @@ def select_daily_digest(
     recent.sort(key=rank, reverse=True)
     fallback.sort(key=rank, reverse=True)
     extended_fallback.sort(key=rank, reverse=True)
-    if len(recent) < target:
-        recent.extend(fallback[:target - len(recent)])
-    if len(recent) < target:
-        # Prefer an older unique article over recycling anything that appeared
-        # in the 30-day digest history. This is the last fill tier only.
-        recent.extend(extended_fallback[:target - len(recent)])
 
     # Reserve space for thin but strategically important categories first.
     minimum_by_category = {'①': 4, '②': 3, '③': 1, '④': 1, '⑤': 1, '⑥': 2}
@@ -554,6 +549,14 @@ def select_daily_digest(
         if len(selected) >= target:
             break
         add(item)
+
+    # Fill after deduplication, scanning the complete fallback pools. Slicing
+    # before deduplication could leave a short digest despite enough candidates.
+    for pool in (fallback, extended_fallback):
+        for item in pool:
+            if len(selected) >= target:
+                break
+            add(item)
 
     selected.sort(key=rank, reverse=True)
     return selected[:maximum]
@@ -629,6 +632,7 @@ def main():
     # model as though the article body had been read.
     pending_items = [
         it for it in data
+        if (it.get('permanent_record') or verified_news(it))
         if not ((it.get('score') or 0) > 0 and it.get('impact_analysis'))
         and 'title_only_summary' not in it.get('quality_flags', [])
         and it.get('fulltext_status') != 'unavailable'

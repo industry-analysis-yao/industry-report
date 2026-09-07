@@ -1,0 +1,719 @@
+{
+  "checked_at": "2026-09-07T22:45:23.902602+00:00",
+  "records": [
+    {
+      "url": "https://news.infoseek.co.jp/article/toushiru_53290",
+      "canonical_url": "https://news.infoseek.co.jp/article/toushiru_53290",
+      "previous_date": "2026-09-07",
+      "publisher_date": "2026-09-07",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-07T07:30:00+09:00",
+      "evidence_url": "https://news.infoseek.co.jp/article/toushiru_53290/"
+    },
+    {
+      "url": "https://jocr.jp/raditopi/2026/09/07/704428",
+      "canonical_url": "https://jocr.jp/raditopi/2026/09/07/704428",
+      "previous_date": "2026-09-07",
+      "publisher_date": "2026-09-06",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-06T21:55:18+09:00",
+      "evidence_url": "https://jocr.jp/raditopi/2026/09/07/704428/"
+    },
+    {
+      "url": "https://www.okinawatimes.co.jp/articles/-/1917978",
+      "canonical_url": "https://www.okinawatimes.co.jp/articles/-/1917978",
+      "previous_date": "2026-09-06",
+      "publisher_date": "2026-09-06",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-06T03:57:00+09:00",
+      "evidence_url": "https://www.okinawatimes.co.jp/articles/-/1917978"
+    },
+    {
+      "url": "https://news.livedoor.com/topics/detail/32249446",
+      "canonical_url": "https://news.livedoor.com/topics/detail/32249446",
+      "previous_date": "2026-09-05",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://www.walkerplus.com/article/1121163/image11537960.html",
+      "canonical_url": "https://www.walkerplus.com/article/1121163/",
+      "previous_date": "2026-09-05",
+      "publisher_date": "2023-02-24",
+      "status": "verified",
+      "evidence_source": "walkerplus:time",
+      "evidence_raw": "2023年2月24日",
+      "evidence_url": "https://www.walkerplus.com/article/1121163/"
+    },
+    {
+      "url": "https://news.livedoor.com/topics/detail/32247897",
+      "canonical_url": "https://news.livedoor.com/topics/detail/32247897",
+      "previous_date": "2026-09-05",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://otonanswer.jp/post/390309",
+      "canonical_url": "https://otonanswer.jp/post/390309",
+      "previous_date": "2026-09-04",
+      "publisher_date": "2026-09-04",
+      "status": "verified",
+      "evidence_source": "meta:article:published_time",
+      "evidence_raw": "2026-09-04T11:00:00+00:00",
+      "evidence_url": "https://otonanswer.jp/post/390309/"
+    },
+    {
+      "url": "https://news.ntv.co.jp/n/kkt/category/society/kkea32eb583c984f35b9e081c99c0a09bc",
+      "canonical_url": "https://news.ntv.co.jp/n/kkt/category/society/kkea32eb583c984f35b9e081c99c0a09bc",
+      "previous_date": "2026-09-04",
+      "publisher_date": "2026-09-04",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-04T18:52:00+09:00",
+      "evidence_url": "https://news.ntv.co.jp/n/kkt/category/society/kkea32eb583c984f35b9e081c99c0a09bc"
+    },
+    {
+      "url": "https://mantan-web.jp/prtimes/article/20260904prt00m200001053a.html",
+      "canonical_url": "https://mantan-web.jp/prtimes/article/20260904prt00m200001053a.html",
+      "previous_date": "2026-09-04",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://373news.com/news/national/photo/2026090401000876",
+      "canonical_url": "https://373news.com/news/national/photo/2026090401000876",
+      "previous_date": "2026-09-04",
+      "publisher_date": "2026-09-04",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-04T13:06:12+09:00",
+      "evidence_url": "https://373news.com/news/national/photo/2026090401000876"
+    },
+    {
+      "url": "https://373news.com/news/national/detail/2026090401000876",
+      "canonical_url": "https://373news.com/news/national/detail/2026090401000876",
+      "previous_date": "2026-09-04",
+      "publisher_date": "2026-09-04",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-04T13:06:12+09:00",
+      "evidence_url": "https://373news.com/news/national/detail/2026090401000876"
+    },
+    {
+      "url": "https://prtimes.jp/main/html/rd/p/000000212.000026351.html",
+      "canonical_url": "https://prtimes.jp/main/html/rd/p/000000212.000026351.html",
+      "previous_date": "2026-09-04",
+      "publisher_date": "2026-09-04",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-04 11:00:02",
+      "evidence_url": "https://prtimes.jp/main/html/rd/p/000000212.000026351.html"
+    },
+    {
+      "url": "https://article.auone.jp/article/a2bf4736-479b-49c2-a2a1-d69af7648436",
+      "canonical_url": "https://article.auone.jp/article/a2bf4736-479b-49c2-a2a1-d69af7648436",
+      "previous_date": "2026-09-04",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://www.jiji.com/jc/article?k=2026090300677&g=eco",
+      "canonical_url": "https://www.jiji.com/jc/article?k=2026090300677&g=eco",
+      "previous_date": "2026-09-04",
+      "publisher_date": "2026-09-04",
+      "status": "verified",
+      "evidence_source": "meta:pubdate",
+      "evidence_raw": "2026-09-04T07:04:00+09:00",
+      "evidence_url": "https://www.jiji.com/jc/article?k=2026090300677&g=eco"
+    },
+    {
+      "url": "https://www.chukei-news.co.jp/news/2026/09/04/OK0002609040101_01",
+      "canonical_url": "https://www.chukei-news.co.jp/news/2026/09/04/OK0002609040101_01",
+      "previous_date": "2026-09-04",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://www.jakartashimbun.com/free/detail/72943.html",
+      "canonical_url": "https://www.jakartashimbun.com/free/detail/72943.html",
+      "previous_date": "2026-09-04",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://medical.nikkeibp.co.jp/leaf/all/series/drug/update/202609/594400.html",
+      "canonical_url": "https://medical.nikkeibp.co.jp/leaf/all/series/drug/update/202609/594400.html",
+      "previous_date": "2026-09-03",
+      "publisher_date": "2026-09-03",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-03T23:45:06+09:00",
+      "evidence_url": "https://medical.nikkeibp.co.jp/leaf/all/series/drug/update/202609/594400.html"
+    },
+    {
+      "url": "https://news.infoseek.co.jp/topics/otonanswer_390032",
+      "canonical_url": "https://news.infoseek.co.jp/topics/otonanswer_390032",
+      "previous_date": "2026-09-03",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://topics.smt.docomo.ne.jp/amp/article/jiji/business/jiji-20260903Y604",
+      "canonical_url": "https://topics.smt.docomo.ne.jp/amp/article/jiji/business/jiji-20260903Y604",
+      "previous_date": "2026-09-03",
+      "publisher_date": "2026-09-03",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-03 22:09:27",
+      "evidence_url": "https://topics.smt.docomo.ne.jp/amp/article/jiji/business/jiji-20260903Y604"
+    },
+    {
+      "url": "https://373news.com/news/national/photo/2026090301001797",
+      "canonical_url": "https://373news.com/news/national/photo/2026090301001797",
+      "previous_date": "2026-09-03",
+      "publisher_date": "2026-09-03",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-03T19:25:51+09:00",
+      "evidence_url": "https://373news.com/news/national/photo/2026090301001797"
+    },
+    {
+      "url": "https://topics.smt.docomo.ne.jp/amp/article/jiji/business/jiji-20260903Y585",
+      "canonical_url": "https://topics.smt.docomo.ne.jp/amp/article/jiji/business/jiji-20260903Y585",
+      "previous_date": "2026-09-03",
+      "publisher_date": "2026-09-03",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-03 19:19:03",
+      "evidence_url": "https://topics.smt.docomo.ne.jp/amp/article/jiji/business/jiji-20260903Y585"
+    },
+    {
+      "url": "https://news.livedoor.com/article/detail/32233580",
+      "canonical_url": "https://news.livedoor.com/article/detail/32233580",
+      "previous_date": "2026-09-03",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://0115765.com/archives/203591",
+      "canonical_url": "https://0115765.com/archives/203591",
+      "previous_date": "2026-09-03",
+      "publisher_date": "2026-09-03",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-03T12:25:53+09:00",
+      "evidence_url": "https://0115765.com/archives/203591"
+    },
+    {
+      "url": "https://motor-fan.jp/article/1496764/202605koba-054-018",
+      "canonical_url": "https://motor-fan.jp/article/1496764/202605koba-054-018",
+      "previous_date": "2026-09-03",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://news.infoseek.co.jp/article/prtimes_000000210_000055607",
+      "canonical_url": "https://news.infoseek.co.jp/article/prtimes_000000210_000055607",
+      "previous_date": "2026-09-03",
+      "publisher_date": "2026-09-03",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-03T05:10:02+09:00",
+      "evidence_url": "https://news.infoseek.co.jp/article/prtimes_000000210_000055607/"
+    },
+    {
+      "url": "http://www.excite.co.jp/news/article/AMP_507433",
+      "canonical_url": "http://www.excite.co.jp/news/article/AMP_507433",
+      "previous_date": "2026-09-02",
+      "publisher_date": "2026-09-02",
+      "status": "verified",
+      "evidence_source": "itemprop:datePublished",
+      "evidence_raw": "2026-09-02T14:00:00+09:00",
+      "evidence_url": "https://www.excite.co.jp/news/article/AMP_507433/"
+    },
+    {
+      "url": "https://prtimes.jp/main/html/rd/p/000000210.000055607.html",
+      "canonical_url": "https://prtimes.jp/main/html/rd/p/000000210.000055607.html",
+      "previous_date": "2026-09-02",
+      "publisher_date": "2026-09-02",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-02 11:00:02",
+      "evidence_url": "https://prtimes.jp/main/html/rd/p/000000210.000055607.html"
+    },
+    {
+      "url": "https://prtimes.jp/main/html/rd/p/000001342.000006976.html",
+      "canonical_url": "https://prtimes.jp/main/html/rd/p/000001342.000006976.html",
+      "previous_date": "2026-09-02",
+      "publisher_date": "2026-09-02",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-02 10:10:02",
+      "evidence_url": "https://prtimes.jp/main/html/rd/p/000001342.000006976.html"
+    },
+    {
+      "url": "https://www.chukei-news.co.jp/news/2026/09/02/OK0002609020401_01",
+      "canonical_url": "https://www.chukei-news.co.jp/news/2026/09/02/OK0002609020401_01",
+      "previous_date": "2026-09-02",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://newsdig.tbs.co.jp/articles/sbs/2913314",
+      "canonical_url": "https://newsdig.tbs.co.jp/articles/sbs/2913314",
+      "previous_date": "2026-09-01",
+      "publisher_date": "2026-09-01",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-01T19:07:00+09:00",
+      "evidence_url": "https://newsdig.tbs.co.jp/articles/sbs/2913314"
+    },
+    {
+      "url": "https://news.livedoor.com/pr_topics/detail/32214671",
+      "canonical_url": "https://news.livedoor.com/pr_topics/detail/32214671",
+      "previous_date": "2026-09-01",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://news.livedoor.com/topics/detail/32212527",
+      "canonical_url": "https://news.livedoor.com/topics/detail/32212527",
+      "previous_date": "2026-09-01",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://www.chiba-tv.com/plus/detail/amp/2026091963422",
+      "canonical_url": "https://www.chiba-tv.com/plus/detail/amp/2026091963422",
+      "previous_date": "2026-09-01",
+      "publisher_date": "2026-09-02",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-02T02:39:26+09:00",
+      "evidence_url": "https://www.chiba-tv.com/plus/detail/amp/2026091963422"
+    },
+    {
+      "url": "http://www.excite.co.jp/news/article/CrankinTrend_E190557",
+      "canonical_url": "http://www.excite.co.jp/news/article/CrankinTrend_E190557",
+      "previous_date": "2026-09-01",
+      "publisher_date": "2026-09-01",
+      "status": "verified",
+      "evidence_source": "itemprop:datePublished",
+      "evidence_raw": "2026-09-01T11:50:00+09:00",
+      "evidence_url": "https://www.excite.co.jp/news/article/CrankinTrend_E190557/"
+    },
+    {
+      "url": "https://voix.jp/sdgs/sdgs/88560",
+      "canonical_url": "https://voix.jp/sdgs/sdgs/88560",
+      "previous_date": "2026-09-01",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://prtimes.jp/main/html/rd/p/000000094.000020832.html",
+      "canonical_url": "https://prtimes.jp/main/html/rd/p/000000094.000020832.html",
+      "previous_date": "2026-09-01",
+      "publisher_date": "2026-09-01",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-09-01 10:00:03",
+      "evidence_url": "https://prtimes.jp/main/html/rd/p/000000094.000020832.html"
+    },
+    {
+      "url": "https://www.walkerplus.com/article/1109815/image11231201.html",
+      "canonical_url": "https://www.walkerplus.com/article/1109815/",
+      "previous_date": "2026-09-01",
+      "publisher_date": "2022-11-11",
+      "status": "verified",
+      "evidence_source": "walkerplus:time",
+      "evidence_raw": "2022年11月11日",
+      "evidence_url": "https://www.walkerplus.com/article/1109815/"
+    },
+    {
+      "url": "https://news.livedoor.com/article/detail/32205099",
+      "canonical_url": "https://news.livedoor.com/article/detail/32205099",
+      "previous_date": "2026-08-31",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://switch-news.com/politics/post-138232",
+      "canonical_url": "https://switch-news.com/politics/post-138232",
+      "previous_date": "2026-08-31",
+      "publisher_date": "2026-08-31",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-31T17:05:35+09:00",
+      "evidence_url": "https://switch-news.com/politics/post-138232/"
+    },
+    {
+      "url": "http://www.excite.co.jp/news/article/impress_watch_1467022663166886256",
+      "canonical_url": "http://www.excite.co.jp/news/article/impress_watch_1467022663166886256",
+      "previous_date": "2026-08-31",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://news.shoninsha.co.jp/csr/316880",
+      "canonical_url": "https://news.shoninsha.co.jp/csr/316880",
+      "previous_date": "2026-08-31",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://news.yahoo.co.jp/articles/77452a0904429195cb3767882523c3521614e0a9",
+      "canonical_url": "https://news.yahoo.co.jp/articles/77452a0904429195cb3767882523c3521614e0a9",
+      "previous_date": "2026-08-31",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://news.yahoo.co.jp/articles/b19567c68c2f0ebc3e79cb2444b4656e06137115",
+      "canonical_url": "https://news.yahoo.co.jp/articles/b19567c68c2f0ebc3e79cb2444b4656e06137115",
+      "previous_date": "2026-08-31",
+      "publisher_date": "2026-08-31",
+      "status": "verified",
+      "evidence_source": "meta:pubdate",
+      "evidence_raw": "2026-08-31T08:29:35+09:00",
+      "evidence_url": "https://news.yahoo.co.jp/articles/b19567c68c2f0ebc3e79cb2444b4656e06137115"
+    },
+    {
+      "url": "https://www.nikkei.com/prime/gx/article/DGXZQOUC243TO0U6A820C2000000",
+      "canonical_url": "https://www.nikkei.com/prime/gx/article/DGXZQOUC243TO0U6A820C2000000",
+      "previous_date": "2026-08-31",
+      "publisher_date": "2026-08-31",
+      "status": "verified",
+      "evidence_source": "meta:article:published_time",
+      "evidence_raw": "2026-08-31T05:00:00+09:00",
+      "evidence_url": "https://www.nikkei.com/prime/gx/article/DGXZQOUC243TO0U6A820C2000000"
+    },
+    {
+      "url": "https://mshale.com/cd25ddbc/ed1041b8Zqa-mhRAQDI",
+      "canonical_url": "https://mshale.com/cd25ddbc/ed1041b8Zqa-mhRAQDI",
+      "previous_date": "2026-08-31",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://news.livedoor.com/article/detail/32198820",
+      "canonical_url": "https://news.livedoor.com/article/detail/32198820",
+      "previous_date": "2026-08-30",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://news.yahoo.co.jp/articles/66af125d1f3db30ec2dec7a336e9cdcea813c8a9",
+      "canonical_url": "https://news.yahoo.co.jp/articles/66af125d1f3db30ec2dec7a336e9cdcea813c8a9",
+      "previous_date": "2026-08-30",
+      "publisher_date": "2026-08-30",
+      "status": "verified",
+      "evidence_source": "meta:pubdate",
+      "evidence_raw": "2026-08-30T20:31:05+09:00",
+      "evidence_url": "https://news.yahoo.co.jp/articles/66af125d1f3db30ec2dec7a336e9cdcea813c8a9"
+    },
+    {
+      "url": "https://afri-quest.com/archives/45474",
+      "canonical_url": "https://afri-quest.com/archives/45474",
+      "previous_date": "2026-08-30",
+      "publisher_date": "2026-08-30",
+      "status": "verified",
+      "evidence_source": "meta:article:published_time",
+      "evidence_raw": "2026-08-29T16:00:00+00:00",
+      "evidence_url": "https://afri-quest.com/archives/45474"
+    },
+    {
+      "url": "https://www.famitsu.com/article/202608/85759",
+      "canonical_url": "https://www.famitsu.com/article/202608/85759",
+      "previous_date": "2026-08-29",
+      "publisher_date": "2026-08-29",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-29T09:00:00+09:00",
+      "evidence_url": "https://www.famitsu.com/article/202608/85759"
+    },
+    {
+      "url": "https://finance.biggo.jp/news/e0bcf6a9-dd2d-40ce-b3b1-e60708999131",
+      "canonical_url": "https://finance.biggo.jp/news/e0bcf6a9-dd2d-40ce-b3b1-e60708999131",
+      "previous_date": "2026-08-29",
+      "publisher_date": "2026-08-29",
+      "status": "verified",
+      "evidence_source": "meta:article:published_time",
+      "evidence_raw": "2026-08-28T18:35:22.000Z",
+      "evidence_url": "https://finance.biggo.jp/news/e0bcf6a9-dd2d-40ce-b3b1-e60708999131"
+    },
+    {
+      "url": "http://www.excite.co.jp/news/article/sunsuntv_1466025374279647405",
+      "canonical_url": "http://www.excite.co.jp/news/article/sunsuntv_1466025374279647405",
+      "previous_date": "2026-08-28",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://news.livedoor.com/article/image_detail/32181051?img_id=56001648",
+      "canonical_url": "https://news.livedoor.com/article/image_detail/32181051?img_id=56001648",
+      "previous_date": "2026-08-28",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://www.atpress.ne.jp/news/6346289",
+      "canonical_url": "https://www.atpress.ne.jp/news/6346289",
+      "previous_date": "2026-08-28",
+      "publisher_date": "2026-08-28",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-28T00:30:00.000Z",
+      "evidence_url": "https://www.atpress.ne.jp/news/6346289"
+    },
+    {
+      "url": "https://topics.smt.docomo.ne.jp/article/fnn/business/fnn-1102695",
+      "canonical_url": "https://topics.smt.docomo.ne.jp/article/fnn/business/fnn-1102695",
+      "previous_date": "2026-08-27",
+      "publisher_date": "2026-08-27",
+      "status": "verified",
+      "evidence_source": "meta:pubdate",
+      "evidence_raw": "2026-08-27T18:12:00+09:00",
+      "evidence_url": "https://topics.smt.docomo.ne.jp/article/fnn/business/fnn-1102695"
+    },
+    {
+      "url": "https://www.sanyonews.jp/article/1939881",
+      "canonical_url": "https://www.sanyonews.jp/article/1939881",
+      "previous_date": "2026-08-27",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://mainichikirei.jp/prtimes/article/20260826prt00m100000410a.html",
+      "canonical_url": "https://mainichikirei.jp/prtimes/article/20260826prt00m100000410a.html",
+      "previous_date": "2026-08-27",
+      "publisher_date": "2026-08-26",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-26",
+      "evidence_url": "https://mainichikirei.jp/prtimes/article/20260826prt00m100000410a.html"
+    },
+    {
+      "url": "https://www.nikkei.com/article/DGXZQOUC2650T0W6A820C2000000",
+      "canonical_url": "https://www.nikkei.com/article/DGXZQOUC2650T0W6A820C2000000",
+      "previous_date": "2026-08-26",
+      "publisher_date": "2026-08-26",
+      "status": "verified",
+      "evidence_source": "meta:article:published_time",
+      "evidence_raw": "2026-08-26T17:45:44+09:00",
+      "evidence_url": "https://www.nikkei.com/article/DGXZQOUC2650T0W6A820C2000000/"
+    },
+    {
+      "url": "https://www.nikkei.com/article/DGXZQOUC2648Y0W6A820C2000000",
+      "canonical_url": "https://www.nikkei.com/article/DGXZQOUC2648Y0W6A820C2000000",
+      "previous_date": "2026-08-26",
+      "publisher_date": "2026-08-26",
+      "status": "verified",
+      "evidence_source": "meta:article:published_time",
+      "evidence_raw": "2026-08-26T18:19:09+09:00",
+      "evidence_url": "https://www.nikkei.com/article/DGXZQOUC2648Y0W6A820C2000000/"
+    },
+    {
+      "url": "https://prtimes.jp/main/html/rd/p/000000206.000026351.html",
+      "canonical_url": "https://prtimes.jp/main/html/rd/p/000000206.000026351.html",
+      "previous_date": "2026-08-26",
+      "publisher_date": "2026-08-26",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-26 11:02:04",
+      "evidence_url": "https://prtimes.jp/main/html/rd/p/000000206.000026351.html"
+    },
+    {
+      "url": "https://prtimes.jp/main/html/rd/p/000000082.000157137.html",
+      "canonical_url": "https://prtimes.jp/main/html/rd/p/000000082.000157137.html",
+      "previous_date": "2026-08-26",
+      "publisher_date": "2026-08-26",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-26 11:00:02",
+      "evidence_url": "https://prtimes.jp/main/html/rd/p/000000082.000157137.html"
+    },
+    {
+      "url": "https://prtimes.jp/main/html/rd/p/000000786.000001310.html",
+      "canonical_url": "https://prtimes.jp/main/html/rd/p/000000786.000001310.html",
+      "previous_date": "2026-08-26",
+      "publisher_date": "2026-08-26",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-26 10:00:02",
+      "evidence_url": "https://prtimes.jp/main/html/rd/p/000000786.000001310.html"
+    },
+    {
+      "url": "https://news.infoseek.co.jp/article/20260825jcast20262517434",
+      "canonical_url": "https://news.infoseek.co.jp/article/20260825jcast20262517434",
+      "previous_date": "2026-08-25",
+      "publisher_date": "2026-08-25",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-25T18:30:06+09:00",
+      "evidence_url": "https://news.infoseek.co.jp/article/20260825jcast20262517434/"
+    },
+    {
+      "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE5RRFU2d2g5bUYxdkVtR0xTSGZwMHExTU9VTl9SbHMwUmw0WUNDdDcwN25MNTFzek1hTW1QdHJSM24xUVNKOWFwVDUxbURMbTZoc290bURzSnpvTTlCOGc?oc=5",
+      "canonical_url": "https://news.livedoor.com/topics/detail/32137896",
+      "previous_date": "2026-08-23",
+      "publisher_date": null,
+      "status": "unverified",
+      "evidence_source": null,
+      "evidence_raw": null,
+      "evidence_url": null
+    },
+    {
+      "url": "https://www.vietnam.vn/ja/bang-ve-sinh-thuan-chay-cohee-cham-soc-suc-khoe-phu-nu-tu-nhung-dieu-nho-nhat",
+      "canonical_url": "https://www.vietnam.vn/ja/bang-ve-sinh-thuan-chay-cohee-cham-soc-suc-khoe-phu-nu-tu-nhung-dieu-nho-nhat",
+      "previous_date": "2026-08-22",
+      "publisher_date": "2026-08-22",
+      "status": "verified",
+      "evidence_source": "meta:article:published_time",
+      "evidence_raw": "2026-08-22T01:00:00+00:00",
+      "evidence_url": "https://www.vietnam.vn/ja/bang-ve-sinh-thuan-chay-cohee-cham-soc-suc-khoe-phu-nu-tu-nhung-dieu-nho-nhat"
+    },
+    {
+      "url": "https://www.nishinippon.co.jp/item/1529000",
+      "canonical_url": "https://www.nishinippon.co.jp/item/1529000",
+      "previous_date": "2026-08-21",
+      "publisher_date": "2026-08-21",
+      "status": "verified",
+      "evidence_source": "meta:article:published_time",
+      "evidence_raw": "2026-08-21T06:00:00+09:00",
+      "evidence_url": "https://www.nishinippon.co.jp/item/1529000/"
+    },
+    {
+      "url": "https://chemicaldaily.com/archives/842582",
+      "canonical_url": "https://chemicaldaily.com/archives/842582",
+      "previous_date": "2026-08-21",
+      "publisher_date": "2026-08-21",
+      "status": "verified",
+      "evidence_source": "meta:article:published_time",
+      "evidence_raw": "2026-08-20T19:55:00+00:00",
+      "evidence_url": "https://chemicaldaily.com/archives/842582"
+    },
+    {
+      "url": "https://news.infoseek.co.jp/article/prtimes_000000035_000128537",
+      "canonical_url": "https://news.infoseek.co.jp/article/prtimes_000000035_000128537",
+      "previous_date": "2026-08-21",
+      "publisher_date": "2026-08-21",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-21T04:40:02+09:00",
+      "evidence_url": "https://news.infoseek.co.jp/article/prtimes_000000035_000128537/"
+    },
+    {
+      "url": "https://www.venturesquare.net/jp/1107535",
+      "canonical_url": "https://www.venturesquare.net/jp/1107535",
+      "previous_date": "2026-08-20",
+      "publisher_date": "2026-08-20",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-20T22:53:53+09:00",
+      "evidence_url": "https://www.venturesquare.net/jp/1107535"
+    },
+    {
+      "url": "https://prtimes.jp/main/html/rd/p/000000484.000047889.html",
+      "canonical_url": "https://prtimes.jp/main/html/rd/p/000000484.000047889.html",
+      "previous_date": "2026-08-20",
+      "publisher_date": "2026-08-20",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-20 16:00:01",
+      "evidence_url": "https://prtimes.jp/main/html/rd/p/000000484.000047889.html"
+    },
+    {
+      "url": "https://prtimes.jp/main/html/rd/p/000000035.000128537.html",
+      "canonical_url": "https://prtimes.jp/main/html/rd/p/000000035.000128537.html",
+      "previous_date": "2026-08-20",
+      "publisher_date": "2026-08-20",
+      "status": "verified",
+      "evidence_source": "jsonld:datePublished",
+      "evidence_raw": "2026-08-20 10:10:02",
+      "evidence_url": "https://prtimes.jp/main/html/rd/p/000000035.000128537.html"
+    },
+    {
+      "url": "https://pr-free.jp/2026/175976",
+      "canonical_url": "https://pr-free.jp/2026/175976",
+      "previous_date": "2026-07-14",
+      "publisher_date": "2026-07-14",
+      "status": "verified",
+      "evidence_source": "meta:article:published_time",
+      "evidence_raw": "2026-07-14T07:10:50+00:00",
+      "evidence_url": "https://pr-free.jp/2026/175976/"
+    }
+  ],
+  "removed_stale_urls": [
+    "https://www.walkerplus.com/article/1109815/image11231201.html",
+    "https://www.walkerplus.com/article/1121163/image11537960.html"
+  ]
+}
