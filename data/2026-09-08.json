@@ -1,0 +1,52 @@
+{
+  "date": "2026-09-08",
+  "digest_window_days": 14,
+  "target_count": 20,
+  "items": [
+    {
+      "title": "オーガニックコットンがデリケートな肌にやさしい・ナチュラムーン「オーガニックコットン ショーツ型ナプキン」9/14（月）EC先行発売",
+      "summary": "株式会社G-Placeは2026年9月14日、ナチュラル生理用品ブランド「NaturaMoon」でオーガニックコットン不織布を使用したショーツ型ナプキンをEC先行発売。化学肥料不使用の綿（吸水量150cc）で肌ざわりを追求し、ポリマー不使用の綿状パルプ採用で通気性を確保。M～Lサイズ（税込693～1,100円）で、グレーカラーによる下着感覚のデザインが特徴。10月1日一般発売予定。",
+      "company": "不明",
+      "date": "2026-09-07",
+      "published_at": "2026-09-07T05:05:26Z",
+      "collected_at": "2026-09-08T00:16:10Z",
+      "category_id": "①",
+      "rss_published_at": "2026-09-07T05:05:26Z",
+      "publication_date_status": "verified",
+      "category_name": "日用品・衛生用品メーカー",
+      "info_type": "其他",
+      "url": "https://prtimes.jp/main/html/rd/p/000000084.000157137.html",
+      "source_name": "PR TIMES",
+      "source_url": "https://prtimes.jp/",
+      "discovery_provider": "Google News RSS",
+      "discovery_query": "(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)",
+      "confidence": "中",
+      "quality_flags": [],
+      "fingerprint": "5cdff19209fbacac1cfc9127",
+      "discovery_url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFA3dnRXNWVKaUtrT1RTS3drcWx0S1N1TW5qYWpnNGN5VlAwU3V3eEJLOWZ6dWFrRVFYdmtjTVNUdm9KdnFMc2ViMHhlTzRiN3ZFbjJ0LXJZT2xIY0JYa2hFSTlfWkxIaHBwTnc?oc=5",
+      "publisher_published_at": "2026-09-07T05:05:26Z",
+      "publisher_date": "2026-09-07",
+      "publication_date_source": "jsonld:datePublished",
+      "publication_date_raw": "2026-09-07 14:05:26",
+      "publication_date_url": "https://prtimes.jp/main/html/rd/p/000000084.000157137.html",
+      "publication_date_version": 1,
+      "fulltext_status": "excerpt_extracted",
+      "score": 58,
+      "impact_analysis": "大王製紙のR&D戦略に対して直接的なインパクトは限定的。オーガニックコットンやポリマーフリー素材への注目は市場トレンドとして把握可能だが、既に同様の技術・製品を開発済みの可能性がある。ただし、吸水量150ccという具体的な性能指標やデリケート肌向け設計は、高機能衛生材料分野の参考データとして有用。",
+      "dashboard_section": "rivals"
+    }
+  ],
+  "highlights": [
+    {
+      "rank": 1,
+      "title": "オーガニックコットンがデリケートな肌にやさしい・ナチュラムーン「オーガニックコットン ショーツ型ナプキン」9/14（月）EC先行発売",
+      "url": "https://prtimes.jp/main/html/rd/p/000000084.000157137.html",
+      "company": "不明",
+      "category": "日用品・衛生用品メーカー / 其他",
+      "date": "2026-09-07",
+      "impact": "大王製紙のR&D戦略に対して直接的なインパクトは限定的。オーガニックコットンやポリマーフリー素材への注目は市場トレンドとして把握可能だが、既に同様の技術・製品を開発済みの可能性がある。ただし、吸水量150ccという具体的な性能指標やデリケート肌向け設計は、高機能衛生材料分野の参考データとして有用。",
+      "score": 58,
+      "is_patent": false
+    }
+  ]
+}
