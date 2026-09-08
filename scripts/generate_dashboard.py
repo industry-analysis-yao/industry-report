@@ -15,6 +15,9 @@ import unicodedata
 from difflib import SequenceMatcher
 from datetime import datetime, timedelta, timezone
 from news_dates import verified_news
+from news_scoring import apply_fallback
+from fetch_news import assess_relevance, extract_company
+from official_sources import official_relevance
 
 try:
     from dotenv import load_dotenv
@@ -28,6 +31,7 @@ RETRY_SCORE_THRESHOLD = 80
 _OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1/chat/completions'
 _OPENROUTER_MODEL = 'deepseek/deepseek-chat'
 _OPENROUTER_MAX_RETRIES = 5
+_OPENROUTER_UNAVAILABLE = False
 
 _LENIENT_THRESHOLD_DEFAULT = 15
 PATENT_RETENTION_DAYS = int(os.environ.get('PATENT_MAX_AGE_DAYS', '365'))
@@ -58,6 +62,7 @@ def assign_daily_section(item):
         'ウェットティッシュ', 'ウエットティッシュ',
         'ウェットティシュー', 'ウエットティシュー',
         'ウェットワイプ', 'ウエットワイプ',
+        'ウェットシート', 'ウエットシート', 'おしりふき',
         'wet tissue', 'wet tissues', 'wet wipe', 'wet wipes',
     )
     if category_id == '⑤' or any(term in text for term in wet_terms):
@@ -210,6 +215,9 @@ def strip_html(text):
     return re.sub(r'<[^>]+>', '', text or '').strip()
 
 def _openrouter_generate(prompt):
+    global _OPENROUTER_UNAVAILABLE
+    if _OPENROUTER_UNAVAILABLE:
+        raise RuntimeError('AI service unavailable in this run; using original extracts')
     api_key = os.environ.get('OPENROUTER_API_KEY', '')
     if not api_key:
         raise RuntimeError('OPENROUTER_API_KEY not set')
@@ -234,6 +242,7 @@ def _openrouter_generate(prompt):
             print(f'  [OPENROUTER] Attempt {attempt + 1}/{_OPENROUTER_MAX_RETRIES} failed: {e}')
             if attempt < _OPENROUTER_MAX_RETRIES - 1:
                 time.sleep(2 ** attempt)
+    _OPENROUTER_UNAVAILABLE = True
     raise RuntimeError('OpenRouter failed after all retries')
 
 # ============================================================
@@ -261,7 +270,8 @@ def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None, len
             'この記事が「家庭紙・ティッシュ・トイレットペーパー・おむつ・ナプキン・衛生用品・不織布・'
             '吸収体加工機・包装機・パレタイザー・学術論文・特許」に直接関連する業界ニュースかどうかを判断してください。\n'
             '関連しない場合は「IRRELEVANT」とだけ出力。\n'
-            '競合他社（ユニ・チャーム・花王・P&G等）のニュースはスニペットが短くても保持してください。\n\n'
+            '競合他社（ユニ・チャーム・花王・P&G・日本製紙・王子等）の製品、経営、工場、原材料、GX・設備技術も対象です。\n'
+            'スポーツ、大学単独研究、ペットフード、一般美容商品の宣伝は対象外です。\n\n'
             '【ステップ2: 要約】\n'
             '業界関連ニュースの場合は、「誰が・いつ・何を・どのように・数値」が明確に伝わる、80〜150字で要約。\n'
             'タイトルの言い換え禁止。本文から新しい情報を付加すること。\n'
@@ -363,7 +373,7 @@ def process_item_with_retry(item, api_key=None, lenient_mode=False):
     company = item.get('company', '不明')
     date_str = item.get('date', '')
     
-    best_score = item.get('score') or 0
+    best_score = 0 if item.get('score_method') == 'rules_v1' else item.get('score') or 0
     best_summary = snippet
     best_impact = item.get('impact_analysis') or ''
     feedback = None
@@ -375,6 +385,9 @@ def process_item_with_retry(item, api_key=None, lenient_mode=False):
         
         if not is_relevant:
             return False
+        if new_summary == 'AI Summary Pending':
+            apply_fallback(item, reference_date=datetime.now(pytz.timezone('Asia/Tokyo')).date())
+            return True
         
         current_summary = new_summary or best_summary
         if not current_summary:
@@ -402,6 +415,9 @@ def process_item_with_retry(item, api_key=None, lenient_mode=False):
     item['summary'] = best_summary or '分析待ち'
     item['score'] = best_score
     item['impact_analysis'] = best_impact
+    if best_score > 0 and best_summary != snippet and best_summary != 'AI Summary Pending':
+        item['summary_method'] = 'ai'
+        item['score_method'] = 'ai'
     return True
 
 # ============================================================
@@ -486,7 +502,9 @@ def select_daily_digest(
         except (TypeError, ValueError):
             return None
 
-    regular = [item for item in items if not item.get('permanent_record') and verified_news(item)]
+    regular = [item for item in items if not item.get('permanent_record') and verified_news(item)
+               and item.get('fulltext_status') != 'unavailable'
+               and 'title_only_summary' not in item.get('quality_flags', [])]
     previous_regular = [item for item in previous_items if not item.get('permanent_record')]
     if previous_regular:
         regular = [
@@ -501,7 +519,7 @@ def select_daily_digest(
         if item_date is None:
             continue
         age = (reference_date - item_date).days
-        if -1 <= age <= lookback_days:
+        if 0 <= age <= lookback_days:
             recent.append(item)
         elif lookback_days < age <= 30:
             fallback.append(item)
@@ -539,7 +557,10 @@ def select_daily_digest(
 
     for category_id, quota in minimum_by_category.items():
         count = 0
-        for item in recent:
+        # Equipment rarely publishes daily. Reserve one never-used release
+        # from the previous 30 days before generic recent corporate filler.
+        category_pool = recent + fallback if category_id in {'③', '④', '⑤', '⑥'} else recent
+        for item in category_pool:
             if item.get('category_id') == category_id and add(item):
                 count += 1
                 if count >= quota:
@@ -625,6 +646,22 @@ def main():
         elif url not in url_map or (item.get('score') or 0) > (url_map[url].get('score') or 0):
             url_map[url] = item
     data = list(url_map.values()) + no_url_items
+    for item in data:
+        if item.get('company', '不明') == '不明':
+            item['company'] = extract_company(item.get('title', '') + ' ' + item.get('summary', ''))
+    # Recheck retained candidates as well as fresh feeds. Otherwise an old,
+    # misclassified anecdote can be resurrected by quantity fallback later.
+    def in_scope(item):
+        if item.get('permanent_record'):
+            return True
+        if item.get('source_kind') == 'manufacturer_official':
+            return official_relevance(item.get('title', ''), item.get('company', ''))
+        body = item.get('source_excerpt') or item.get('summary', '')
+        return (assess_relevance(item.get('title', ''), body, item.get('source_name', ''))[0]
+                and assess_relevance('', body, item.get('source_name', ''))[0])
+    irrelevant_before_ai = [it for it in data if not in_scope(it)]
+    data = [it for it in data if it not in irrelevant_before_ai]
+    print(f'[RELEVANCE] Excluded {len(irrelevant_before_ai)} off-topic retained/fresh candidates')
 
     # Score every newly collected item, regardless of its publication day. A
     # daily run often discovers articles published late on the previous day.
@@ -634,6 +671,7 @@ def main():
         it for it in data
         if (it.get('permanent_record') or verified_news(it))
         if not ((it.get('score') or 0) > 0 and it.get('impact_analysis'))
+        and (it.get('score_method') != 'rules_v1' or os.environ.get('OPENROUTER_API_KEY'))
         and 'title_only_summary' not in it.get('quality_flags', [])
         and it.get('fulltext_status') != 'unavailable'
     ]
@@ -663,20 +701,26 @@ def main():
             continue
 
         if not os.environ.get('OPENROUTER_API_KEY', ''):
-            if not has_score:
-                item['score'] = 0
-            if not has_impact:
-                item['impact_analysis'] = ''
+            apply_fallback(item, reference_date=datetime.now(pytz.timezone('Asia/Tokyo')).date())
             continue
 
+        item.setdefault('source_excerpt', summary)
         is_relevant = process_item_with_retry(item, lenient_mode=lenient_mode)
         if not is_relevant:
             irrelevant_items.append(item)
         else:
+            if not (item.get('score') and item.get('impact_analysis')):
+                apply_fallback(item, reference_date=datetime.now(pytz.timezone('Asia/Tokyo')).date())
             updated += 1
 
     # 移除不相关的条目
     data = [it for it in data if it not in irrelevant_items]
+    # Also rank the verified overflow beyond this run's AI budget. This is
+    # explicitly an original-text extract, not an AI-generated summary.
+    for item in data:
+        if verified_news(item) and item.get('fulltext_status') != 'unavailable' and (
+                not item.get('score') or item.get('score_method') == 'rules_v1'):
+            apply_fallback(item, reference_date=datetime.now(pytz.timezone('Asia/Tokyo')).date())
 
     # Keep low-frequency equipment/specialty records for balancing, while the
     # digest selector limits ordinary fallback content to 30 days.
@@ -708,6 +752,25 @@ def main():
         )
     ]
     digest_highlights = generate_highlights(digest_items, today_str=digest_date)
+    selection_health = {
+        'target': DAILY_DIGEST_TARGET, 'selected': len(digest_items),
+        'shortfall': max(0, DAILY_DIGEST_TARGET - len(digest_items)),
+        'candidate_news': sum(not it.get('permanent_record') for it in data),
+        'date_verified_news': sum(not it.get('permanent_record') and verified_news(it) for it in data),
+        'ai_rejected': len(irrelevant_items),
+        'relevance_rejected': len(irrelevant_before_ai),
+        'history_records_checked': len(previous_digest_items),
+        'history_duplicate_candidates': sum(verified_news(it) and any(same_news_story(it, prev) for prev in previous_digest_items)
+                                           for it in data if not it.get('permanent_record')),
+        'section_counts': {section: sum(it['dashboard_section'] == section for it in digest_items)
+                           for section in sorted({it['dashboard_section'] for it in digest_items})},
+    }
+    assert sum(selection_health['section_counts'].values()) == len(digest_items)
+    if selection_health['shortfall']:
+        print(f"::warning::Daily digest below target: {len(digest_items)}/{DAILY_DIGEST_TARGET}. See selection_health in today's snapshot.")
+    if os.environ.get('GITHUB_STEP_SUMMARY'):
+        with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as handle:
+            handle.write(f"\nDaily digest: {len(digest_items)}/{DAILY_DIGEST_TARGET}; verified candidates: {selection_health['date_verified_news']}; history duplicates: {selection_health['history_duplicate_candidates']}.\n")
     digest_file = os.path.join(data_dir, f'{digest_date}.json')
     with open(digest_file, 'w', encoding='utf-8') as f:
         json.dump(
@@ -715,6 +778,7 @@ def main():
                 'date': digest_date,
                 'digest_window_days': DAILY_DIGEST_LOOKBACK_DAYS,
                 'target_count': DAILY_DIGEST_TARGET,
+                'selection_health': selection_health,
                 'items': digest_items,
                 'highlights': digest_highlights,
             },

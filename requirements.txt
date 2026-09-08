@@ -3,4 +3,5 @@ beautifulsoup4
 python-dotenv
 feedparser
 pytz
+pypdf>=5,<7
 duckduckgo_search>=6.0.0

@@ -25,6 +25,8 @@ def parse_date(value):
     japanese = re.search(r'(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日', value)
     if japanese:
         value = '%04d-%02d-%02d' % tuple(map(int, japanese.groups()))
+    elif re.fullmatch(r'\d{4}[./]\d{1,2}[./]\d{1,2}', value):
+        value = '%04d-%02d-%02d' % tuple(map(int, re.split(r'[./]', value)))
     try:
         parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
         return parsed.replace(tzinfo=JST) if parsed.tzinfo is None else parsed

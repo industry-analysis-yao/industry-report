@@ -551,7 +551,7 @@ function buildCard(item, idx) {
   else if (score >= 60) scoreColor = '#f97316';
   else if (score >= 40) scoreColor = '#3b82f6';
   const scoreBadge = score > 0
-    ? `<span class="badge" style="background:${scoreColor};color:#fff;">⚡ ${score}点</span>`
+    ? `<span class="badge" style="background:${scoreColor};color:#fff;">⚡ ${score}点${item.score_method === 'rules_v1' ? '（ルール評価）' : ''}</span>`
     : '';
 
   // Strategic impact analysis section
@@ -578,7 +578,7 @@ function buildCard(item, idx) {
       <div class="card-body">
         <div class="card-title">${item.title}</div>
         <div class="card-source">🔗 ソース: <a href="${item.url}" target="_blank" rel="noopener">${item.source_name}</a></div>
-        <div class="card-summary-label">🤖 AI要約</div>
+        <div class="card-summary-label">${item.summary_method === 'publisher_excerpt' ? '📄 公式・原文抜粋（AI要約ではありません）' : '🤖 AI要約'}</div>
         <div class="card-summary">${item.summary}</div>
         ${impactSection}
         <div class="card-memo-label">📝 編集者メモ</div>

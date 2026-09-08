@@ -14,6 +14,7 @@ import calendar
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import hashlib
 import html
+import io
 import json
 import os
 import re
@@ -117,6 +118,7 @@ KNOWN_COMPANIES = [
     "王子ホールディングス", "王子製紙", "日本製紙", "瑞光", "Zuiko",
     "GDM", "Fameccanica", "OPTIMA", "ファナック", "FANUC", "Vinda",
     "维达", "Hengan", "恒安", "中顺洁柔", "Winner Medical", "稳健医疗",
+    "住友精化", "G-Place", "日本製紙クレシア", "丸富製紙", "カミ商事",
 ]
 
 CORE_TERMS = [
@@ -277,12 +279,13 @@ def map_category(text: str, *, academic: bool = False) -> tuple[str, str]:
         "ウェットティッシュ", "ウエットティッシュ",
         "ウェットティシュー", "ウエットティシュー",
         "ウェットワイプ", "ウエットワイプ",
+        "ウェットシート", "ウエットシート", "おしりふき",
         "wet tissue", "wet tissues", "wet wipe", "wet wipes",
     )):
         category = "⑤"
     elif any(term in lowered for term in ("パルプ", "製紙", "王子ホールディングス", "日本製紙", "大王製紙")):
         category = "②"
-    elif any(term in lowered for term in ("トイレットペーパー", "ティシュー", "ティッシュ", "家庭紙")):
+    elif any(term in lowered for term in ("トイレットペーパー", "ティシュー", "ティッシュ", "家庭紙", "ペーパーふきん", "ハンドタオル")):
         category = "⑥"
     else:
         category = "①"
@@ -293,6 +296,12 @@ def assess_relevance(title: str, snippet: str, source_name: str = "", *, academi
     text = f"{title} {snippet}"
     lowered = unicodedata.normalize("NFKC", text).lower()
     flags: list[str] = []
+    subject = unicodedata.normalize('NFKC', title).lower()
+    if any(term in subject for term in (
+            '行方不明', '侵入し', '停職処分', '逮捕', 'フィギュア', '漫画', 'マンガ',
+            '株主優待', '銘柄', 'シェフ', 'アティッシュ', 'たかいたかい', 'ちょい拭き',
+            '卓上で使えるケース', '育児体験')):
+        return False, ['incidental_keyword_not_industry_news']
     if any(term.lower() in lowered for term in MARKET_REPORT_SPAM_TERMS):
         return False, ["market_report_spam"]
     if "市場" in lowered and "レポート" in lowered:
@@ -316,6 +325,14 @@ def assess_relevance(title: str, snippet: str, source_name: str = "", *, academi
         relevant = (has_core or has_company) and any(k in lowered for k in ("特許", "論文", "patent", "研究"))
     else:
         relevant = has_core or has_machine or (has_company and has_business_signal)
+        event_signals = business_signals + (
+            '発売', '発表', '新商品', '新製品', '新登場', '開発', '導入', '稼働', '実証',
+            'ラインナップ', '拡充', '値上げ', '寄贈', '寄付', '製造', '生産', '需要',
+            'リサイクル', 'サステナ', '市場', '調査', '価格', 'launch', 'investment',
+            'plant', 'technology', 'production', 'recycling', 'acquisition',
+        )
+        # A diaper/tissue mentioned in an anecdote is not a manufacturer event.
+        relevant = relevant and any(signal in lowered for signal in event_signals)
     if not relevant:
         return False, ["no_industry_signal"]
     low_trust = any(name.lower() in source_name.lower() for name in LOW_TRUST_SOURCES)
@@ -673,6 +690,15 @@ def fetch_article_details(url: str, *, session: Any = None) -> dict:
             allow_redirects=True,
         )
         response.raise_for_status()
+        if 'application/pdf' in response.headers.get('Content-Type', '').lower() or urlsplit(response.url).path.lower().endswith('.pdf'):
+            # The official index supplies publication evidence. PDF creation /
+            # modification metadata is deliberately never used as a news date.
+            if len(response.content) > 8_000_000:
+                return {}
+            from pypdf import PdfReader
+            reader = PdfReader(io.BytesIO(response.content))
+            body = ' '.join((page.extract_text() or '') for page in reader.pages[:4])
+            return {'excerpt': re.sub(r'\s+', ' ', body).strip()[:2400], 'excerpt_format': 'pdf'}
         if "html" not in response.headers.get("Content-Type", "").lower():
             return {}
         if len(response.content) > 3_000_000:
@@ -694,10 +720,30 @@ def fetch_article_details(url: str, *, session: Any = None) -> dict:
                 candidates.append(strip_html(tag.get("content")))
         for unwanted in soup(["script", "style", "nav", "footer", "aside", "form", "noscript"]):
             unwanted.decompose()
-        container = soup.find("article") or soup.find("main")
+        preferred = None
+        if urlsplit(response.url).hostname == 'www.zuiko.co.jp':
+            preferred = soup.select_one('.news_body')
+        elif urlsplit(response.url).hostname == 'www.daio-paper.co.jp':
+            preferred = soup.select_one('#article .post_content')
+        container = preferred or soup.select_one('[itemprop="articleBody"]') or soup.find("article") or soup.find("main")
         if container:
             paragraphs = [strip_html(node.get_text(" ", strip=True)) for node in container.find_all("p")]
             body = " ".join(part for part in paragraphs if len(part) >= 30)
+            if body:
+                if preferred:
+                    candidates = [body[:1800]]
+                else:
+                    heading = soup.find('h1')
+                    headline = normalize_text(heading.get_text()) if heading else ''
+                    grams = {headline[i:i+3] for i in range(max(0, len(headline)-2))}
+                    body_text = normalize_text(body)
+                    overlap = sum(g in body_text for g in grams) / max(1, len(grams))
+                    # Some portals' <main><p> nodes contain only recommended
+                    # articles. Prefer the article meta excerpt in that case.
+                    if not headline or overlap >= 0.12:
+                        candidates.append(body[:1800])
+        if urlsplit(response.url).hostname == 'www.kao.com':
+            body = ' '.join(node.get_text(' ', strip=True) for node in soup.select('.corp-paragraph-01 p'))
             if body:
                 candidates.append(body[:1800])
         candidates = [text for text in candidates if len(text) >= 60]
@@ -705,6 +751,41 @@ def fetch_article_details(url: str, *, session: Any = None) -> dict:
         return details
     except Exception:
         return {}
+
+
+def prepare_official_item(item, *, fetch_details=True):
+    """Keep a bound official release date if detail HTML has no metadata."""
+    item = item.copy()
+    details = fetch_article_details(item['url']) if fetch_details else {}
+    excerpt = details.get('excerpt') or item.get('source_excerpt', '')
+    # An earlier, explicitly published article date defeats a newer index date.
+    if details.get('publication_date_status') == 'verified' and details['publisher_date'] <= item['publisher_date']:
+        item['index_publication_evidence'] = {k: v for k, v in item.items() if k.startswith('publication_date_')}
+        item.update({k: v for k, v in details.items() if k != 'excerpt'})
+        item['date'] = item['publisher_date']
+        item['published_at'] = item['publisher_published_at']
+    item['source_excerpt'] = excerpt
+    item['summary'] = excerpt
+    item['fulltext_status'] = 'excerpt_extracted' if len(excerpt) >= 60 else 'unavailable'
+    if details.get('excerpt_format'):
+        item['excerpt_format'] = details['excerpt_format']
+    title = item['title']
+    # A product release mentioning patented technology is still news, not a
+    # newly published patent. Patent-library entries come from patent records.
+    subject = re.sub(r'特許|patent', '', title, flags=re.I)
+    category, name = map_category(subject)
+    if any(term in (title + ' ' + excerpt[:600]).lower() for term in (
+            'ウェットシート', 'ウエットシート', 'おしりふき', 'ウェットティ', 'ウエットティ')):
+        category = '⑤'
+    elif 'ペーパーふきん' in excerpt[:600] or 'ペーパータオル' in excerpt[:600]:
+        category = '⑥'
+    if item['company'] == '瑞光':
+        category = '③'
+    elif category == '①' and item['company'] in {'大王製紙', '日本製紙', '王子ホールディングス'}:
+        category = '②'
+    item.update(category_id=category, category_name=CATEGORY_NAMES[category], info_type=determine_info_type(subject))
+    item['fingerprint'] = article_fingerprint(item)
+    return item
 
 
 def fetch_article_excerpt(url: str, *, session: Any = None) -> str:
@@ -854,8 +935,9 @@ def deduplicate(items: Iterable[dict[str, Any]], existing: Iterable[dict[str, An
     chosen: dict[str, dict[str, Any]] = {}
     confidence_rank = {"低": 0, "中": 1, "高": 2}
 
-    def quality(item: dict[str, Any]) -> tuple[int, int, int]:
+    def quality(item: dict[str, Any]) -> tuple[int, int, int, int]:
         return (
+            int(verified_news(item)),
             confidence_rank.get(item.get("confidence", ""), 0),
             1 if item.get("fulltext_status") == "excerpt_extracted" else 0,
             len(item.get("summary", "")),
@@ -869,6 +951,9 @@ def deduplicate(items: Iterable[dict[str, Any]], existing: Iterable[dict[str, An
         old_key = fingerprint
         normalized_title = normalize_text(title_without_source(item.get("title", ""), item.get("source_name", "")))
         for candidate_key, candidate in chosen.items():
+            if url and canonicalize_url(candidate.get('url', '')) == url:
+                old_key = candidate_key
+                break
             if candidate.get("date") != item.get("date"):
                 continue
             candidate_title = normalize_text(title_without_source(candidate.get("title", ""), candidate.get("source_name", "")))
@@ -891,7 +976,31 @@ def collect_news(
     feed_parser: Any = None,
     enrich: bool = True,
     enrich_limit: int = MAX_ENRICH_ARTICLES,
+    existing: Iterable[dict[str, Any]] = (),
+    diagnostics: dict | None = None,
+    include_official: bool = True,
 ) -> tuple[list[dict[str, Any]], list[str]]:
+    diagnostics = diagnostics if diagnostics is not None else {}
+    existing = list(existing)
+    official = []
+    errors: list[str] = []
+    if include_official and feed_parser is None:
+        from official_sources import collect_official_news
+        official, source_health = collect_official_news(now=now)
+        diagnostics['official_sources'] = source_health
+        for health in source_health:
+            print(f"[OFFICIAL] {health['source']}: {health['accepted']} candidates ({health['status']})")
+            if health['status'] == 'error':
+                errors.append(f"{health['source']}: {health['error']}")
+        cached = {canonicalize_url(it['url']): it for it in existing if it.get('url') and verified_news(it)}
+        pending = [it for it in official if canonicalize_url(it['url']) not in cached]
+        if enrich:
+            with ThreadPoolExecutor(max_workers=5) as executor:
+                pending = list(executor.map(prepare_official_item, pending))
+        else:
+            pending = [prepare_official_item(it, fetch_details=False) for it in pending]
+        official = [cached[canonicalize_url(it['url'])] for it in official if canonicalize_url(it['url']) in cached] + pending
+        diagnostics['official_verified'] = sum(verified_news(it) for it in official)
     jobs = [(query, MAX_AGE_DAYS, False) for query in SEARCH_QUERIES_GENERAL]
     jobs += [(query, SPECIALTY_MAX_AGE_DAYS, False) for query in SEARCH_QUERIES_SPECIALTY]
     jobs += [(query, SPECIALTY_MAX_AGE_DAYS, False) for query in SEARCH_QUERIES_MACHINE]
@@ -899,7 +1008,7 @@ def collect_news(
     if query_limit is not None:
         jobs = jobs[:query_limit]
     collected: list[dict[str, Any]] = []
-    errors: list[str] = []
+    rss_health = []
     for index, (query, age, academic) in enumerate(jobs, start=1):
         try:
             rows = fetch_google_news_rss(
@@ -907,17 +1016,28 @@ def collect_news(
                 now=now, feed_parser=feed_parser,
             )
             collected.extend(rows)
+            rss_health.append({'query': query, 'accepted': len(rows), 'status': 'ok'})
             print(f"[{index:02d}/{len(jobs):02d}] {len(rows):2d} accepted: {query[:72]}")
         except Exception as exc:  # One failed feed must not abort the full daily run.
             message = f"{query}: {exc}"
             errors.append(message)
+            rss_health.append({'query': query, 'accepted': 0, 'status': 'error', 'error': str(exc)})
             print(f"[{index:02d}/{len(jobs):02d}] ERROR: {message}")
         time.sleep(0.1)
     unique = deduplicate(collected)
+    diagnostics['rss_sources'] = rss_health
+    diagnostics['rss_candidates'] = len(unique)
+    # Verified cached articles must not consume the bounded publisher-fetch
+    # budget every morning. Search discovery URLs are also kept as identities.
+    cached_urls = {canonicalize_url(it.get(key, '')) for it in existing + official if verified_news(it)
+                   for key in ('url', 'discovery_url') if it.get(key)}
+    unique = [it for it in unique if canonicalize_url(it.get('url', '')) not in cached_urls]
+    unique.sort(key=lambda it: it.get('published_at', ''), reverse=True)
     if enrich:
         print(f"Enriching up to {min(enrich_limit, len(unique))} unique articles with publisher URLs/text...")
         unique = enrich_items(unique, limit=enrich_limit)
         unique = deduplicate(unique)
+    diagnostics['rss_verified'] = sum(verified_news(it) for it in unique)
 
     patent_rows: list[dict[str, Any]] = []
     try:
@@ -928,7 +1048,7 @@ def collect_news(
         errors.append(message)
         print(f"[PATENT] ERROR: {message}")
     patent_rows = deduplicate(patent_rows)[:MAX_PATENTS_TOTAL]
-    unique = deduplicate(unique + patent_rows)
+    unique = deduplicate(official + unique + patent_rows)
     return unique, errors
 
 
@@ -992,6 +1112,7 @@ def main() -> int:
     script_dir = os.path.dirname(os.path.abspath(__file__))
     data_path = os.path.normpath(os.path.join(script_dir, "..", "data", "news_data.json"))
     regular, patents, highlights = load_existing(data_path)
+    diagnostics = {'collected_at': isoformat_utc(utc_now())}
     if not args.dry_run:
         # Legacy records have only a search-feed date. Check them before they
         # can be selected or suppress a newly discovered publisher record.
@@ -1003,14 +1124,21 @@ def main() -> int:
         max_items=args.max_items,
         enrich=not args.no_enrich,
         enrich_limit=args.enrich_limit,
+        existing=regular + patents,
+        diagnostics=diagnostics,
     )
+    # Upgrade legacy/unverified copies rather than letting them suppress a
+    # verified direct-publisher record with the same URL.
+    upgrades = {canonicalize_url(it.get('url', '')): it for it in fresh if verified_news(it)}
+    regular = [it for it in regular if verified_news(it) or canonicalize_url(it.get('url', '')) not in upgrades]
     fresh = deduplicate(fresh, regular + patents)
+    diagnostics['new_verified_news'] = sum(verified_news(it) for it in fresh if not it.get('permanent_record'))
 
     if args.json_output:
         output_path = os.path.abspath(args.json_output)
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         with open(output_path, "w", encoding="utf-8") as handle:
-            json.dump({"items": fresh, "errors": errors}, handle, ensure_ascii=False, indent=2)
+            json.dump({"items": fresh, "errors": errors, "diagnostics": diagnostics}, handle, ensure_ascii=False, indent=2)
 
     fresh_patents = sum(1 for item in fresh if item.get("info_type") == "特許")
     print(
@@ -1033,6 +1161,8 @@ def main() -> int:
     regular = prune_items(regular + new_regular, days=SPECIALTY_MAX_AGE_DAYS)
     patents = prune_items(patents + new_patents, days=PATENT_MAX_AGE_DAYS)
     save_data(data_path, deduplicate(regular), deduplicate(patents), highlights)
+    with open(os.path.join(os.path.dirname(data_path), 'collection_health.json'), 'w', encoding='utf-8') as handle:
+        json.dump({**diagnostics, 'errors': errors}, handle, ensure_ascii=False, indent=2)
     print(f"Saved {len(regular)} regular articles and {len(patents)} academic/patent articles.")
     return 0
 

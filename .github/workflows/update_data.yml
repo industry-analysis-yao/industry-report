@@ -36,7 +36,7 @@ jobs:
       - name: Fetch news and patents
         env:
           NEWS_MAX_ITEMS_PER_QUERY: '40'
-          NEWS_MAX_ENRICH_ARTICLES: '50'
+          NEWS_MAX_ENRICH_ARTICLES: '100'
           SPECIALTY_MAX_AGE_DAYS: '60'
           ACADEMIC_MAX_AGE_DAYS: '90'
           PATENT_MAX_AGE_DAYS: '365'
@@ -54,6 +54,9 @@ jobs:
           DAILY_DIGEST_HISTORY_DAYS: '30'
           SPECIALTY_MAX_AGE_DAYS: '60'
         run: python scripts/generate_dashboard.py
+
+      - name: Validate publication dates and 30-day deduplication
+        run: python scripts/validate_digest.py
 
       - name: Cleanup data older than 90 days
         run: python scripts/cleanup_old_data.py

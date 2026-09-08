@@ -1,0 +1,164 @@
+{
+  "collected_at": "2026-09-08T10:40:48Z",
+  "official_sources": [
+    {
+      "source": "unicharm",
+      "url": "https://www.unicharm.co.jp/ja/company/news/2026.html",
+      "parsed": 80,
+      "accepted": 12,
+      "status": "ok"
+    },
+    {
+      "source": "nippon",
+      "url": "https://www.nipponpapergroup.com/data/news_data_ja.json",
+      "parsed": 534,
+      "accepted": 14,
+      "status": "ok"
+    },
+    {
+      "source": "kao",
+      "url": "https://www.kao.com/content/dam/article/newsindex/v4.content.wcm_kao.sites.kao.www-kao-com.jp.ja.newsroom.news.1.json",
+      "parsed": 826,
+      "accepted": 8,
+      "status": "ok"
+    },
+    {
+      "source": "daio",
+      "url": "https://www.daio-paper.co.jp/news/",
+      "parsed": 10,
+      "accepted": 3,
+      "status": "ok"
+    },
+    {
+      "source": "oji",
+      "url": "https://www.ojiholdings.co.jp/news/",
+      "parsed": 1130,
+      "accepted": 11,
+      "status": "ok"
+    },
+    {
+      "source": "zuiko",
+      "url": "https://www.zuiko.co.jp/",
+      "parsed": 4,
+      "accepted": 1,
+      "status": "ok"
+    }
+  ],
+  "official_verified": 49,
+  "rss_sources": [
+    {
+      "query": "\"ユニ・チャーム\" (おむつ OR 生理用品 OR 衛生用品 OR 新製品 OR 決算 OR 投資)",
+      "accepted": 3,
+      "status": "ok"
+    },
+    {
+      "query": "\"花王\" (おむつ OR 生理用品 OR 衛生用品 OR 家庭紙 OR 研究開発)",
+      "accepted": 2,
+      "status": "ok"
+    },
+    {
+      "query": "(\"P&G Japan\" OR \"Kimberly-Clark\" OR Essity) (diaper OR tissue OR hygiene OR おむつ)",
+      "accepted": 0,
+      "status": "ok"
+    },
+    {
+      "query": "(大王製紙 OR 王子ホールディングス OR 日本製紙) (家庭紙 OR パルプ OR 衛生用品 OR 投資)",
+      "accepted": 9,
+      "status": "ok"
+    },
+    {
+      "query": "(Vinda OR Hengan OR 中顺洁柔 OR 维达 OR 恒安) (ティシュー OR おむつ OR 衛生用品)",
+      "accepted": 0,
+      "status": "ok"
+    },
+    {
+      "query": "(家庭紙 OR トイレットペーパー OR ティシュー) (価格 OR 値上げ OR 規制 OR 市場)",
+      "accepted": 8,
+      "status": "ok"
+    },
+    {
+      "query": "(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)",
+      "accepted": 3,
+      "status": "ok"
+    },
+    {
+      "query": "(衛生用品 OR 紙おむつ OR 生理用品) (企業 OR 工場 OR 生産 OR 発売 OR 技術)",
+      "accepted": 7,
+      "status": "ok"
+    },
+    {
+      "query": "(家庭紙 OR 衛生用紙 OR ティッシュ) (メーカー OR 工場 OR 生産 OR 価格)",
+      "accepted": 1,
+      "status": "ok"
+    },
+    {
+      "query": "(紙パルプ OR 古紙 OR セルロース) (価格 OR 技術 OR 投資 OR 生産)",
+      "accepted": 0,
+      "status": "ok"
+    },
+    {
+      "query": "(吸水性樹脂 OR SAP OR エアレイド OR 不織布) (衛生用品 OR おむつ OR 生理用品)",
+      "accepted": 1,
+      "status": "ok"
+    },
+    {
+      "query": "(介護用おむつ OR 大人用おむつ OR 失禁用品) (新製品 OR 市場 OR 技術)",
+      "accepted": 0,
+      "status": "ok"
+    },
+    {
+      "query": "(生理用品 OR フェムケア OR 月経) (素材 OR 新製品 OR 企業 OR 技術)",
+      "accepted": 5,
+      "status": "ok"
+    },
+    {
+      "query": "(tissue OR toilet paper OR diaper OR hygiene) (Japan OR Asia) (launch OR investment OR plant OR technology)",
+      "accepted": 0,
+      "status": "ok"
+    },
+    {
+      "query": "(不織布 OR 吸収体 OR パルプ) (新技術 OR 原料価格 OR 生産設備 OR サステナビリティ)",
+      "accepted": 1,
+      "status": "ok"
+    },
+    {
+      "query": "(ウェットティッシュ OR ウエットティッシュ OR ウェットワイプ OR \"wet tissue\" OR \"wet wipe\") (新製品 OR 市場 OR 技術)",
+      "accepted": 1,
+      "status": "ok"
+    },
+    {
+      "query": "(瑞光 OR Zuiko OR GDM OR Fameccanica) (おむつ OR ナプキン OR 吸収体) (加工機 OR 製造設備)",
+      "accepted": 0,
+      "status": "ok"
+    },
+    {
+      "query": "(OPTIMA OR FANUC OR ファナック) (衛生用品 OR 不織布) (包装機 OR パレタイザー OR 自動化)",
+      "accepted": 0,
+      "status": "ok"
+    },
+    {
+      "query": "(衛生用品 OR おむつ OR ナプキン) (製造機械 OR 包装ライン OR パレタイザー)",
+      "accepted": 0,
+      "status": "ok"
+    },
+    {
+      "query": "(\"diaper machine\" OR \"sanitary napkin machine\" OR \"absorbent hygiene\") (Fameccanica OR GDM OR Zuiko)",
+      "accepted": 0,
+      "status": "ok"
+    },
+    {
+      "query": "(\"case packer\" OR palletizer OR \"packaging automation\") (tissue OR diaper OR hygiene)",
+      "accepted": 0,
+      "status": "ok"
+    },
+    {
+      "query": "site:jstage.jst.go.jp (家庭紙 OR 衛生用品 OR 不織布 OR 吸収体)",
+      "accepted": 0,
+      "status": "ok"
+    }
+  ],
+  "rss_candidates": 27,
+  "rss_verified": 3,
+  "new_verified_news": 4,
+  "errors": []
+}
