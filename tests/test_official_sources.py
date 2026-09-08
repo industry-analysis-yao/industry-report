@@ -150,6 +150,16 @@ class OfficialSourceTests(unittest.TestCase):
                     generate_dashboard._openrouter_generate('test')
             self.assertEqual(post.call_count, 1)
 
+    def test_verified_but_missing_body_is_retried_not_cached_forever(self):
+        old = dict(self.item(), fulltext_status='unavailable')
+        repaired = dict(old, fulltext_status='excerpt_extracted')
+        with patch('official_sources.collect_official_news', return_value=([self.item()], [])), \
+                patch('fetch_news.prepare_official_item', return_value=repaired) as enrich, \
+                patch('fetch_news.fetch_google_patents', return_value=[]):
+            rows, _ = collect_news(query_limit=0, existing=[old], now=NOW)
+        enrich.assert_called_once()
+        self.assertEqual(rows[0]['fulltext_status'], 'excerpt_extracted')
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -992,7 +992,8 @@ def collect_news(
             print(f"[OFFICIAL] {health['source']}: {health['accepted']} candidates ({health['status']})")
             if health['status'] == 'error':
                 errors.append(f"{health['source']}: {health['error']}")
-        cached = {canonicalize_url(it['url']): it for it in existing if it.get('url') and verified_news(it)}
+        cached = {canonicalize_url(it['url']): it for it in existing if it.get('url') and verified_news(it)
+                  and it.get('fulltext_status') == 'excerpt_extracted'}
         pending = [it for it in official if canonicalize_url(it['url']) not in cached]
         if enrich:
             with ThreadPoolExecutor(max_workers=5) as executor:
@@ -1030,6 +1031,7 @@ def collect_news(
     # Verified cached articles must not consume the bounded publisher-fetch
     # budget every morning. Search discovery URLs are also kept as identities.
     cached_urls = {canonicalize_url(it.get(key, '')) for it in existing + official if verified_news(it)
+                   and it.get('fulltext_status') == 'excerpt_extracted'
                    for key in ('url', 'discovery_url') if it.get(key)}
     unique = [it for it in unique if canonicalize_url(it.get('url', '')) not in cached_urls]
     unique.sort(key=lambda it: it.get('published_at', ''), reverse=True)
@@ -1130,7 +1132,8 @@ def main() -> int:
     # Upgrade legacy/unverified copies rather than letting them suppress a
     # verified direct-publisher record with the same URL.
     upgrades = {canonicalize_url(it.get('url', '')): it for it in fresh if verified_news(it)}
-    regular = [it for it in regular if verified_news(it) or canonicalize_url(it.get('url', '')) not in upgrades]
+    regular = [it for it in regular if (verified_news(it) and it.get('fulltext_status') == 'excerpt_extracted')
+               or canonicalize_url(it.get('url', '')) not in upgrades]
     fresh = deduplicate(fresh, regular + patents)
     diagnostics['new_verified_news'] = sum(verified_news(it) for it in fresh if not it.get('permanent_record'))
 
