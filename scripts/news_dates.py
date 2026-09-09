@@ -11,6 +11,10 @@ DATE_VERSION = 1
 def article_url(url):
     """Collapse known WalkerPlus image pages to their parent article."""
     parts = urlsplit(url)
+    if (parts.hostname or '') == 'robotstart.info':
+        match = re.fullmatch(r'/article/img/(\d{4}/\d{2}/\d{2}/\d+)/\d+\.html', parts.path)
+        if match:
+            return urlunsplit((parts.scheme, parts.netloc, '/article/' + match[1] + '.html', '', ''))
     if (parts.hostname or '').lower() in {'walkerplus.com', 'www.walkerplus.com'}:
         match = re.fullmatch(r'/article/(\d+)/(?:image\d+\.html)?', parts.path)
         if match:
@@ -31,6 +35,11 @@ def parse_date(value):
         parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
         return parsed.replace(tzinfo=JST) if parsed.tzinfo is None else parsed
     except ValueError:
+        for pattern in ('%B %d, %Y', '%b %d, %Y', '%b.%d.%Y', '%d %B %Y'):
+            try:
+                return datetime.strptime(value, pattern).replace(tzinfo=JST)
+            except ValueError:
+                pass
         return None
 
 
@@ -69,6 +78,9 @@ def publication_evidence(soup, url):
         except (ValueError, TypeError):
             pass
 
+    if urlsplit(url).hostname == 'www.yaskawa.co.jp':
+        for node in soup.select('p.news_date')[:1]:
+            add(node.get_text(' ', strip=True), 'yaskawa:news_date')
     if (urlsplit(url).hostname or '').endswith('walkerplus.com'):
         # WalkerPlus's dateless <time> beside the heading is publication time.
         # Its unrelated page-generation meta timestamp must never be used.

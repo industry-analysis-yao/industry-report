@@ -44,7 +44,7 @@ class DailyDigestTests(unittest.TestCase):
         self.assertEqual(selected_categories, {"①", "②", "③", "④", "⑤", "⑥"})
         self.assertTrue(all(item["date"] == "2026-09-01" for item in selected))
 
-    def test_uses_thirty_day_fallback_only_when_recent_pool_is_too_small(self):
+    def test_old_lookback_setting_cannot_reenable_month_old_fallback(self):
         recent = [self.make_item(i, "①", published="2026-09-01") for i in range(10)]
         older = [self.make_item(100 + i, "②", published="2026-08-15") for i in range(10)]
 
@@ -57,10 +57,10 @@ class DailyDigestTests(unittest.TestCase):
             lookback_days=14,
         )
 
-        self.assertEqual(len(selected), 18)
-        self.assertTrue(any(item["date"] == "2026-08-15" for item in selected))
+        self.assertEqual(len(selected), 10)
+        self.assertFalse(any(item["date"] == "2026-08-15" for item in selected))
 
-    def test_uses_sixty_day_unique_fallback_before_recycling_history(self):
+    def test_unseen_sixty_day_news_is_not_fresh_news(self):
         recent = [self.make_item(i, "①", published="2026-09-01") for i in range(10)]
         older_unique = [self.make_item(100 + i, "②", published="2026-07-25") for i in range(10)]
 
@@ -72,8 +72,8 @@ class DailyDigestTests(unittest.TestCase):
             maximum=20,
         )
 
-        self.assertEqual(len(selected), 20)
-        self.assertEqual(sum(item["date"] == "2026-07-25" for item in selected), 10)
+        self.assertEqual(len(selected), 10)
+        self.assertEqual(sum(item["date"] == "2026-07-25" for item in selected), 0)
 
     def test_collapses_syndicated_versions_of_the_same_story(self):
         items = [self.make_item(i, "①", score=80 - i) for i in range(20)]

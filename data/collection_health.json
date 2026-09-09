@@ -1,164 +1,1634 @@
 {
-  "collected_at": "2026-09-09T00:07:39Z",
+  "collected_at": "2026-09-09T22:46:28Z",
   "official_sources": [
     {
       "source": "unicharm",
       "url": "https://www.unicharm.co.jp/ja/company/news/2026.html",
-      "parsed": 80,
-      "accepted": 12,
-      "status": "ok"
+      "parsed": 81,
+      "accepted": 13,
+      "status": "ok",
+      "recent_5_days": 3
     },
     {
       "source": "nippon",
       "url": "https://www.nipponpapergroup.com/data/news_data_ja.json",
       "parsed": 534,
       "accepted": 14,
-      "status": "ok"
+      "status": "ok",
+      "recent_5_days": 1
     },
     {
       "source": "kao",
       "url": "https://www.kao.com/content/dam/article/newsindex/v4.content.wcm_kao.sites.kao.www-kao-com.jp.ja.newsroom.news.1.json",
       "parsed": 826,
       "accepted": 8,
-      "status": "ok"
+      "status": "ok",
+      "recent_5_days": 0
     },
     {
       "source": "daio",
       "url": "https://www.daio-paper.co.jp/news/",
       "parsed": 10,
-      "accepted": 3,
-      "status": "ok"
+      "accepted": 2,
+      "status": "ok",
+      "recent_5_days": 0
     },
     {
       "source": "oji",
       "url": "https://www.ojiholdings.co.jp/news/",
       "parsed": 1130,
       "accepted": 10,
-      "status": "ok"
+      "status": "ok",
+      "recent_5_days": 0
     },
     {
       "source": "zuiko",
       "url": "https://www.zuiko.co.jp/",
       "parsed": 4,
       "accepted": 1,
-      "status": "ok"
+      "status": "ok",
+      "recent_5_days": 0
+    },
+    {
+      "source": "fuji",
+      "url": "https://www.fujikikai-inc.co.jp/news",
+      "parsed": 15,
+      "accepted": 1,
+      "status": "ok",
+      "recent_5_days": 1
+    },
+    {
+      "source": "yaskawa",
+      "url": "https://www.yaskawa.co.jp/date/2026",
+      "parsed": 52,
+      "accepted": 5,
+      "status": "ok",
+      "recent_5_days": 0
+    },
+    {
+      "source": "omori",
+      "url": "https://www.omori.co.jp/",
+      "parsed": 10,
+      "accepted": 0,
+      "status": "ok",
+      "recent_5_days": 0
+    },
+    {
+      "source": "kawashima",
+      "url": "https://www.kawashima-pack.co.jp/",
+      "parsed": 4,
+      "accepted": 0,
+      "status": "ok",
+      "recent_5_days": 0
+    },
+    {
+      "source": "universal",
+      "url": "https://www.universal-robots.com/news-and-media/news-center/",
+      "parsed": 12,
+      "accepted": 1,
+      "status": "ok",
+      "recent_5_days": 0
+    },
+    {
+      "source": "valmet",
+      "url": "https://www.valmet.com/tissue/tissue-news/",
+      "parsed": 12,
+      "accepted": 2,
+      "status": "ok",
+      "recent_5_days": 0
+    },
+    {
+      "source": "andritz",
+      "url": "https://www.andritz.com/newsroom-en/nonwoven-and-textile",
+      "parsed": 30,
+      "accepted": 1,
+      "status": "ok",
+      "recent_5_days": 0
+    },
+    {
+      "source": "orbbec",
+      "url": "https://www.orbbec.com/wp-json/wp/v2/news?per_page=30&orderby=date&order=desc",
+      "parsed": 30,
+      "accepted": 4,
+      "status": "ok",
+      "recent_5_days": 1
     }
   ],
-  "official_verified": 48,
-  "rss_sources": [
+  "official_verified": 8,
+  "rss_candidates": 82,
+  "publisher_feeds": [
     {
-      "query": "\"ユニ・チャーム\" (おむつ OR 生理用品 OR 衛生用品 OR 新製品 OR 決算 OR 投資)",
-      "accepted": 3,
-      "status": "ok"
-    },
-    {
-      "query": "\"花王\" (おむつ OR 生理用品 OR 衛生用品 OR 家庭紙 OR 研究開発)",
-      "accepted": 2,
-      "status": "ok"
-    },
-    {
-      "query": "(\"P&G Japan\" OR \"Kimberly-Clark\" OR Essity) (diaper OR tissue OR hygiene OR おむつ)",
-      "accepted": 0,
-      "status": "ok"
-    },
-    {
-      "query": "(大王製紙 OR 王子ホールディングス OR 日本製紙) (家庭紙 OR パルプ OR 衛生用品 OR 投資)",
-      "accepted": 9,
-      "status": "ok"
-    },
-    {
-      "query": "(Vinda OR Hengan OR 中顺洁柔 OR 维达 OR 恒安) (ティシュー OR おむつ OR 衛生用品)",
-      "accepted": 0,
-      "status": "ok"
-    },
-    {
-      "query": "(家庭紙 OR トイレットペーパー OR ティシュー) (価格 OR 値上げ OR 規制 OR 市場)",
-      "accepted": 8,
-      "status": "ok"
-    },
-    {
-      "query": "(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)",
-      "accepted": 2,
-      "status": "ok"
-    },
-    {
-      "query": "(衛生用品 OR 紙おむつ OR 生理用品) (企業 OR 工場 OR 生産 OR 発売 OR 技術)",
+      "source": "Automation News",
+      "url": "https://www.automation-news.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+      "raw": 100,
       "accepted": 6,
       "status": "ok"
     },
     {
-      "query": "(家庭紙 OR 衛生用紙 OR ティッシュ) (メーカー OR 工場 OR 生産 OR 価格)",
+      "source": "PR TIMES",
+      "url": "https://prtimes.jp/index.rdf",
+      "raw": 200,
+      "accepted": 0,
+      "status": "ok"
+    },
+    {
+      "source": "ロボスタ",
+      "url": "https://robotstart.info/rss20/index.rdf",
+      "raw": 50,
+      "accepted": 14,
+      "status": "ok"
+    }
+  ],
+  "rss_sources": [
+    {
+      "query": "\"ユニ・チャーム\" (おむつ OR 生理用品 OR 衛生用品 OR 新製品 OR 決算 OR 投資)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
+      "accepted": 4,
+      "raw": 19,
+      "inspected": 19,
+      "date_eligible": 19,
+      "rejected": {
+        "no_industry_signal": 13,
+        "off_topic": 1,
+        "incidental_keyword_not_industry_news": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "\"花王\" (おむつ OR 生理用品 OR 衛生用品 OR 家庭紙 OR 研究開発)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
       "accepted": 1,
+      "raw": 5,
+      "inspected": 5,
+      "date_eligible": 5,
+      "rejected": {
+        "no_industry_signal": 4
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(\"P&G Japan\" OR \"Kimberly-Clark\" OR Essity) (diaper OR tissue OR hygiene OR おむつ)",
+      "max_age_days": 7,
+      "language": "en",
+      "group": "general",
+      "accepted": 1,
+      "raw": 10,
+      "inspected": 10,
+      "date_eligible": 10,
+      "rejected": {
+        "no_industry_signal": 8,
+        "outside_supply_chain_scope": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(大王製紙 OR 王子ホールディングス OR 日本製紙) (家庭紙 OR パルプ OR 衛生用品 OR 投資)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
+      "accepted": 10,
+      "raw": 23,
+      "inspected": 23,
+      "date_eligible": 23,
+      "rejected": {
+        "no_industry_signal": 12,
+        "outside_supply_chain_scope": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(Vinda OR Hengan OR 中顺洁柔 OR 维达 OR 恒安) (ティシュー OR おむつ OR 衛生用品)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "(家庭紙 OR トイレットペーパー OR ティシュー) (価格 OR 値上げ OR 規制 OR 市場)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
+      "accepted": 1,
+      "raw": 25,
+      "inspected": 25,
+      "date_eligible": 25,
+      "rejected": {
+        "outside_supply_chain_scope": 1,
+        "consumer_or_market_noise": 2,
+        "no_industry_signal": 20,
+        "incidental_keyword_not_industry_news": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
+      "accepted": 1,
+      "raw": 10,
+      "inspected": 10,
+      "date_eligible": 10,
+      "rejected": {
+        "no_industry_signal": 9
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(衛生用品 OR 紙おむつ OR 生理用品) (企業 OR 工場 OR 生産 OR 発売 OR 技術)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
+      "accepted": 3,
+      "raw": 34,
+      "inspected": 34,
+      "date_eligible": 34,
+      "rejected": {
+        "no_industry_signal": 22,
+        "market_report_spam": 3,
+        "incidental_keyword_not_industry_news": 4,
+        "low_trust_source": 1,
+        "local_community_story_without_target_manufacturer": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(家庭紙 OR 衛生用紙 OR ティッシュ) (メーカー OR 工場 OR 生産 OR 価格)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
+      "accepted": 0,
+      "raw": 34,
+      "inspected": 34,
+      "date_eligible": 34,
+      "rejected": {
+        "market_report_spam": 3,
+        "no_industry_signal": 20,
+        "outside_supply_chain_scope": 5,
+        "consumer_or_market_noise": 2,
+        "incidental_keyword_not_industry_news": 4
+      },
       "status": "ok"
     },
     {
       "query": "(紙パルプ OR 古紙 OR セルロース) (価格 OR 技術 OR 投資 OR 生産)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
       "accepted": 0,
+      "raw": 22,
+      "inspected": 22,
+      "date_eligible": 22,
+      "rejected": {
+        "no_industry_signal": 18,
+        "market_report_spam": 4
+      },
       "status": "ok"
     },
     {
       "query": "(吸水性樹脂 OR SAP OR エアレイド OR 不織布) (衛生用品 OR おむつ OR 生理用品)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
       "accepted": 1,
+      "raw": 4,
+      "inspected": 4,
+      "date_eligible": 4,
+      "rejected": {
+        "market_report_spam": 2,
+        "incidental_keyword_not_industry_news": 1
+      },
       "status": "ok"
     },
     {
       "query": "(介護用おむつ OR 大人用おむつ OR 失禁用品) (新製品 OR 市場 OR 技術)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
       "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
       "status": "ok"
     },
     {
       "query": "(生理用品 OR フェムケア OR 月経) (素材 OR 新製品 OR 企業 OR 技術)",
-      "accepted": 5,
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
+      "accepted": 2,
+      "raw": 30,
+      "inspected": 30,
+      "date_eligible": 30,
+      "rejected": {
+        "no_industry_signal": 21,
+        "local_community_story_without_target_manufacturer": 2,
+        "incidental_keyword_not_industry_news": 3,
+        "off_topic": 1,
+        "market_report_spam": 1
+      },
       "status": "ok"
     },
     {
       "query": "(tissue OR toilet paper OR diaper OR hygiene) (Japan OR Asia) (launch OR investment OR plant OR technology)",
+      "max_age_days": 7,
+      "language": "en",
+      "group": "general",
       "accepted": 0,
+      "raw": 4,
+      "inspected": 4,
+      "date_eligible": 4,
+      "rejected": {
+        "no_industry_signal": 4
+      },
       "status": "ok"
     },
     {
       "query": "(不織布 OR 吸収体 OR パルプ) (新技術 OR 原料価格 OR 生産設備 OR サステナビリティ)",
-      "accepted": 1,
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
+      "accepted": 0,
+      "raw": 5,
+      "inspected": 5,
+      "date_eligible": 5,
+      "rejected": {
+        "no_industry_signal": 4,
+        "market_report_spam": 1
+      },
       "status": "ok"
     },
     {
       "query": "(ウェットティッシュ OR ウエットティッシュ OR ウェットワイプ OR \"wet tissue\" OR \"wet wipe\") (新製品 OR 市場 OR 技術)",
+      "max_age_days": 7,
+      "language": "ja",
+      "group": "general",
+      "accepted": 0,
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {
+        "market_report_spam": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "瑞光",
+      "language": "ja",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
+      "rejected": {
+        "no_industry_signal": 3
+      },
+      "status": "ok"
+    },
+    {
+      "query": "GDM 不織布",
+      "language": "ja",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "Fameccanica",
+      "language": "ja",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "Joa おむつ",
+      "language": "ja",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "(不織布 OR 吸収体) (加工機 OR 製造ライン OR 超音波 OR 接合)",
+      "language": "ja",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 2,
+      "inspected": 2,
+      "date_eligible": 2,
+      "rejected": {
+        "market_report_spam": 1,
+        "no_industry_signal": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(スリッター OR 巻取機 OR コンバーティング) (新製品 OR 開発 OR 導入)",
+      "language": "ja",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {
+        "no_industry_signal": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "フジキカイ",
+      "language": "ja",
+      "group": "packaging",
+      "max_age_days": 7,
+      "accepted": 3,
+      "raw": 4,
+      "inspected": 4,
+      "date_eligible": 4,
+      "rejected": {
+        "no_industry_signal": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "大森機械工業",
+      "language": "ja",
+      "group": "packaging",
+      "max_age_days": 7,
       "accepted": 1,
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {},
       "status": "ok"
     },
     {
-      "query": "(瑞光 OR Zuiko OR GDM OR Fameccanica) (おむつ OR ナプキン OR 吸収体) (加工機 OR 製造設備)",
+      "query": "川島製作所 包装",
+      "language": "ja",
+      "group": "packaging",
+      "max_age_days": 7,
       "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
       "status": "ok"
     },
     {
-      "query": "(OPTIMA OR FANUC OR ファナック) (衛生用品 OR 不織布) (包装機 OR パレタイザー OR 自動化)",
+      "query": "東京自働機械",
+      "language": "ja",
+      "group": "packaging",
+      "max_age_days": 7,
       "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
       "status": "ok"
     },
     {
-      "query": "(衛生用品 OR おむつ OR ナプキン) (製造機械 OR 包装ライン OR パレタイザー)",
+      "query": "PACRAFT",
+      "language": "ja",
+      "group": "packaging",
+      "max_age_days": 7,
       "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
       "status": "ok"
     },
     {
-      "query": "(\"diaper machine\" OR \"sanitary napkin machine\" OR \"absorbent hygiene\") (Fameccanica OR GDM OR Zuiko)",
-      "accepted": 0,
+      "query": "イシダ 包装",
+      "language": "ja",
+      "group": "packaging",
+      "max_age_days": 7,
+      "accepted": 2,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
+      "rejected": {
+        "market_report_spam": 1
+      },
       "status": "ok"
     },
     {
-      "query": "(\"case packer\" OR palletizer OR \"packaging automation\") (tissue OR diaper OR hygiene)",
+      "query": "OPTIMA 包装",
+      "language": "ja",
+      "group": "packaging",
+      "max_age_days": 7,
       "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "(包装機 OR 装箱機 OR ピロー包装 OR ケーサー) (発売 OR 開発 OR 出展 OR 導入)",
+      "language": "ja",
+      "group": "packaging",
+      "max_age_days": 7,
+      "accepted": 8,
+      "raw": 15,
+      "inspected": 15,
+      "date_eligible": 15,
+      "rejected": {
+        "no_industry_signal": 7
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(包装 OR 充填 OR 封緘) (検査装置 OR 画像検査 OR 検査機) (新製品 OR 発売 OR 出展)",
+      "language": "ja",
+      "group": "packaging",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
+      "rejected": {
+        "market_report_spam": 1,
+        "no_industry_signal": 2
+      },
+      "status": "ok"
+    },
+    {
+      "query": "ファナック ロボット",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 10,
+      "inspected": 10,
+      "date_eligible": 10,
+      "rejected": {
+        "outside_supply_chain_scope": 2,
+        "no_industry_signal": 6,
+        "incidental_keyword_not_industry_news": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "安川電機 ロボット",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 2,
+      "raw": 15,
+      "inspected": 15,
+      "date_eligible": 15,
+      "rejected": {
+        "no_industry_signal": 10,
+        "incidental_keyword_not_industry_news": 1,
+        "outside_supply_chain_scope": 2
+      },
+      "status": "ok"
+    },
+    {
+      "query": "川崎重工 ロボット",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 2,
+      "raw": 8,
+      "inspected": 8,
+      "date_eligible": 8,
+      "rejected": {
+        "no_industry_signal": 4,
+        "market_report_spam": 1,
+        "general_ai_not_production_application": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "三菱電機 ロボット",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 18,
+      "inspected": 18,
+      "date_eligible": 18,
+      "rejected": {
+        "no_industry_signal": 13,
+        "market_report_spam": 1,
+        "outside_supply_chain_scope": 2,
+        "low_trust_source": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "オムロン ロボット",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 5,
+      "inspected": 5,
+      "date_eligible": 5,
+      "rejected": {
+        "outside_supply_chain_scope": 1,
+        "no_industry_signal": 3
+      },
+      "status": "ok"
+    },
+    {
+      "query": "ヤマハ発動機 産業用ロボット",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 5,
+      "inspected": 5,
+      "date_eligible": 5,
+      "rejected": {
+        "no_industry_signal": 5
+      },
+      "status": "ok"
+    },
+    {
+      "query": "不二輸送機",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {
+        "outside_supply_chain_scope": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "ユニバーサルロボット",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
+      "rejected": {
+        "no_industry_signal": 2,
+        "market_report_spam": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "ABB ロボット",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 14,
+      "inspected": 14,
+      "date_eligible": 14,
+      "rejected": {
+        "no_industry_signal": 10,
+        "outside_supply_chain_scope": 2,
+        "market_report_spam": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "オカムラ パレタイザー",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "(協働ロボット OR パレタイジング OR ピッキング OR ロボットハンド) (発売 OR 開発 OR 導入 OR 展示)",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 15,
+      "raw": 33,
+      "inspected": 33,
+      "date_eligible": 33,
+      "rejected": {
+        "no_industry_signal": 14,
+        "market_report_spam": 1,
+        "low_trust_source": 3
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(物流自動化 OR AMR OR AGV) (工場 OR 出荷 OR パレット OR 包装)",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 2,
+      "raw": 39,
+      "inspected": 39,
+      "date_eligible": 39,
+      "rejected": {
+        "no_industry_signal": 35,
+        "market_report_spam": 1,
+        "outside_supply_chain_scope": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "\"国際物流総合展\" (ロボット OR 包装 OR パレタイザー)",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 10,
+      "raw": 43,
+      "inspected": 43,
+      "date_eligible": 43,
+      "rejected": {
+        "no_industry_signal": 29,
+        "outside_supply_chain_scope": 4
+      },
+      "status": "ok"
+    },
+    {
+      "query": "\"国際物流総合展\" (仕分け OR 搬送 OR 自動倉庫)",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 9,
+      "raw": 41,
+      "inspected": 41,
+      "date_eligible": 41,
+      "rejected": {
+        "no_industry_signal": 32
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(ロボット OR ピッキング) (ビジョン OR センサー OR 制御装置) (発売 OR 開発 OR 新製品)",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 11,
+      "raw": 38,
+      "inspected": 38,
+      "date_eligible": 38,
+      "rejected": {
+        "no_industry_signal": 23,
+        "market_report_spam": 2,
+        "low_trust_source": 1,
+        "outside_supply_chain_scope": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(パナソニックコネクト OR ダイフク OR Mujin OR ラピュタロボティクス) (新製品 OR 開発 OR 導入 OR 出展)",
+      "language": "ja",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 8,
+      "raw": 36,
+      "inspected": 36,
+      "date_eligible": 36,
+      "rejected": {
+        "outside_supply_chain_scope": 3,
+        "no_industry_signal": 25
+      },
+      "status": "ok"
+    },
+    {
+      "query": "ユニ・チャーム 新製品",
+      "language": "ja",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 15,
+      "inspected": 15,
+      "date_eligible": 15,
+      "rejected": {
+        "no_industry_signal": 13,
+        "off_topic": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "大王製紙 エリエール",
+      "language": "ja",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 10,
+      "inspected": 10,
+      "date_eligible": 10,
+      "rejected": {
+        "no_industry_signal": 10
+      },
+      "status": "ok"
+    },
+    {
+      "query": "日本製紙 クレシア",
+      "language": "ja",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 6,
+      "inspected": 6,
+      "date_eligible": 6,
+      "rejected": {
+        "no_industry_signal": 6
+      },
+      "status": "ok"
+    },
+    {
+      "query": "花王 (メリーズ OR ロリエ OR おむつ)",
+      "language": "ja",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 6,
+      "inspected": 6,
+      "date_eligible": 6,
+      "rejected": {
+        "no_industry_signal": 5
+      },
+      "status": "ok"
+    },
+    {
+      "query": "王子ネピア",
+      "language": "ja",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 2,
+      "inspected": 2,
+      "date_eligible": 2,
+      "rejected": {
+        "incidental_keyword_not_industry_news": 1,
+        "no_industry_signal": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "リブドゥコーポレーション",
+      "language": "ja",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 2,
+      "inspected": 2,
+      "date_eligible": 2,
+      "rejected": {
+        "no_industry_signal": 2
+      },
+      "status": "ok"
+    },
+    {
+      "query": "白十字 おむつ",
+      "language": "ja",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "住友精化 吸水性樹脂",
+      "language": "ja",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "日本触媒 吸水性樹脂",
+      "language": "ja",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "丸富製紙",
+      "language": "ja",
+      "group": "tissue",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
+      "rejected": {
+        "no_industry_signal": 3
+      },
+      "status": "ok"
+    },
+    {
+      "query": "カミ商事",
+      "language": "ja",
+      "group": "tissue",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {
+        "no_industry_signal": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "大分製紙",
+      "language": "ja",
+      "group": "tissue",
+      "max_age_days": 7,
+      "accepted": 4,
+      "raw": 4,
+      "inspected": 4,
+      "date_eligible": 4,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "丸住製紙 家庭紙",
+      "language": "ja",
+      "group": "tissue",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "春日製紙",
+      "language": "ja",
+      "group": "tissue",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "(ティシュー OR トイレットペーパー OR ペーパータオル) (新発売 OR 生産 OR 値上げ)",
+      "language": "ja",
+      "group": "tissue",
+      "max_age_days": 7,
+      "accepted": 2,
+      "raw": 18,
+      "inspected": 18,
+      "date_eligible": 18,
+      "rejected": {
+        "consumer_or_market_noise": 3,
+        "no_industry_signal": 10,
+        "incidental_keyword_not_industry_news": 1,
+        "outside_supply_chain_scope": 1,
+        "low_trust_source": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "ユニ・チャーム おしりふき",
+      "language": "ja",
+      "group": "wet",
+      "max_age_days": 7,
+      "accepted": 3,
+      "raw": 8,
+      "inspected": 8,
+      "date_eligible": 8,
+      "rejected": {
+        "no_industry_signal": 5
+      },
+      "status": "ok"
+    },
+    {
+      "query": "レック ウェット",
+      "language": "ja",
+      "group": "wet",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "大一紙工",
+      "language": "ja",
+      "group": "wet",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "昭和紙工",
+      "language": "ja",
+      "group": "wet",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "(ウエットティシュー OR ウェットシート OR ウェットワイプ) (発売 OR 工場 OR 技術)",
+      "language": "ja",
+      "group": "wet",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
+      "rejected": {
+        "no_industry_signal": 3
+      },
+      "status": "ok"
+    },
+    {
+      "query": "GDM Coesia",
+      "language": "en",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "Fameccanica",
+      "language": "en",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "Curt G Joa",
+      "language": "en",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {
+        "no_industry_signal": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "ANDRITZ (nonwoven OR tissue)",
+      "language": "en",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "Valmet (tissue OR converting)",
+      "language": "en",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
+      "rejected": {
+        "no_industry_signal": 2
+      },
+      "status": "ok"
+    },
+    {
+      "query": "PCMC tissue",
+      "language": "en",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "(diaper OR nonwoven) (converting OR machinery OR production line)",
+      "language": "en",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
+      "rejected": {
+        "no_industry_signal": 2,
+        "market_report_spam": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "OPTIMA Nonwovens",
+      "language": "en",
+      "group": "packaging",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "PAC Machinery",
+      "language": "en",
+      "group": "packaging",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 4,
+      "inspected": 4,
+      "date_eligible": 4,
+      "rejected": {
+        "no_industry_signal": 3
+      },
+      "status": "ok"
+    },
+    {
+      "query": "Cama Group packaging",
+      "language": "en",
+      "group": "packaging",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "IMA packaging",
+      "language": "en",
+      "group": "packaging",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
+      "rejected": {
+        "no_industry_signal": 2,
+        "market_report_spam": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(cartoning OR case packing OR flow wrapping) (launch OR unveils OR automation)",
+      "language": "en",
+      "group": "packaging",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 4,
+      "inspected": 4,
+      "date_eligible": 4,
+      "rejected": {
+        "no_industry_signal": 2,
+        "market_report_spam": 2
+      },
+      "status": "ok"
+    },
+    {
+      "query": "FANUC (robot OR automation)",
+      "language": "en",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 9,
+      "raw": 21,
+      "inspected": 21,
+      "date_eligible": 21,
+      "rejected": {
+        "no_industry_signal": 12
+      },
+      "status": "ok"
+    },
+    {
+      "query": "Universal Robots",
+      "language": "en",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 2,
+      "raw": 25,
+      "inspected": 25,
+      "date_eligible": 25,
+      "rejected": {
+        "no_industry_signal": 23
+      },
+      "status": "ok"
+    },
+    {
+      "query": "ABB Robotics",
+      "language": "en",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 36,
+      "inspected": 36,
+      "date_eligible": 36,
+      "rejected": {
+        "outside_supply_chain_scope": 8,
+        "no_industry_signal": 27
+      },
+      "status": "ok"
+    },
+    {
+      "query": "Yaskawa palletizing",
+      "language": "en",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "Robotiq",
+      "language": "en",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "KUKA (handling OR palletizing)",
+      "language": "en",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
+      "rejected": {
+        "no_industry_signal": 2
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(robotic packing OR palletizing robot OR robot gripper) (launch OR unveils OR partnership)",
+      "language": "en",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "Essity (hygiene OR tissue OR investment)",
+      "language": "en",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 7,
+      "inspected": 7,
+      "date_eligible": 7,
+      "rejected": {
+        "no_industry_signal": 6
+      },
+      "status": "ok"
+    },
+    {
+      "query": "Kimberly-Clark (diaper OR tissue OR hygiene)",
+      "language": "en",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 8,
+      "inspected": 8,
+      "date_eligible": 8,
+      "rejected": {
+        "no_industry_signal": 6,
+        "outside_supply_chain_scope": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "Procter Gamble (Pampers OR Always)",
+      "language": "en",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 36,
+      "inspected": 36,
+      "date_eligible": 36,
+      "rejected": {
+        "no_industry_signal": 36
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(nonwoven OR superabsorbent) (investment OR launches)",
+      "language": "en",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 11,
+      "inspected": 11,
+      "date_eligible": 11,
+      "rejected": {
+        "no_industry_signal": 10
+      },
+      "status": "ok"
+    },
+    {
+      "query": "金卫机械 卫生用品",
+      "language": "zh",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "汉威机械 卫生用品",
+      "language": "zh",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "培新 纸尿裤",
+      "language": "zh",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "(卫生巾 OR 纸尿裤 OR 无纺布) (生产线 OR 设备 OR 超声波)",
+      "language": "zh",
+      "group": "machine",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 29,
+      "inspected": 29,
+      "date_eligible": 29,
+      "rejected": {
+        "no_industry_signal": 28
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(生活用纸 OR 纸巾 OR 湿巾) (包装机 OR 装箱机 OR 自动化)",
+      "language": "zh",
+      "group": "packaging",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {
+        "no_industry_signal": 1
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(达意隆 OR 松川 OR 中亚股份) (包装 OR 机器人)",
+      "language": "zh",
+      "group": "packaging",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 0,
+      "inspected": 0,
+      "date_eligible": 0,
+      "rejected": {},
+      "status": "ok"
+    },
+    {
+      "query": "(埃斯顿 OR 新松 OR 埃夫特 OR 节卡 OR 越疆) (码垛 OR 搬运 OR 协作机器人)",
+      "language": "zh",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 20,
+      "inspected": 20,
+      "date_eligible": 20,
+      "rejected": {
+        "no_industry_signal": 19
+      },
+      "status": "ok"
+    },
+    {
+      "query": "(码垛机器人 OR 装箱机器人 OR 机器视觉) (发布 OR 新品 OR 投产)",
+      "language": "zh",
+      "group": "palletizer",
+      "max_age_days": 7,
+      "accepted": 1,
+      "raw": 26,
+      "inspected": 26,
+      "date_eligible": 26,
+      "rejected": {
+        "no_industry_signal": 25
+      },
+      "status": "ok"
+    },
+    {
+      "query": "恒安 卫生用品",
+      "language": "zh",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 2,
+      "inspected": 2,
+      "date_eligible": 2,
+      "rejected": {
+        "no_industry_signal": 2
+      },
+      "status": "ok"
+    },
+    {
+      "query": "维达 生活用纸",
+      "language": "zh",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 4,
+      "inspected": 4,
+      "date_eligible": 4,
+      "rejected": {
+        "no_industry_signal": 4
+      },
+      "status": "ok"
+    },
+    {
+      "query": "中顺洁柔",
+      "language": "zh",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 15,
+      "inspected": 15,
+      "date_eligible": 15,
+      "rejected": {
+        "no_industry_signal": 15
+      },
+      "status": "ok"
+    },
+    {
+      "query": "稳健医疗 全棉 湿巾",
+      "language": "zh",
+      "group": "rivals",
+      "max_age_days": 7,
+      "accepted": 0,
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {
+        "no_industry_signal": 1
+      },
       "status": "ok"
     },
     {
       "query": "site:jstage.jst.go.jp (家庭紙 OR 衛生用品 OR 不織布 OR 吸収体)",
+      "max_age_days": 90,
+      "language": "ja",
+      "group": "academic",
+      "academic": true,
       "accepted": 0,
+      "raw": 20,
+      "inspected": 20,
+      "date_eligible": 20,
+      "rejected": {
+        "no_industry_signal": 20
+      },
       "status": "ok"
     }
   ],
-  "rss_candidates": 27,
-  "rss_verified": 4,
-  "new_verified_news": 5,
+  "discovery_candidates": 97,
+  "discovery_verified": 12,
+  "rss_verified": 9,
+  "rss_raw": 930,
+  "by_group": {
+    "academic": {
+      "queries": 1,
+      "raw": 20,
+      "candidates": 0,
+      "verified": 0
+    },
+    "general": {
+      "queries": 16,
+      "raw": 226,
+      "candidates": 24,
+      "verified": 2
+    },
+    "machine": {
+      "queries": 17,
+      "raw": 42,
+      "candidates": 2,
+      "verified": 0
+    },
+    "packaging": {
+      "queries": 16,
+      "raw": 38,
+      "candidates": 15,
+      "verified": 1
+    },
+    "palletizer": {
+      "queries": 25,
+      "raw": 441,
+      "candidates": 79,
+      "verified": 7
+    },
+    "rivals": {
+      "queries": 17,
+      "raw": 126,
+      "candidates": 6,
+      "verified": 0
+    },
+    "tissue": {
+      "queries": 6,
+      "raw": 26,
+      "candidates": 6,
+      "verified": 0
+    },
+    "wet": {
+      "queries": 5,
+      "raw": 11,
+      "candidates": 3,
+      "verified": 0
+    }
+  },
+  "new_verified_news": 20,
   "errors": []
 }

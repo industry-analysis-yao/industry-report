@@ -11,6 +11,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from news_dates import JST, DATE_VERSION, parse_date
+from source_catalog import equipment_section
 
 KAO_INDEX = 'https://www.kao.com/content/dam/article/newsindex/v4.content.wcm_kao.sites.kao.www-kao-com.jp.ja.newsroom.news.1.json'
 NIPPON_INDEX = 'https://www.nipponpapergroup.com/data/news_data_ja.json'
@@ -22,6 +23,9 @@ def clean(value):
 
 def parse_index(source, content, index_url):
     """Return bound (title, URL, publication date, excerpt) records; no IO."""
+    if source == 'orbbec':
+        return [(clean(r['title']['rendered']), r['link'], r['date_gmt'] + 'Z', clean(r['excerpt']['rendered']))
+                for r in content if r.get('status') == 'publish']
     if source == 'nippon':
         return [(clean(r.get('title')), urljoin(index_url, r.get('url', '')),
                  r.get('pub_on'), clean(r.get('body')))
@@ -37,15 +41,25 @@ def parse_index(source, content, index_url):
         'daio': ('li.clearfix', 'p.title a[href]', 'p.title a', 'p.date time'),
         'zuiko': ('li.news_item', 'a.news_link', '.news_text', '.news_date'),
         'oji': ('li.c-newslist__item', 'a.c-newslist__anchor', '.c-newslist__subject', 'time'),
+        'fuji': ('article.item', 'a[href]', 'h3.title', '.time'),
+        'yaskawa': ('dl', 'dd a[href]', 'dd a[href]', 'dt b'),
+        'omori': ('a.home-slider__item', None, '.home-slider__name', '.home-slider__date'),
+        'kawashima': ('a.newsList', None, '.title', '.date span'),
+        'universal': ('.sir-card-body', 'a.sir-card__link', 'h3', 'time'),
+        'valmet': ('.content-card', 'a.card', 'h3.card-title', 'time'),
+        'andritz': ('a:has(.ci-teaser-content)', None, '.h-4', '.ci-kicker'),
     }
     row_selector, link_selector, title_selector, date_selector = selectors[source]
     rows = []
     for row in soup.select(row_selector):
-        link, title, date = row.select_one(link_selector), row.select_one(title_selector), row.select_one(date_selector)
+        link = row.select_one(link_selector) if link_selector else row
+        title, date = row.select_one(title_selector), row.select_one(date_selector)
         if link and title and date:
             # Daio's datetime is WordPress's edit timestamp; the visible date is
             # the publisher's release date (e.g. edit Sep4, published Sep7).
             raw_date = date.get_text(' ', strip=True)
+            if source == 'fuji' and re.fullmatch(r'\d{2}\.\d{2}\.\d{2}', raw_date):
+                raw_date = '20' + raw_date
             rows.append((title.get('title') or title.get_text(' ', strip=True),
                          urljoin(index_url, link['href']), raw_date, ''))
     return rows
@@ -60,6 +74,8 @@ def official_relevance(title, company):
                 '夏季休業', '感謝祭', 'ダンス部', 'フォトコンテスト', '短歌')
     if any(term in text for term in excluded):
         return False
+    if equipment_section(title):
+        return True
     signals = ('おむつ', 'オムツ', 'ナプキン', '生理', '月経', 'ソフィ', 'sofy', 'ムーニー',
                'マミーポコ', 'グーン', 'エリス', 'ロリエ', 'マスク', '失禁', '衛生',
                'ティシュ', 'ティッシュ', 'ティシュー', 'ウエット', 'ウェット', 'おしりふき',
@@ -68,7 +84,8 @@ def official_relevance(title, company):
                '投資', '買収', '業績', '決算', '損失', '事業', '株式', '需要計画',
                '研究', '技術', '新素材', 'セルロース', 'バイオ', 'リサイクル', '再資源',
                '環境', '脱炭素', 'esg', 'gx', '人権', 'サプライ', 'ppe', 'packplus')
-    return any(term in text for term in signals)
+    return any(term in text for term in signals) or (company in {'Valmet', 'ANDRITZ'} and
+        any(term in text for term in ('tissue', 'nonwoven', 'converting', 'airlay', 'spunlace', 'diaper')))
 
 
 def index_item(title, url, raw_date, excerpt, *, company, source, index_url, now):
@@ -87,7 +104,7 @@ def index_item(title, url, raw_date, excerpt, *, company, source, index_url, now
         'publication_date_url': index_url, 'publication_date_raw': raw_date,
         'publication_date_version': DATE_VERSION,
         'source_name': company + ' 公式発表', 'source_url': index_url,
-        'source_kind': 'manufacturer_official', 'region': 'Japan',
+        'source_kind': 'manufacturer_official', 'region': 'International' if source in {'universal', 'valmet', 'andritz', 'orbbec'} else 'Japan',
         'summary': excerpt, 'source_excerpt': excerpt, 'summary_method': 'publisher_excerpt',
         'confidence': '高', 'quality_flags': [], 'permanent_record': False,
         'discovered_at': now.isoformat(),
@@ -106,6 +123,14 @@ def collect_official_news(*, now=None, get=None, sources=None):
         ('daio', '大王製紙', 'https://www.daio-paper.co.jp/news/'),
         ('oji', '王子ホールディングス', 'https://www.ojiholdings.co.jp/news/'),
         ('zuiko', '瑞光', 'https://www.zuiko.co.jp/'),
+        ('fuji', 'フジキカイ', 'https://www.fujikikai-inc.co.jp/news'),
+        ('yaskawa', '安川電機', f'https://www.yaskawa.co.jp/date/{now.year}'),
+        ('omori', '大森機械工業', 'https://www.omori.co.jp/'),
+        ('kawashima', '川島製作所', 'https://www.kawashima-pack.co.jp/'),
+        ('universal', 'Universal Robots', 'https://www.universal-robots.com/news-and-media/news-center/'),
+        ('valmet', 'Valmet', 'https://www.valmet.com/tissue/tissue-news/'),
+        ('andritz', 'ANDRITZ', 'https://www.andritz.com/newsroom-en/nonwoven-and-textile'),
+        ('orbbec', 'Orbbec', 'https://www.orbbec.com/wp-json/wp/v2/news?per_page=30&orderby=date&order=desc'),
     ]
 
     def fetch(spec):
@@ -114,7 +139,7 @@ def collect_official_news(*, now=None, get=None, sources=None):
         try:
             response = get(index_url, timeout=25, headers={'User-Agent': 'industry-report/3.0'})
             response.raise_for_status()
-            payload = response.json() if source in {'nippon', 'kao'} else response.content
+            payload = response.json() if source in {'nippon', 'kao', 'orbbec'} else response.content
             rows = parse_index(source, payload, index_url)
             diagnostic['parsed'] = len(rows)
             if not rows:
@@ -124,7 +149,8 @@ def collect_official_news(*, now=None, get=None, sources=None):
                 item = index_item(title, url, raw_date, excerpt, company=company, source=source, index_url=index_url, now=now)
                 if item:
                     items.append(item)
-            diagnostic.update(status='ok', accepted=len(items))
+            diagnostic.update(status='ok', accepted=len(items), recent_5_days=sum(
+                0 <= (now.astimezone(JST).date() - parse_date(it['date']).date()).days <= 4 for it in items))
             return items, diagnostic
         except Exception as exc:
             diagnostic.update(status='error', error=str(exc))

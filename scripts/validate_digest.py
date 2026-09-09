@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 from news_dates import JST, verified_news
-from generate_dashboard import load_previous_digest_items, same_news_story, assign_daily_section
+from generate_dashboard import load_previous_digest_items, same_news_story, assign_daily_section, DAILY_DIGEST_MAX_AGE_DAYS
 
 
 def validate_digest(data_dir, reference_date):
@@ -20,7 +20,7 @@ def validate_digest(data_dir, reference_date):
             errors.append('Unverified publication date: ' + label)
         try:
             age = (reference_date - datetime.strptime(item['date'], '%Y-%m-%d').date()).days
-            if not 0 <= age <= 60:
+            if not 0 <= age < DAILY_DIGEST_MAX_AGE_DAYS:
                 errors.append('Publication date out of window: ' + label)
         except (ValueError, KeyError):
             errors.append('Invalid date: ' + label)

@@ -13,11 +13,14 @@ import requests
 import pytz
 import unicodedata
 from difflib import SequenceMatcher
+from functools import lru_cache
+from urllib.parse import urlsplit
 from datetime import datetime, timedelta, timezone
 from news_dates import verified_news
 from news_scoring import apply_fallback
-from fetch_news import assess_relevance, extract_company
+from fetch_news import assess_relevance, extract_company, CATEGORY_NAMES
 from official_sources import official_relevance
+from source_catalog import equipment_section
 
 try:
     from dotenv import load_dotenv
@@ -38,7 +41,8 @@ PATENT_RETENTION_DAYS = int(os.environ.get('PATENT_MAX_AGE_DAYS', '365'))
 DAILY_DIGEST_MIN = int(os.environ.get('DAILY_DIGEST_MIN', '15'))
 DAILY_DIGEST_TARGET = int(os.environ.get('DAILY_DIGEST_TARGET', '20'))
 DAILY_DIGEST_MAX = int(os.environ.get('DAILY_DIGEST_MAX', '20'))
-DAILY_DIGEST_LOOKBACK_DAYS = int(os.environ.get('DAILY_DIGEST_LOOKBACK_DAYS', '14'))
+DAILY_DIGEST_LOOKBACK_DAYS = int(os.environ.get('DAILY_DIGEST_LOOKBACK_DAYS', '3'))
+DAILY_DIGEST_MAX_AGE_DAYS = 5  # Inclusive calendar window: today plus four previous JST dates.
 DAILY_DIGEST_HISTORY_DAYS = int(os.environ.get('DAILY_DIGEST_HISTORY_DAYS', '30'))
 SPECIALTY_MAX_AGE_DAYS = int(os.environ.get('SPECIALTY_MAX_AGE_DAYS', '60'))
 
@@ -54,7 +58,7 @@ def assign_daily_section(item):
     if category_id == '③':
         return 'machine'
     if category_id == '④':
-        palletizer_terms = ('パレタイ', 'ロボット', 'robot', 'fanuc', 'ファナック', '自動化', 'automation')
+        palletizer_terms = ('パレタイ', 'ロボット', 'robot', 'fanuc', 'ファナック', '码垛', 'palletiz', 'palletis', 'ピッキング', '机器人', '搬送')
         return 'palletizer' if any(term in text for term in palletizer_terms) else 'packaging'
     # Japanese publishers use both ウェット and ウエット.  Wet-tissue
     # phrases must be checked before the generic ティシュー/category ⑥ rule.
@@ -78,6 +82,7 @@ def assign_daily_section(item):
     return 'rivals'
 
 
+@lru_cache(maxsize=2048)
 def _normalize_story_text(value):
     value = unicodedata.normalize('NFKC', value or '').lower()
     # Treat the two common Japanese spellings as the same product term.
@@ -92,11 +97,16 @@ def _story_date(item):
         return None
 
 
+@lru_cache(maxsize=512)
+def _grams(text, size):
+    return frozenset(text[i:i + size] for i in range(len(text) - size + 1))
+
+
 def _ngram_containment(left, right, size=3):
     if min(len(left), len(right)) < max(12, size):
         return 0.0
-    left_grams = {left[i:i + size] for i in range(len(left) - size + 1)}
-    right_grams = {right[i:i + size] for i in range(len(right) - size + 1)}
+    left_grams = _grams(left, size)
+    right_grams = _grams(right, size)
     if not left_grams or not right_grams:
         return 0.0
     return len(left_grams & right_grams) / min(len(left_grams), len(right_grams))
@@ -107,6 +117,15 @@ def same_news_story(left, right):
     left_url = (left.get('url') or '').strip()
     right_url = (right.get('url') or '').strip()
     if left_url and right_url and left_url == right_url:
+        return True
+    left_parts, right_parts = urlsplit(left_url), urlsplit(right_url)
+    if (left_parts.hostname in {'finance.biggo.jp', 'finance.biggo.com'} and
+            right_parts.hostname in {'finance.biggo.jp', 'finance.biggo.com'} and
+            left_parts.path == right_parts.path and left_parts.path.startswith('/news/')):
+        return True
+    left_ids = {left_url, left.get('original_source_url') or ''} - {''}
+    right_ids = {right_url, right.get('original_source_url') or ''} - {''}
+    if left_ids & right_ids:
         return True
 
     left_fingerprint = left.get('fingerprint')
@@ -131,6 +150,18 @@ def same_news_story(left, right):
     # near-identical publication dates to avoid suppressing genuine follow-ups.
     left_date = _story_date(left)
     right_date = _story_date(right)
+    if left_date and right_date and abs((left_date - right_date).days) <= 30:
+        left_body = _normalize_story_text(left.get('source_excerpt') or left.get('summary') or '')
+        right_body = _normalize_story_text(right.get('source_excerpt') or right.get('summary') or '')
+        if min(len(left_body), len(right_body)) >= 100 and _ngram_containment(left_body, right_body) >= 0.65:
+            return True
+        def model_ids(item):
+            text = unicodedata.normalize('NFKC', item.get('title','') + ' ' + (item.get('source_excerpt') or item.get('summary',''))).lower()
+            return {m for m in re.findall(r'(?<![a-z0-9])[a-z][a-z0-9]*[0-9][a-z0-9]*(?:-[a-z0-9]+)+(?![a-z0-9])', text) if len(m) >= 8}
+        releases = ('発売', '新製品', 'launch', 'introduc')
+        if (any(t in left.get('title','').lower() for t in releases) and
+                any(t in right.get('title','').lower() for t in releases) and model_ids(left) & model_ids(right)):
+            return True
     if left_date and right_date and abs((left_date - right_date).days) <= 3:
         left_full = _normalize_story_text(' '.join((left.get('title') or '', left.get('summary') or '')))
         right_full = _normalize_story_text(' '.join((right.get('title') or '', right.get('summary') or '')))
@@ -271,6 +302,9 @@ def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None, len
             '吸収体加工機・包装機・パレタイザー・学術論文・特許」に直接関連する業界ニュースかどうかを判断してください。\n'
             '関連しない場合は「IRRELEVANT」とだけ出力。\n'
             '競合他社（ユニ・チャーム・花王・P&G・日本製紙・王子等）の製品、経営、工場、原材料、GX・設備技術も対象です。\n'
+            '包装・装箱・搬送・協働ロボット・ピッキング・画像認識の新製品と実導入も、当社ラインへ応用可能なら対象です。'
+            '記事におむつや衛生用品という単語がないだけで除外しないこと。食品そのものの新商品、掃除ロボット、手術・溶接専用は対象外。'
+            '展示会の開催日や将来の発売日を記事の公開日として書き換えないこと。\n'
             'スポーツ、大学単独研究、ペットフード、一般美容商品の宣伝は対象外です。\n\n'
             '【ステップ2: 要約】\n'
             '業界関連ニュースの場合は、「誰が・いつ・何を・どのように・数値」が明確に伝わる、80〜150字で要約。\n'
@@ -513,23 +547,21 @@ def select_daily_digest(
         ]
     recent = []
     fallback = []
-    extended_fallback = []
     for item in regular:
         item_date = parsed_date(item)
         if item_date is None:
             continue
         age = (reference_date - item_date).days
-        if 0 <= age <= lookback_days:
+        if 0 <= age < min(lookback_days, DAILY_DIGEST_MAX_AGE_DAYS):
             recent.append(item)
-        elif lookback_days < age <= 30:
+        elif 0 <= age < DAILY_DIGEST_MAX_AGE_DAYS:
             fallback.append(item)
-        elif 30 < age <= SPECIALTY_MAX_AGE_DAYS:
-            extended_fallback.append(item)
 
     confidence_rank = {'高': 2, '中': 1, '低': 0, '要確認': 0}
 
     def rank(item):
         return (
+            1 if (reference_date - parsed_date(item)).days < min(lookback_days, DAILY_DIGEST_MAX_AGE_DAYS) else 0,
             int(item.get('score') or 0),
             confidence_rank.get(item.get('confidence', ''), 0),
             1 if item.get('fulltext_status') == 'excerpt_extracted' else 0,
@@ -538,7 +570,6 @@ def select_daily_digest(
 
     recent.sort(key=rank, reverse=True)
     fallback.sort(key=rank, reverse=True)
-    extended_fallback.sort(key=rank, reverse=True)
 
     # Reserve space for thin but strategically important categories first.
     minimum_by_category = {'①': 4, '②': 3, '③': 1, '④': 1, '⑤': 1, '⑥': 2}
@@ -557,9 +588,8 @@ def select_daily_digest(
 
     for category_id, quota in minimum_by_category.items():
         count = 0
-        # Equipment rarely publishes daily. Reserve one never-used release
-        # from the previous 30 days before generic recent corporate filler.
-        category_pool = recent + fallback if category_id in {'③', '④', '⑤', '⑥'} else recent
+        # Soft category coverage, never an exception to the five-day cutoff.
+        category_pool = recent + fallback
         for item in category_pool:
             if item.get('category_id') == category_id and add(item):
                 count += 1
@@ -573,7 +603,7 @@ def select_daily_digest(
 
     # Fill after deduplication, scanning the complete fallback pools. Slicing
     # before deduplication could leave a short digest despite enough candidates.
-    for pool in (fallback, extended_fallback):
+    for pool in (fallback,):
         for item in pool:
             if len(selected) >= target:
                 break
@@ -649,6 +679,10 @@ def main():
     for item in data:
         if item.get('company', '不明') == '不明':
             item['company'] = extract_company(item.get('title', '') + ' ' + item.get('summary', ''))
+        equipment = equipment_section(item.get('title', ''))
+        if equipment and not item.get('permanent_record'):
+            item['category_id'] = '③' if equipment == 'machine' else '④'
+            item['category_name'] = CATEGORY_NAMES[item['category_id']]
     # Recheck retained candidates as well as fresh feeds. Otherwise an old,
     # misclassified anecdote can be resurrected by quantity fallback later.
     def in_scope(item):
@@ -657,8 +691,8 @@ def main():
         if item.get('source_kind') == 'manufacturer_official':
             return official_relevance(item.get('title', ''), item.get('company', ''))
         body = item.get('source_excerpt') or item.get('summary', '')
-        return (assess_relevance(item.get('title', ''), body, item.get('source_name', ''))[0]
-                and assess_relevance('', body, item.get('source_name', ''))[0])
+        return (len(body.strip()) >= 60 and
+                assess_relevance(item.get('title', ''), body, item.get('source_name', ''))[0])
     irrelevant_before_ai = [it for it in data if not in_scope(it)]
     data = [it for it in data if it not in irrelevant_before_ai]
     print(f'[RELEVANCE] Excluded {len(irrelevant_before_ai)} off-topic retained/fresh candidates')
@@ -723,7 +757,7 @@ def main():
             apply_fallback(item, reference_date=datetime.now(pytz.timezone('Asia/Tokyo')).date())
 
     # Keep low-frequency equipment/specialty records for balancing, while the
-    # digest selector limits ordinary fallback content to 30 days.
+    # Daily selection is separately limited to five JST calendar dates.
     cutoff = datetime.now(timezone.utc) - timedelta(days=SPECIALTY_MAX_AGE_DAYS)
     cutoff_str = cutoff.strftime('%Y-%m-%d')
     kept = []
@@ -755,6 +789,10 @@ def main():
     selection_health = {
         'target': DAILY_DIGEST_TARGET, 'selected': len(digest_items),
         'shortfall': max(0, DAILY_DIGEST_TARGET - len(digest_items)),
+        'preferred_calendar_days': DAILY_DIGEST_LOOKBACK_DAYS,
+        'maximum_calendar_days': DAILY_DIGEST_MAX_AGE_DAYS,
+        'fresh_verified_news': sum(not it.get('permanent_record') and verified_news(it) and
+                                  0 <= (jst_now.date() - datetime.strptime(it['date'], '%Y-%m-%d').date()).days < DAILY_DIGEST_MAX_AGE_DAYS for it in data),
         'candidate_news': sum(not it.get('permanent_record') for it in data),
         'date_verified_news': sum(not it.get('permanent_record') and verified_news(it) for it in data),
         'ai_rejected': len(irrelevant_items),
@@ -776,7 +814,7 @@ def main():
         json.dump(
             {
                 'date': digest_date,
-                'digest_window_days': DAILY_DIGEST_LOOKBACK_DAYS,
+                'digest_window_days': DAILY_DIGEST_MAX_AGE_DAYS,
                 'target_count': DAILY_DIGEST_TARGET,
                 'selection_health': selection_health,
                 'items': digest_items,

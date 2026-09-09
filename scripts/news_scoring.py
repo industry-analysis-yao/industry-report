@@ -1,6 +1,7 @@
 """Transparent fallback ranking and verbatim extracts when AI is unavailable."""
 import re
 from datetime import date
+from source_catalog import equipment_section
 
 
 def apply_fallback(item, *, reference_date=None):
@@ -8,9 +9,10 @@ def apply_fallback(item, *, reference_date=None):
     title = item.get('title', '').lower()
     core = any(t in title for t in ('おむつ', 'オムツ', 'ソフィ', 'ナプキン', 'マミーポコ', 'ムーニー',
                                     'グーン', 'ティシュ', 'ティッシュ', 'ティシュー', 'ふきん', 'ハンドタオル',
-                                    'ウエット', 'ウェット', '生理', '吸収', '不織布', 'diaper', 'tissue'))
-    technology = any(t in title for t in ('開発', '技術', '研究', '新素材', '実証', '製造', '設備', '工場',
-                                        '火災', '自動化', 'ppe', '需要計画'))
+                                    'ウエット', 'ウェット', '生理', '吸収', '不織布', 'diaper', 'tissue',
+                                    '纸尿裤', '卫生巾', '生活用纸', '无纺布', '湿巾'))
+    technology = bool(equipment_section(title)) or any(t in title for t in ('開発', '技術', '研究', '新素材', '実証', '製造', '設備', '工場',
+                                        '火災', '自動化', 'ppe', '需要計画', 'technology', 'automation', 'production', '工厂', '投产', '自动化'))
     business = any(t in title for t in ('事業', '投資', '損失', '決算', '業績', '買収', '価格'))
     new_product = any(t in title for t in ('発売', 'ラインナップ', 'リニューアル', 'launch'))
     relevance = 35 if core else 28 if technology else 23 if business else 15

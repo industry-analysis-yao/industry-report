@@ -27,6 +27,7 @@ from email.utils import parsedate_to_datetime
 from typing import Any, Iterable
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 from news_dates import article_url, publication_evidence, verified_news
+from source_catalog import LOCALES, EQUIPMENT_COMPANIES, CONGLOMERATES, equipment_section, company_matches, expanded_queries
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -47,16 +48,17 @@ except ImportError:  # Unit tests can inject a parser without this dependency.
 
 
 JST = timezone(timedelta(hours=9))
-MAX_AGE_DAYS = int(os.getenv("NEWS_MAX_AGE_DAYS", "14"))
+MAX_AGE_DAYS = int(os.getenv("NEWS_MAX_AGE_DAYS", "7"))
 SPECIALTY_MAX_AGE_DAYS = int(os.getenv("SPECIALTY_MAX_AGE_DAYS", "60"))
 ACADEMIC_MAX_AGE_DAYS = int(os.getenv("ACADEMIC_MAX_AGE_DAYS", "90"))
 PATENT_MAX_AGE_DAYS = int(os.getenv("PATENT_MAX_AGE_DAYS", "365"))
-MAX_ITEMS_PER_QUERY = int(os.getenv("NEWS_MAX_ITEMS_PER_QUERY", "25"))
-MAX_ENRICH_ARTICLES = int(os.getenv("NEWS_MAX_ENRICH_ARTICLES", "50"))
+MAX_ITEMS_PER_QUERY = int(os.getenv("NEWS_MAX_ITEMS_PER_QUERY", "60"))
+MAX_ENRICH_ARTICLES = int(os.getenv("NEWS_MAX_ENRICH_ARTICLES", "240"))
 MAX_PATENTS_TOTAL = int(os.getenv("MAX_PATENTS_TOTAL", "30"))
 HTTP_TIMEOUT_SECONDS = int(os.getenv("NEWS_HTTP_TIMEOUT_SECONDS", "15"))
+EXTRACTION_VERSION = 2
 
-# Fewer, broader queries reduce duplicate results and RSS traffic. The
+# Discovery is broad and multilingual; publication filtering happens later. The
 # ``when:Nd`` clause is appended in build_feed_url(), so Google is asked for
 # recent results before our own strict timestamp check runs.
 SEARCH_QUERIES_GENERAL = [
@@ -119,6 +121,7 @@ KNOWN_COMPANIES = [
     "GDM", "Fameccanica", "OPTIMA", "ファナック", "FANUC", "Vinda",
     "维达", "Hengan", "恒安", "中顺洁柔", "Winner Medical", "稳健医疗",
     "住友精化", "G-Place", "日本製紙クレシア", "丸富製紙", "カミ商事",
+    'Babycare', 'Tork', '北越パレット', 'アイオイ・システム', 'グンゼ',
 ]
 
 CORE_TERMS = [
@@ -127,6 +130,7 @@ CORE_TERMS = [
     "生理用品", "月経", "ロリエ", "失禁", "ウェットティッシュ", "ウエットティッシュ", "ウェットティシュー", "ウエットティシュー", "ウェットワイプ", "ウエットワイプ", "不織布",
     "吸収体", "パルプ", "衛生用品", "diaper", "tissue", "hygiene",
     "sanitary napkin", "nonwoven", "absorbent core", "wet tissue", "wet wipe",
+    '纸尿裤', '卫生巾', '生活用纸', '纸巾', '湿巾', '无纺布', '吸水树脂',
 ]
 
 MACHINE_TERMS = [
@@ -243,6 +247,9 @@ def extract_source(entry: Any) -> tuple[str, str]:
 
 def extract_company(text: str) -> str:
     normalized = normalize_text(text)
+    for company in EQUIPMENT_COMPANIES:
+        if company_matches(company, text):
+            return company
     for company in KNOWN_COMPANIES:
         if normalize_text(company) in normalized:
             return company
@@ -269,8 +276,11 @@ def determine_info_type(text: str) -> str:
 
 def map_category(text: str, *, academic: bool = False) -> tuple[str, str]:
     lowered = unicodedata.normalize("NFKC", text).lower()
-    if academic or any(term in lowered for term in ("特許", "論文", "j-stage", "patent")):
+    equipment = equipment_section(text)
+    if academic or 'j-stage' in lowered:
         category = "⑦"
+    elif equipment:
+        category = '③' if equipment == 'machine' else '④'
     elif any(term.lower() in lowered for term in ("包装機", "パレタイザー", "包装ライン", "optima", "fanuc", "ファナック")):
         category = "④"
     elif any(term.lower() in lowered for term in ("加工機", "製造機械", "製造設備", "瑞光", "zuiko", "fameccanica", "gdm")):
@@ -302,6 +312,22 @@ def assess_relevance(title: str, snippet: str, source_name: str = "", *, academi
             '株主優待', '銘柄', 'シェフ', 'アティッシュ', 'たかいたかい', 'ちょい拭き',
             '卓上で使えるケース', '育児体験')):
         return False, ['incidental_keyword_not_industry_news']
+    if any(term in subject for term in (
+            'ロボットサッカー', 'robot soccer', '掃除機', '清掃ロボット', 'ごみ箱ロボット',
+            'surgical robot', 'robot vacuum', 'welding', '溶接', 'metal 3d print',
+            '霧ヶ峰', 'エアコン', '原子炉', 'nuclear', 'small modular reactor',
+            'stock holds', 'is abb', 'sa mines', 'mining operat', '株価', '投資分野', '平均年収', '人気ランキング',
+            'ティッシュ収納', '価格を解剖', '知事表彰')):
+        return False, ['outside_supply_chain_scope']
+    if any(term in subject for term in ('見逃し配信', '市場動向セミナー', '助手ロボット',
+                                       'lovot', 'aibo', 'アニマルウェア', '愛玩ロボット', 'ロボホン')):
+        return False, ['not_a_manufacturer_or_production_technology_event']
+    if any(term in subject for term in ('薬局', '児童養護施設', '無償提供', '寄贈')) and extract_company(title) == '不明':
+        return False, ['local_community_story_without_target_manufacturer']
+    if any(term in subject for term in ('gpt-', 'chatgpt')) and not any(term in subject for term in ('導入', '製造', '工場', '制御')):
+        return False, ['general_ai_not_production_application']
+    if any(term in subject for term in ('market growth', 'market forecast', 'market size', 'market report')):
+        return False, ['market_report_spam']
     if any(term.lower() in lowered for term in MARKET_REPORT_SPAM_TERMS):
         return False, ["market_report_spam"]
     if "市場" in lowered and "レポート" in lowered:
@@ -311,12 +337,14 @@ def assess_relevance(title: str, snippet: str, source_name: str = "", *, academi
     if any(term.lower() in lowered for term in CLICKBAIT_TERMS):
         return False, ["consumer_or_market_noise"]
     has_core = any(term.lower() in lowered for term in CORE_TERMS)
-    has_machine = any(term.lower() in lowered for term in MACHINE_TERMS)
+    has_machine = bool(equipment_section(text)) or any(term.lower() in lowered for term in MACHINE_TERMS
+        if term not in {'自動化', '製造設備', '製造機械'})
     has_company = extract_company(text) != "不明"
-    has_offtopic = any(term.lower() in lowered for term in OFFTOPIC_TERMS)
+    has_offtopic = not equipment_section(title) and any(term.lower() in lowered for term in OFFTOPIC_TERMS)
     business_signals = (
         "決算", "業績", "投資", "買収", "出資", "m&a", "工場", "生産能力",
         "研究開発", "特許", "中期経営", "事業再編", "提携", "規制", "価格改定",
+        'partnership', 'collaboration', 'investment', 'acquisition', 'earnings', '投产', '扩产', '合作',
     )
     has_business_signal = any(term in lowered for term in business_signals)
     if has_offtopic:
@@ -324,12 +352,14 @@ def assess_relevance(title: str, snippet: str, source_name: str = "", *, academi
     if academic:
         relevant = (has_core or has_company) and any(k in lowered for k in ("特許", "論文", "patent", "研究"))
     else:
-        relevant = has_core or has_machine or (has_company and has_business_signal)
+        relevant = has_core or has_machine or (has_company and has_business_signal and extract_company(text) not in CONGLOMERATES)
         event_signals = business_signals + (
             '発売', '発表', '新商品', '新製品', '新登場', '開発', '導入', '稼働', '実証',
             'ラインナップ', '拡充', '値上げ', '寄贈', '寄付', '製造', '生産', '需要',
             'リサイクル', 'サステナ', '市場', '調査', '価格', 'launch', 'investment',
             'plant', 'technology', 'production', 'recycling', 'acquisition',
+            '出展', '展示', '受賞', '展開', 'unveil', 'introduc', 'showcase', 'automation',
+            'debuts', 'announc', 'introduc', '发布', '推出', '新品', '自动化', '展会',
         )
         # A diaper/tissue mentioned in an anecdote is not a manufacturer event.
         relevant = relevant and any(signal in lowered for signal in event_signals)
@@ -364,9 +394,10 @@ def article_fingerprint(item: dict[str, Any]) -> str:
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:24]
 
 
-def build_feed_url(query: str, max_age_days: int) -> str:
+def build_feed_url(query: str, max_age_days: int, language: str = 'ja') -> str:
     dated_query = query if re.search(r"\bwhen:\d+[dhm]\b", query) else f"{query} when:{max_age_days}d"
-    return f"https://news.google.com/rss/search?q={quote(dated_query)}&hl=ja&gl=JP&ceid=JP:ja"
+    locale = LOCALES[language]
+    return f"https://news.google.com/rss/search?q={quote(dated_query)}&hl={locale['hl']}&gl={locale['gl']}&ceid={locale['ceid']}"
 
 
 def _patent_is_relevant(title: str, abstract: str) -> bool:
@@ -677,7 +708,7 @@ def resolve_google_news_url(url: str, *, session: Any = None) -> str:
     return canonicalize_url(url)
 
 
-def fetch_article_details(url: str, *, session: Any = None) -> dict:
+def fetch_article_details(url: str, *, session: Any = None, follow_original: bool = True) -> dict:
     """Extract publisher publication evidence alongside the article excerpt."""
     if requests is None or BeautifulSoup is None or not url or "news.google.com" in urlsplit(url).netloc:
         return {}
@@ -725,6 +756,26 @@ def fetch_article_details(url: str, *, session: Any = None) -> dict:
             preferred = soup.select_one('.news_body')
         elif urlsplit(response.url).hostname == 'www.daio-paper.co.jp':
             preferred = soup.select_one('#article .post_content')
+        elif urlsplit(response.url).hostname == 'www.fujikikai-inc.co.jp':
+            preferred = soup.select_one('.area-cmn-article')
+        elif urlsplit(response.url).hostname == 'www.automation-news.jp':
+            preferred = soup.select_one('article .post_content')
+            # This trade paper explicitly embeds the manufacturer's source
+            # release in the article. Follow it once, not sidebar suggestions.
+            if follow_original and preferred:
+                links = preferred.select('a[href]')
+                trusted = {'www.yaskawa.co.jp', 'www.omori.co.jp', 'www.fanuc.co.jp',
+                           'www.unicharm.co.jp', 'www.daio-paper.co.jp', 'prtimes.jp'}
+                links = [a for a in links if urlsplit(a['href']).hostname in trusted and
+                         re.search(r'/(news|newsrelease|main/html/rd)/', urlsplit(a['href']).path)]
+                for link in links[:3]:
+                    if urlsplit(link['href']).hostname in trusted:
+                        original = fetch_article_details(link['href'], session=session, follow_original=False)
+                        if original.get('publication_date_status') == 'verified':
+                            details['reporting_publication_evidence'] = details.copy()
+                            details['original_source_url'] = link['href']
+                            if original['publisher_date'] < details.get('publisher_date', '9999'):
+                                details.update({k:v for k,v in original.items() if k != 'excerpt'})
         container = preferred or soup.select_one('[itemprop="articleBody"]') or soup.find("article") or soup.find("main")
         if container:
             paragraphs = [strip_html(node.get_text(" ", strip=True)) for node in container.find_all("p")]
@@ -748,6 +799,13 @@ def fetch_article_details(url: str, *, session: Any = None) -> dict:
                 candidates.append(body[:1800])
         candidates = [text for text in candidates if len(text) >= 60]
         details['excerpt'] = max(candidates, key=len)[:1800] if candidates else ''
+        heading = soup.find('h1')
+        title = normalize_text(heading.get_text()) if heading else ''
+        body = normalize_text(details['excerpt'])
+        # Wrapper metadata such as “this is the article page for <title>” is
+        # not a body. It must never satisfy verification merely by length.
+        if title and title in body and len(body.replace(title, '')) < 35:
+            details['excerpt'] = ''
         return details
     except Exception:
         return {}
@@ -756,6 +814,7 @@ def fetch_article_details(url: str, *, session: Any = None) -> dict:
 def prepare_official_item(item, *, fetch_details=True):
     """Keep a bound official release date if detail HTML has no metadata."""
     item = item.copy()
+    item['extraction_version'] = EXTRACTION_VERSION
     details = fetch_article_details(item['url']) if fetch_details else {}
     excerpt = details.get('excerpt') or item.get('source_excerpt', '')
     # An earlier, explicitly published article date defeats a newer index date.
@@ -774,13 +833,15 @@ def prepare_official_item(item, *, fetch_details=True):
     # newly published patent. Patent-library entries come from patent records.
     subject = re.sub(r'特許|patent', '', title, flags=re.I)
     category, name = map_category(subject)
-    if any(term in (title + ' ' + excerpt[:600]).lower() for term in (
+    if category not in {'③', '④'} and any(term in (title + ' ' + excerpt[:600]).lower() for term in (
             'ウェットシート', 'ウエットシート', 'おしりふき', 'ウェットティ', 'ウエットティ')):
         category = '⑤'
     elif 'ペーパーふきん' in excerpt[:600] or 'ペーパータオル' in excerpt[:600]:
         category = '⑥'
     if item['company'] == '瑞光':
         category = '③'
+    elif item['company'] in EQUIPMENT_COMPANIES and equipment_section(title + ' ' + item['company']):
+        category = '③' if EQUIPMENT_COMPANIES[item['company']] == 'machine' else '④'
     elif category == '①' and item['company'] in {'大王製紙', '日本製紙', '王子ホールディングス'}:
         category = '②'
     item.update(category_id=category, category_name=CATEGORY_NAMES[category], info_type=determine_info_type(subject))
@@ -793,6 +854,7 @@ def fetch_article_excerpt(url: str, *, session: Any = None) -> str:
 
 
 def enrich_item(item: dict[str, Any]) -> dict[str, Any]:
+    item['extraction_version'] = EXTRACTION_VERSION
     discovery_url = item.get("url", "")
     resolved = article_url(resolve_google_news_url(discovery_url))
     flags = set(item.get("quality_flags", []))
@@ -815,7 +877,9 @@ def enrich_item(item: dict[str, Any]) -> dict[str, Any]:
             flags.add('publication_date_unverified')
         if excerpt and normalize_text(excerpt) != normalize_text(item.get("title", "")):
             item["summary"] = excerpt
+            item['source_excerpt'] = excerpt
             flags.discard("title_only_summary")
+            flags.discard('fulltext_unavailable')
             item["fulltext_status"] = "excerpt_extracted"
         else:
             flags.add("fulltext_unavailable")
@@ -854,6 +918,9 @@ def fetch_google_news_rss(
     max_items: int = MAX_ITEMS_PER_QUERY,
     max_age_days: int = MAX_AGE_DAYS,
     academic: bool = False,
+    language: str = 'ja',
+    group: str = 'general',
+    diagnostics: dict | None = None,
     now: datetime | None = None,
     feed_parser: Any = None,
 ) -> list[dict[str, Any]]:
@@ -863,18 +930,28 @@ def fetch_google_news_rss(
 
     reference_time = (now or utc_now()).astimezone(timezone.utc)
     cutoff = reference_time - timedelta(days=max_age_days)
-    feed_url = build_feed_url(query, max_age_days)
-    feed = parser.parse(feed_url, request_headers={"User-Agent": "industry-report/2.0 (+GitHub Actions)"})
+    feed_url = build_feed_url(query, max_age_days, language)
+    if feed_parser is None:
+        response = requests.get(feed_url, timeout=HTTP_TIMEOUT_SECONDS,
+                                headers={'User-Agent': 'industry-report/3.0 (+GitHub Actions)'})
+        response.raise_for_status()
+        feed = parser.parse(response.content)
+    else:
+        feed = parser.parse(feed_url, request_headers={"User-Agent": "industry-report/3.0"})
     if getattr(feed, "bozo", False) and not getattr(feed, "entries", []):
         raise RuntimeError(f"RSS parse failed for query: {query}")
 
+    diagnostic = diagnostics if diagnostics is not None else {}
+    diagnostic.update(raw=len(getattr(feed, 'entries', [])), inspected=0, date_eligible=0, rejected={})
     results: list[dict[str, Any]] = []
     for entry in list(getattr(feed, "entries", []))[:max_items]:
+        diagnostic['inspected'] += 1
         published = parse_published_at(entry)
         if published is None:
             continue
         if published < cutoff or published > reference_time + timedelta(hours=12):
             continue
+        diagnostic['date_eligible'] += 1
 
         source_name, source_url = extract_source(entry)
         title = title_without_source(entry.get("title", ""), source_name)
@@ -884,6 +961,8 @@ def fetch_google_news_rss(
         summary = title_without_source(raw_summary, source_name)
         relevant, flags = assess_relevance(title, summary, source_name, academic=academic)
         if not relevant:
+            reason = flags[0] if flags else 'unknown'
+            diagnostic['rejected'][reason] = diagnostic['rejected'].get(reason, 0) + 1
             continue
 
         if normalize_text(summary) == normalize_text(title) or len(summary) < 20:
@@ -915,6 +994,8 @@ def fetch_google_news_rss(
             "source_url": source_url,
             "discovery_provider": "Google News RSS",
             "discovery_query": query,
+            "discovery_language": language,
+            "discovery_group": group,
             "confidence": source_confidence(source_name, source_url, flags),
             "quality_flags": sorted(set(flags)),
         }
@@ -993,7 +1074,11 @@ def collect_news(
             if health['status'] == 'error':
                 errors.append(f"{health['source']}: {health['error']}")
         cached = {canonicalize_url(it['url']): it for it in existing if it.get('url') and verified_news(it)
-                  and it.get('fulltext_status') == 'excerpt_extracted'}
+                  and it.get('fulltext_status') == 'excerpt_extracted' and it.get('extraction_version', 0) >= EXTRACTION_VERSION}
+        # Retention and discovery do not authorize spending the daily fetch
+        # budget on months-old releases. Revisit only the recent search window.
+        reference = (now or utc_now()).astimezone(JST).date()
+        official = [it for it in official if 0 <= (reference - datetime.fromisoformat(it['date']).date()).days <= 6]
         pending = [it for it in official if canonicalize_url(it['url']) not in cached]
         if enrich:
             with ThreadPoolExecutor(max_workers=5) as executor:
@@ -1002,44 +1087,73 @@ def collect_news(
             pending = [prepare_official_item(it, fetch_details=False) for it in pending]
         official = [cached[canonicalize_url(it['url'])] for it in official if canonicalize_url(it['url']) in cached] + pending
         diagnostics['official_verified'] = sum(verified_news(it) for it in official)
-    jobs = [(query, MAX_AGE_DAYS, False) for query in SEARCH_QUERIES_GENERAL]
-    jobs += [(query, SPECIALTY_MAX_AGE_DAYS, False) for query in SEARCH_QUERIES_SPECIALTY]
-    jobs += [(query, SPECIALTY_MAX_AGE_DAYS, False) for query in SEARCH_QUERIES_MACHINE]
-    jobs += [(query, ACADEMIC_MAX_AGE_DAYS, True) for query in ACADEMIC_QUERIES]
+    jobs = [dict(query=q, max_age_days=MAX_AGE_DAYS, language='en' if q.startswith('(tissue') or 'P&G Japan' in q else 'ja', group='general')
+            for q in SEARCH_QUERIES_GENERAL + SEARCH_QUERIES_SPECIALTY]
+    jobs += expanded_queries()
+    jobs += [dict(query=q, max_age_days=ACADEMIC_MAX_AGE_DAYS, language='ja', group='academic', academic=True) for q in ACADEMIC_QUERIES]
     if query_limit is not None:
         jobs = jobs[:query_limit]
     collected: list[dict[str, Any]] = []
     rss_health = []
-    for index, (query, age, academic) in enumerate(jobs, start=1):
+    def run_query(job):
+        health = {**job, 'accepted': 0}
         try:
             rows = fetch_google_news_rss(
-                query, max_items=max_items, max_age_days=age, academic=academic,
-                now=now, feed_parser=feed_parser,
+                **job, max_items=max_items, now=now, feed_parser=feed_parser, diagnostics=health,
             )
-            collected.extend(rows)
-            rss_health.append({'query': query, 'accepted': len(rows), 'status': 'ok'})
-            print(f"[{index:02d}/{len(jobs):02d}] {len(rows):2d} accepted: {query[:72]}")
+            health.update(accepted=len(rows), status='ok')
+            return rows, health
         except Exception as exc:  # One failed feed must not abort the full daily run.
-            message = f"{query}: {exc}"
-            errors.append(message)
-            rss_health.append({'query': query, 'accepted': 0, 'status': 'error', 'error': str(exc)})
-            print(f"[{index:02d}/{len(jobs):02d}] ERROR: {message}")
-        time.sleep(0.1)
+            health.update(status='error', error=str(exc))
+            return [], health
+
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        for index, (rows, health) in enumerate(executor.map(run_query, jobs), start=1):
+            collected.extend(rows)
+            rss_health.append(health)
+            if health['status'] == 'error':
+                errors.append(f"{health['query']}: {health['error']}")
+            print(f"[{index:03d}/{len(jobs):03d}] {len(rows):2d} candidates ({health['status']}): {health['query'][:72]}")
+    diagnostics['rss_candidates'] = len(deduplicate(collected))
+    if include_official and feed_parser is None:
+        from publisher_feeds import collect_publisher_feeds
+        direct, health = collect_publisher_feeds(now=now)
+        diagnostics['publisher_feeds'] = health
+        collected.extend(direct)
+        for row in health:
+            if row['status'] == 'error':
+                errors.append(f"{row['source']}: {row['error']}")
     unique = deduplicate(collected)
     diagnostics['rss_sources'] = rss_health
-    diagnostics['rss_candidates'] = len(unique)
+    diagnostics['discovery_candidates'] = len(unique)
     # Verified cached articles must not consume the bounded publisher-fetch
     # budget every morning. Search discovery URLs are also kept as identities.
     cached_urls = {canonicalize_url(it.get(key, '')) for it in existing + official if verified_news(it)
                    and it.get('fulltext_status') == 'excerpt_extracted'
+                   and it.get('extraction_version', 0) >= EXTRACTION_VERSION
                    for key in ('url', 'discovery_url') if it.get(key)}
     unique = [it for it in unique if canonicalize_url(it.get('url', '')) not in cached_urls]
     unique.sort(key=lambda it: it.get('published_at', ''), reverse=True)
+    # Round-robin topic buckets so a flood of one category cannot consume all
+    # publisher-verification slots before machinery is ever inspected.
+    buckets = {}
+    for item in unique:
+        buckets.setdefault(item.get('discovery_group', 'general'), []).append(item)
+    unique = [bucket[i] for i in range(max(map(len, buckets.values()), default=0))
+              for bucket in buckets.values() if i < len(bucket)]
     if enrich:
         print(f"Enriching up to {min(enrich_limit, len(unique))} unique articles with publisher URLs/text...")
         unique = enrich_items(unique, limit=enrich_limit)
         unique = deduplicate(unique)
-    diagnostics['rss_verified'] = sum(verified_news(it) for it in unique)
+    diagnostics['discovery_verified'] = sum(verified_news(it) for it in unique)
+    diagnostics['rss_verified'] = sum(verified_news(it) for it in unique if it.get('discovery_provider') == 'Google News RSS')
+    diagnostics['rss_raw'] = sum(h.get('raw', 0) for h in rss_health)
+    diagnostics['by_group'] = {group: {
+        'queries': sum(h['group'] == group for h in rss_health),
+        'raw': sum(h.get('raw', 0) for h in rss_health if h['group'] == group),
+        'candidates': sum(h['accepted'] for h in rss_health if h['group'] == group),
+        'verified': sum(verified_news(it) for it in unique if it.get('discovery_group') == group),
+    } for group in sorted({h['group'] for h in rss_health})}
 
     patent_rows: list[dict[str, Any]] = []
     try:
@@ -1118,9 +1232,12 @@ def main() -> int:
     if not args.dry_run:
         # Legacy records have only a search-feed date. Check them before they
         # can be selected or suppress a newly discovered publisher record.
-        pending = [row for row in regular if not verified_news(row)]
+        reference = utc_now().astimezone(JST).date()
+        pending = [row for row in regular if not verified_news(row)
+                   and row.get('date') and 0 <= (reference - datetime.fromisoformat(row['date']).date()).days <= 6]
         checked = enrich_items(pending, limit=len(pending))
-        regular = [row for row in regular if verified_news(row)] + checked
+        pending_ids = {id(row) for row in pending}
+        regular = [row for row in regular if id(row) not in pending_ids] + checked
     fresh, errors = collect_news(
         query_limit=args.query_limit,
         max_items=args.max_items,
@@ -1132,8 +1249,7 @@ def main() -> int:
     # Upgrade legacy/unverified copies rather than letting them suppress a
     # verified direct-publisher record with the same URL.
     upgrades = {canonicalize_url(it.get('url', '')): it for it in fresh if verified_news(it)}
-    regular = [it for it in regular if (verified_news(it) and it.get('fulltext_status') == 'excerpt_extracted')
-               or canonicalize_url(it.get('url', '')) not in upgrades]
+    regular = [it for it in regular if canonicalize_url(it.get('url', '')) not in upgrades]
     fresh = deduplicate(fresh, regular + patents)
     diagnostics['new_verified_news'] = sum(verified_news(it) for it in fresh if not it.get('permanent_record'))
 

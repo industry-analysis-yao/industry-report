@@ -910,6 +910,12 @@ function dedupeByUrl(arr) {
 // This keeps the seven sidebar news counts additive and equal to the overview.
 function dailyNewsSection(d) {
   var text = [d.title, d.summary, d.company, d.info_type].filter(Boolean).join(' ').toLowerCase();
+  // Equipment processing wet wipes is still equipment, not a wet-wipe product.
+  if (d.category_id === '③') return 'machine';
+  if (d.category_id === '④') {
+    var robotKw = ['パレタイ', 'ロボット', 'robot', 'fanuc', 'ファナック', '码垛', 'palletiz', 'palletis', 'ピッキング', '机器人', '搬送'];
+    return robotKw.some(function(k) { return text.includes(k); }) ? 'palletizer' : 'packaging';
+  }
   // Override legacy snapshots that stored Japanese ウエット items as tissue.
   var wetKw = [
     'ウェットティッシュ', 'ウエットティッシュ',
@@ -919,11 +925,6 @@ function dailyNewsSection(d) {
   ];
   if (d.category_id === '⑤' || wetKw.some(function(k) { return text.includes(k); })) return 'wet';
   if (d.dashboard_section) return d.dashboard_section;
-  if (d.category_id === '③') return 'machine';
-  if (d.category_id === '④') {
-    var palletizerKw = ['パレタイ', 'ロボット', 'robot', 'fanuc', 'ファナック', '自動化', 'automation'];
-    return palletizerKw.some(function(k) { return text.includes(k); }) ? 'palletizer' : 'packaging';
-  }
   var toiletKw = ['トイレットペーパー', 'toilet paper', 'トイレロール'];
   if (toiletKw.some(function(k) { return text.includes(k); })) return 'toilet';
   var tissueKw = ['ティッシュペーパー', 'ティシュー', '箱ティッシュ', 'tissue paper', '家庭紙'];

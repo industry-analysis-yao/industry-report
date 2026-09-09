@@ -154,6 +154,7 @@ class OfficialSourceTests(unittest.TestCase):
         old = dict(self.item(), fulltext_status='unavailable')
         repaired = dict(old, fulltext_status='excerpt_extracted')
         with patch('official_sources.collect_official_news', return_value=([self.item()], [])), \
+                patch('publisher_feeds.collect_publisher_feeds', return_value=([], [])), \
                 patch('fetch_news.prepare_official_item', return_value=repaired) as enrich, \
                 patch('fetch_news.fetch_google_patents', return_value=[]):
             rows, _ = collect_news(query_limit=0, existing=[old], now=NOW)

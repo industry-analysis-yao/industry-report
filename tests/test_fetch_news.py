@@ -83,7 +83,7 @@ class FetchNewsTests(unittest.TestCase):
         self.assertEqual(rows[0]["published_at"], "2026-09-01T23:30:00Z")
         self.assertEqual(rows[0]["date"], "2026-09-02")
         self.assertEqual(rows[0]["collected_at"], "2026-09-02T00:00:00Z")
-        self.assertIn("when%3A14d", parser.last_url)
+        self.assertIn("when%3A7d", parser.last_url)
 
     def test_rejects_old_missing_and_future_dates(self):
         parser = FakeParser([
