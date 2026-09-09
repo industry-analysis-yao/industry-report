@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-08T10:40:48Z",
+  "collected_at": "2026-09-09T00:07:39Z",
   "official_sources": [
     {
       "source": "unicharm",
@@ -33,7 +33,7 @@
       "source": "oji",
       "url": "https://www.ojiholdings.co.jp/news/",
       "parsed": 1130,
-      "accepted": 11,
+      "accepted": 10,
       "status": "ok"
     },
     {
@@ -44,7 +44,7 @@
       "status": "ok"
     }
   ],
-  "official_verified": 49,
+  "official_verified": 48,
   "rss_sources": [
     {
       "query": "\"ユニ・チャーム\" (おむつ OR 生理用品 OR 衛生用品 OR 新製品 OR 決算 OR 投資)",
@@ -78,12 +78,12 @@
     },
     {
       "query": "(おむつ OR 生理用品 OR ナプキン) (新製品 OR 素材 OR 技術 OR リサイクル)",
-      "accepted": 3,
+      "accepted": 2,
       "status": "ok"
     },
     {
       "query": "(衛生用品 OR 紙おむつ OR 生理用品) (企業 OR 工場 OR 生産 OR 発売 OR 技術)",
-      "accepted": 7,
+      "accepted": 6,
       "status": "ok"
     },
     {
@@ -158,7 +158,7 @@
     }
   ],
   "rss_candidates": 27,
-  "rss_verified": 3,
-  "new_verified_news": 4,
+  "rss_verified": 4,
+  "new_verified_news": 5,
   "errors": []
 }
