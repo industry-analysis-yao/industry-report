@@ -1,0 +1,75 @@
+{
+  "date": "2026-09-13",
+  "digest_window_days": 5,
+  "target_count": 20,
+  "selection_health": {
+    "target": 20,
+    "selected": 1,
+    "shortfall": 19,
+    "preferred_calendar_days": 3,
+    "maximum_calendar_days": 5,
+    "fresh_verified_news": 16,
+    "candidate_news": 130,
+    "date_verified_news": 87,
+    "ai_rejected": 39,
+    "relevance_rejected": 17,
+    "history_records_checked": 147,
+    "history_duplicate_candidates": 77,
+    "section_counts": {
+      "machine": 1
+    }
+  },
+  "items": [
+    {
+      "title": "Tissue Paper Converting Machine Market to Reach USD 7.4 Billion by 2036 as Automation Drives Capacity Expansion",
+      "summary": "世界のティッシュペーパー加工機市場は、2026年から2036年にかけて年率6.1%で成長し、2036年には74億米ドル規模に達すると予測される。これはメーカー各社が生産能力拡大のため、自動化設備や高速生産設備へ積極投資しているため。",
+      "company": "不明",
+      "date": "2026-09-10",
+      "published_at": "2026-09-10T03:29:12Z",
+      "collected_at": "2026-09-12T23:58:01Z",
+      "category_id": "③",
+      "rss_published_at": "2026-09-10T03:29:12Z",
+      "publication_date_status": "verified",
+      "category_name": "不織布・吸収体加工機メーカー",
+      "info_type": "其他",
+      "url": "https://www.openpr.com/news/4626904/tissue-paper-converting-machine-market-to-reach-usd-7-4-billion",
+      "source_name": "openPR.com",
+      "source_url": "https://www.openpr.com/",
+      "discovery_provider": "Google News RSS",
+      "discovery_query": "(tissue OR toilet paper OR diaper OR hygiene) (Japan OR Asia) (launch OR investment OR plant OR technology)",
+      "discovery_language": "en",
+      "discovery_group": "general",
+      "confidence": "中",
+      "quality_flags": [],
+      "fingerprint": "c88226c1c1aeac3210961bc3",
+      "extraction_version": 2,
+      "discovery_url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNMzhBRy11YS1yalByNDJmVmhRSVIwcWhSalRXTXp0cGZBUjdmLTdCVVZJOXFPYmlERWpjR3ZDUUtJc0hhWW5CVEpNOS0zQUQxZ1h6WTBhRFFXMF9GNzVZSVIxd3F5bjVPd1M3VGhVbGxxZVJTTUZ4NzkyUkFaSG13SHJmZG8yWEFiT3hRUk9oSHRSYjQxR0tqdGc1N280YUhy?oc=5",
+      "publisher_published_at": "2026-09-10T03:29:12Z",
+      "publisher_date": "2026-09-10",
+      "publication_date_source": "meta:article:published_time",
+      "publication_date_raw": "2026-09-10T05:29:12+02:00",
+      "publication_date_url": "https://www.openpr.com/news/4626904/tissue-paper-converting-machine-market-to-reach-usd-7-4-billion",
+      "publication_date_version": 1,
+      "source_excerpt": "The global tissue paper converting machine market is projected to reach USD 7 4 billion by 2036 expanding at a 6 1 CAGR from 2026 to 2036 as tissue manufacturers invest in automated equipment capacity expansion and higher speed production ...",
+      "fulltext_status": "excerpt_extracted",
+      "score": 68,
+      "impact_analysis": "市場成長予測(74億米ドル規模)と自動化投資トレンドは、大王製紙の生産設備近代化戦略に整合性がある。ただし直接的なR&D戦略への言及が不足しており、具体的な技術革新内容(例: 当社の特許技術「連続積層式加工」等)との関連性が不明。業界全体の動向把握には有用だが、即時対応を要する緊急性は低い。",
+      "summary_method": "ai",
+      "score_method": "ai",
+      "dashboard_section": "machine"
+    }
+  ],
+  "highlights": [
+    {
+      "rank": 1,
+      "title": "Tissue Paper Converting Machine Market to Reach USD 7.4 Billion by 2036 as Automation Drives Capacity Expansion",
+      "url": "https://www.openpr.com/news/4626904/tissue-paper-converting-machine-market-to-reach-usd-7-4-billion",
+      "company": "不明",
+      "category": "不織布・吸収体加工機メーカー / 其他",
+      "date": "2026-09-10",
+      "impact": "市場成長予測(74億米ドル規模)と自動化投資トレンドは、大王製紙の生産設備近代化戦略に整合性がある。ただし直接的なR&D戦略への言及が不足しており、具体的な技術革新内容(例: 当社の特許技術「連続積層式加工」等)との関連性が不明。業界全体の動向把握には有用だが、即時対応を要する緊急性は低い。",
+      "score": 68,
+      "is_patent": false
+    }
+  ]
+}
