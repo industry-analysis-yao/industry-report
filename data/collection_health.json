@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-11T00:03:53Z",
+  "collected_at": "2026-09-12T00:12:13Z",
   "official_sources": [
     {
       "source": "unicharm",
@@ -7,7 +7,7 @@
       "parsed": 82,
       "accepted": 13,
       "status": "ok",
-      "recent_5_days": 3
+      "recent_5_days": 2
     },
     {
       "source": "nippon",
@@ -15,13 +15,13 @@
       "parsed": 535,
       "accepted": 15,
       "status": "ok",
-      "recent_5_days": 2
+      "recent_5_days": 1
     },
     {
       "source": "kao",
       "url": "https://www.kao.com/content/dam/article/newsindex/v4.content.wcm_kao.sites.kao.www-kao-com.jp.ja.newsroom.news.1.json",
       "parsed": 826,
-      "accepted": 8,
+      "accepted": 7,
       "status": "ok",
       "recent_5_days": 0
     },
@@ -29,14 +29,14 @@
       "source": "daio",
       "url": "https://www.daio-paper.co.jp/news/",
       "parsed": 10,
-      "accepted": 2,
+      "accepted": 4,
       "status": "ok",
-      "recent_5_days": 0
+      "recent_5_days": 2
     },
     {
       "source": "oji",
       "url": "https://www.ojiholdings.co.jp/news/",
-      "parsed": 1132,
+      "parsed": 1133,
       "accepted": 10,
       "status": "ok",
       "recent_5_days": 0
@@ -61,7 +61,7 @@
       "source": "yaskawa",
       "url": "https://www.yaskawa.co.jp/date/2026",
       "parsed": 52,
-      "accepted": 5,
+      "accepted": 4,
       "status": "ok",
       "recent_5_days": 0
     },
@@ -114,14 +114,14 @@
       "recent_5_days": 1
     }
   ],
-  "official_verified": 7,
-  "rss_candidates": 84,
+  "official_verified": 9,
+  "rss_candidates": 83,
   "publisher_feeds": [
     {
       "source": "Automation News",
       "url": "https://www.automation-news.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
       "raw": 100,
-      "accepted": 5,
+      "accepted": 4,
       "status": "ok"
     },
     {
@@ -145,12 +145,13 @@
       "max_age_days": 7,
       "language": "ja",
       "group": "general",
-      "accepted": 4,
+      "accepted": 2,
       "raw": 20,
       "inspected": 20,
       "date_eligible": 20,
       "rejected": {
-        "no_industry_signal": 12,
+        "no_industry_signal": 13,
+        "outside_supply_chain_scope": 1,
         "off_topic": 3,
         "local_community_story_without_target_manufacturer": 1
       },
@@ -191,13 +192,13 @@
       "max_age_days": 7,
       "language": "ja",
       "group": "general",
-      "accepted": 4,
-      "raw": 14,
-      "inspected": 14,
-      "date_eligible": 14,
+      "accepted": 3,
+      "raw": 13,
+      "inspected": 13,
+      "date_eligible": 13,
       "rejected": {
-        "no_industry_signal": 9,
-        "outside_supply_chain_scope": 1
+        "outside_supply_chain_scope": 1,
+        "no_industry_signal": 9
       },
       "status": "ok"
     },
@@ -218,13 +219,14 @@
       "max_age_days": 7,
       "language": "ja",
       "group": "general",
-      "accepted": 2,
-      "raw": 23,
-      "inspected": 23,
-      "date_eligible": 23,
+      "accepted": 3,
+      "raw": 21,
+      "inspected": 21,
+      "date_eligible": 21,
       "rejected": {
-        "consumer_or_market_noise": 2,
-        "no_industry_signal": 19
+        "consumer_or_market_noise": 1,
+        "no_industry_signal": 16,
+        "outside_supply_chain_scope": 1
       },
       "status": "ok"
     },
@@ -234,12 +236,12 @@
       "language": "ja",
       "group": "general",
       "accepted": 1,
-      "raw": 15,
-      "inspected": 15,
-      "date_eligible": 15,
+      "raw": 13,
+      "inspected": 13,
+      "date_eligible": 13,
       "rejected": {
-        "no_industry_signal": 12,
-        "outside_supply_chain_scope": 2
+        "outside_supply_chain_scope": 3,
+        "no_industry_signal": 9
       },
       "status": "ok"
     },
@@ -248,14 +250,14 @@
       "max_age_days": 7,
       "language": "ja",
       "group": "general",
-      "accepted": 3,
-      "raw": 30,
-      "inspected": 30,
-      "date_eligible": 30,
+      "accepted": 5,
+      "raw": 28,
+      "inspected": 28,
+      "date_eligible": 28,
       "rejected": {
-        "no_industry_signal": 20,
+        "no_industry_signal": 17,
         "market_report_spam": 2,
-        "incidental_keyword_not_industry_news": 4,
+        "incidental_keyword_not_industry_news": 3,
         "local_community_story_without_target_manufacturer": 1
       },
       "status": "ok"
@@ -266,15 +268,16 @@
       "language": "ja",
       "group": "general",
       "accepted": 0,
-      "raw": 30,
-      "inspected": 30,
-      "date_eligible": 30,
+      "raw": 34,
+      "inspected": 34,
+      "date_eligible": 34,
       "rejected": {
         "market_report_spam": 2,
-        "outside_supply_chain_scope": 5,
-        "consumer_or_market_noise": 2,
-        "incidental_keyword_not_industry_news": 4,
-        "no_industry_signal": 17
+        "outside_supply_chain_scope": 6,
+        "consumer_or_market_noise": 1,
+        "no_industry_signal": 21,
+        "low_trust_source": 1,
+        "incidental_keyword_not_industry_news": 3
       },
       "status": "ok"
     },
@@ -284,12 +287,12 @@
       "language": "ja",
       "group": "general",
       "accepted": 0,
-      "raw": 29,
-      "inspected": 29,
-      "date_eligible": 29,
+      "raw": 28,
+      "inspected": 28,
+      "date_eligible": 28,
       "rejected": {
-        "no_industry_signal": 25,
-        "market_report_spam": 4
+        "no_industry_signal": 27,
+        "market_report_spam": 1
       },
       "status": "ok"
     },
@@ -299,12 +302,12 @@
       "language": "ja",
       "group": "general",
       "accepted": 1,
-      "raw": 5,
-      "inspected": 5,
-      "date_eligible": 5,
+      "raw": 4,
+      "inspected": 4,
+      "date_eligible": 4,
       "rejected": {
+        "market_report_spam": 1,
         "outside_supply_chain_scope": 1,
-        "market_report_spam": 2,
         "incidental_keyword_not_industry_news": 1
       },
       "status": "ok"
@@ -315,10 +318,12 @@
       "language": "ja",
       "group": "general",
       "accepted": 0,
-      "raw": 0,
-      "inspected": 0,
-      "date_eligible": 0,
-      "rejected": {},
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {
+        "outside_supply_chain_scope": 1
+      },
       "status": "ok"
     },
     {
@@ -327,14 +332,16 @@
       "language": "ja",
       "group": "general",
       "accepted": 2,
-      "raw": 33,
-      "inspected": 33,
-      "date_eligible": 33,
+      "raw": 35,
+      "inspected": 35,
+      "date_eligible": 35,
       "rejected": {
-        "no_industry_signal": 24,
-        "incidental_keyword_not_industry_news": 4,
-        "off_topic": 2,
-        "local_community_story_without_target_manufacturer": 1
+        "no_industry_signal": 26,
+        "outside_supply_chain_scope": 1,
+        "incidental_keyword_not_industry_news": 3,
+        "local_community_story_without_target_manufacturer": 1,
+        "off_topic": 1,
+        "market_report_spam": 1
       },
       "status": "ok"
     },
@@ -344,11 +351,11 @@
       "language": "en",
       "group": "general",
       "accepted": 1,
-      "raw": 7,
-      "inspected": 7,
-      "date_eligible": 7,
+      "raw": 5,
+      "inspected": 5,
+      "date_eligible": 5,
       "rejected": {
-        "no_industry_signal": 6
+        "no_industry_signal": 4
       },
       "status": "ok"
     },
@@ -358,11 +365,11 @@
       "language": "ja",
       "group": "general",
       "accepted": 0,
-      "raw": 8,
-      "inspected": 8,
-      "date_eligible": 8,
+      "raw": 10,
+      "inspected": 10,
+      "date_eligible": 10,
       "rejected": {
-        "no_industry_signal": 7,
+        "no_industry_signal": 9,
         "market_report_spam": 1
       },
       "status": "ok"
@@ -373,11 +380,12 @@
       "language": "ja",
       "group": "general",
       "accepted": 0,
-      "raw": 1,
-      "inspected": 1,
-      "date_eligible": 1,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
       "rejected": {
-        "market_report_spam": 1
+        "market_report_spam": 2,
+        "no_industry_signal": 1
       },
       "status": "ok"
     },
@@ -387,11 +395,11 @@
       "group": "machine",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 9,
-      "inspected": 9,
-      "date_eligible": 9,
+      "raw": 10,
+      "inspected": 10,
+      "date_eligible": 10,
       "rejected": {
-        "no_industry_signal": 9
+        "no_industry_signal": 10
       },
       "status": "ok"
     },
@@ -437,12 +445,12 @@
       "group": "machine",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 3,
-      "inspected": 3,
-      "date_eligible": 3,
+      "raw": 4,
+      "inspected": 4,
+      "date_eligible": 4,
       "rejected": {
         "market_report_spam": 1,
-        "no_industry_signal": 2
+        "no_industry_signal": 3
       },
       "status": "ok"
     },
@@ -466,10 +474,10 @@
       "language": "ja",
       "group": "packaging",
       "max_age_days": 7,
-      "accepted": 3,
-      "raw": 4,
-      "inspected": 4,
-      "date_eligible": 4,
+      "accepted": 4,
+      "raw": 5,
+      "inspected": 5,
+      "date_eligible": 5,
       "rejected": {
         "no_industry_signal": 1
       },
@@ -529,11 +537,12 @@
       "group": "packaging",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 1,
-      "inspected": 1,
-      "date_eligible": 1,
+      "raw": 7,
+      "inspected": 7,
+      "date_eligible": 7,
       "rejected": {
-        "market_report_spam": 1
+        "no_industry_signal": 5,
+        "market_report_spam": 2
       },
       "status": "ok"
     },
@@ -554,10 +563,10 @@
       "language": "ja",
       "group": "packaging",
       "max_age_days": 7,
-      "accepted": 4,
-      "raw": 13,
-      "inspected": 13,
-      "date_eligible": 13,
+      "accepted": 5,
+      "raw": 14,
+      "inspected": 14,
+      "date_eligible": 14,
       "rejected": {
         "no_industry_signal": 8,
         "market_report_spam": 1
@@ -570,11 +579,11 @@
       "group": "packaging",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 1,
-      "inspected": 1,
-      "date_eligible": 1,
+      "raw": 2,
+      "inspected": 2,
+      "date_eligible": 2,
       "rejected": {
-        "no_industry_signal": 1
+        "no_industry_signal": 2
       },
       "status": "ok"
     },
@@ -583,14 +592,14 @@
       "language": "ja",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 1,
-      "raw": 23,
-      "inspected": 23,
-      "date_eligible": 23,
+      "accepted": 2,
+      "raw": 25,
+      "inspected": 25,
+      "date_eligible": 25,
       "rejected": {
-        "outside_supply_chain_scope": 8,
-        "no_industry_signal": 11,
-        "incidental_keyword_not_industry_news": 2,
+        "outside_supply_chain_scope": 13,
+        "no_industry_signal": 8,
+        "incidental_keyword_not_industry_news": 1,
         "market_report_spam": 1
       },
       "status": "ok"
@@ -601,13 +610,13 @@
       "group": "palletizer",
       "max_age_days": 7,
       "accepted": 3,
-      "raw": 12,
-      "inspected": 12,
-      "date_eligible": 12,
+      "raw": 18,
+      "inspected": 18,
+      "date_eligible": 18,
       "rejected": {
-        "outside_supply_chain_scope": 3,
-        "no_industry_signal": 5,
-        "incidental_keyword_not_industry_news": 1
+        "outside_supply_chain_scope": 7,
+        "incidental_keyword_not_industry_news": 1,
+        "no_industry_signal": 7
       },
       "status": "ok"
     },
@@ -616,12 +625,12 @@
       "language": "ja",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 2,
+      "accepted": 3,
       "raw": 14,
       "inspected": 14,
       "date_eligible": 14,
       "rejected": {
-        "no_industry_signal": 9,
+        "no_industry_signal": 8,
         "outside_supply_chain_scope": 1,
         "general_ai_not_production_application": 2
       },
@@ -637,10 +646,9 @@
       "inspected": 21,
       "date_eligible": 21,
       "rejected": {
-        "no_industry_signal": 15,
+        "no_industry_signal": 17,
         "market_report_spam": 1,
-        "outside_supply_chain_scope": 2,
-        "low_trust_source": 1
+        "outside_supply_chain_scope": 1
       },
       "status": "ok"
     },
@@ -650,11 +658,11 @@
       "group": "palletizer",
       "max_age_days": 7,
       "accepted": 1,
-      "raw": 4,
-      "inspected": 4,
-      "date_eligible": 4,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
       "rejected": {
-        "no_industry_signal": 3
+        "no_industry_signal": 2
       },
       "status": "ok"
     },
@@ -663,10 +671,10 @@
       "language": "ja",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 0,
-      "raw": 2,
-      "inspected": 2,
-      "date_eligible": 2,
+      "accepted": 1,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
       "rejected": {
         "no_industry_signal": 2
       },
@@ -704,12 +712,12 @@
       "language": "ja",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 2,
-      "raw": 17,
-      "inspected": 17,
-      "date_eligible": 17,
+      "accepted": 1,
+      "raw": 14,
+      "inspected": 14,
+      "date_eligible": 14,
       "rejected": {
-        "no_industry_signal": 12,
+        "no_industry_signal": 10,
         "outside_supply_chain_scope": 2,
         "market_report_spam": 1
       },
@@ -732,14 +740,14 @@
       "language": "ja",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 16,
-      "raw": 36,
-      "inspected": 36,
-      "date_eligible": 36,
+      "accepted": 18,
+      "raw": 40,
+      "inspected": 40,
+      "date_eligible": 40,
       "rejected": {
-        "no_industry_signal": 15,
-        "market_report_spam": 1,
-        "low_trust_source": 4
+        "no_industry_signal": 19,
+        "low_trust_source": 2,
+        "market_report_spam": 1
       },
       "status": "ok"
     },
@@ -749,14 +757,14 @@
       "group": "palletizer",
       "max_age_days": 7,
       "accepted": 3,
-      "raw": 40,
-      "inspected": 40,
-      "date_eligible": 40,
+      "raw": 37,
+      "inspected": 37,
+      "date_eligible": 37,
       "rejected": {
-        "no_industry_signal": 33,
+        "no_industry_signal": 29,
+        "low_trust_source": 2,
         "market_report_spam": 2,
-        "outside_supply_chain_scope": 1,
-        "low_trust_source": 1
+        "outside_supply_chain_scope": 1
       },
       "status": "ok"
     },
@@ -765,13 +773,13 @@
       "language": "ja",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 10,
-      "raw": 39,
-      "inspected": 39,
-      "date_eligible": 39,
+      "accepted": 8,
+      "raw": 32,
+      "inspected": 32,
+      "date_eligible": 32,
       "rejected": {
-        "no_industry_signal": 26,
-        "outside_supply_chain_scope": 3
+        "no_industry_signal": 23,
+        "outside_supply_chain_scope": 1
       },
       "status": "ok"
     },
@@ -780,12 +788,12 @@
       "language": "ja",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 8,
-      "raw": 31,
-      "inspected": 31,
-      "date_eligible": 31,
+      "accepted": 6,
+      "raw": 27,
+      "inspected": 27,
+      "date_eligible": 27,
       "rejected": {
-        "no_industry_signal": 23
+        "no_industry_signal": 21
       },
       "status": "ok"
     },
@@ -794,14 +802,13 @@
       "language": "ja",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 10,
-      "raw": 40,
-      "inspected": 40,
-      "date_eligible": 40,
+      "accepted": 15,
+      "raw": 46,
+      "inspected": 46,
+      "date_eligible": 46,
       "rejected": {
-        "no_industry_signal": 25,
-        "market_report_spam": 3,
-        "low_trust_source": 1,
+        "no_industry_signal": 29,
+        "market_report_spam": 1,
         "outside_supply_chain_scope": 1
       },
       "status": "ok"
@@ -811,13 +818,13 @@
       "language": "ja",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 11,
+      "accepted": 12,
       "raw": 40,
       "inspected": 40,
       "date_eligible": 40,
       "rejected": {
-        "outside_supply_chain_scope": 4,
-        "no_industry_signal": 25
+        "no_industry_signal": 26,
+        "outside_supply_chain_scope": 2
       },
       "status": "ok"
     },
@@ -827,12 +834,12 @@
       "group": "rivals",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 17,
-      "inspected": 17,
-      "date_eligible": 17,
+      "raw": 19,
+      "inspected": 19,
+      "date_eligible": 19,
       "rejected": {
-        "no_industry_signal": 15,
-        "off_topic": 2
+        "no_industry_signal": 16,
+        "off_topic": 3
       },
       "status": "ok"
     },
@@ -841,12 +848,12 @@
       "language": "ja",
       "group": "rivals",
       "max_age_days": 7,
-      "accepted": 1,
+      "accepted": 2,
       "raw": 16,
       "inspected": 16,
       "date_eligible": 16,
       "rejected": {
-        "no_industry_signal": 15
+        "no_industry_signal": 14
       },
       "status": "ok"
     },
@@ -856,12 +863,12 @@
       "group": "rivals",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 7,
-      "inspected": 7,
-      "date_eligible": 7,
+      "raw": 6,
+      "inspected": 6,
+      "date_eligible": 6,
       "rejected": {
         "outside_supply_chain_scope": 1,
-        "no_industry_signal": 6
+        "no_industry_signal": 5
       },
       "status": "ok"
     },
@@ -871,12 +878,12 @@
       "group": "rivals",
       "max_age_days": 7,
       "accepted": 1,
-      "raw": 7,
-      "inspected": 7,
-      "date_eligible": 7,
+      "raw": 8,
+      "inspected": 8,
+      "date_eligible": 8,
       "rejected": {
         "outside_supply_chain_scope": 1,
-        "no_industry_signal": 5
+        "no_industry_signal": 6
       },
       "status": "ok"
     },
@@ -886,12 +893,11 @@
       "group": "rivals",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 2,
-      "inspected": 2,
-      "date_eligible": 2,
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
       "rejected": {
-        "incidental_keyword_not_industry_news": 1,
-        "no_industry_signal": 1
+        "incidental_keyword_not_industry_news": 1
       },
       "status": "ok"
     },
@@ -939,10 +945,12 @@
       "group": "rivals",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 0,
-      "inspected": 0,
-      "date_eligible": 0,
-      "rejected": {},
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {
+        "incidental_keyword_not_industry_news": 1
+      },
       "status": "ok"
     },
     {
@@ -951,12 +959,12 @@
       "group": "tissue",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 3,
-      "inspected": 3,
-      "date_eligible": 3,
+      "raw": 2,
+      "inspected": 2,
+      "date_eligible": 2,
       "rejected": {
         "outside_supply_chain_scope": 1,
-        "no_industry_signal": 2
+        "no_industry_signal": 1
       },
       "status": "ok"
     },
@@ -1022,12 +1030,12 @@
       "group": "tissue",
       "max_age_days": 7,
       "accepted": 3,
-      "raw": 19,
-      "inspected": 19,
-      "date_eligible": 19,
+      "raw": 16,
+      "inspected": 16,
+      "date_eligible": 16,
       "rejected": {
-        "consumer_or_market_noise": 3,
-        "no_industry_signal": 13
+        "consumer_or_market_noise": 2,
+        "no_industry_signal": 11
       },
       "status": "ok"
     },
@@ -1036,12 +1044,12 @@
       "language": "ja",
       "group": "wet",
       "max_age_days": 7,
-      "accepted": 3,
+      "accepted": 1,
       "raw": 7,
       "inspected": 7,
       "date_eligible": 7,
       "rejected": {
-        "no_industry_signal": 4
+        "no_industry_signal": 6
       },
       "status": "ok"
     },
@@ -1088,12 +1096,12 @@
       "language": "ja",
       "group": "wet",
       "max_age_days": 7,
-      "accepted": 1,
-      "raw": 6,
-      "inspected": 6,
-      "date_eligible": 6,
+      "accepted": 2,
+      "raw": 8,
+      "inspected": 8,
+      "date_eligible": 8,
       "rejected": {
-        "no_industry_signal": 5
+        "no_industry_signal": 6
       },
       "status": "ok"
     },
@@ -1150,10 +1158,10 @@
       "language": "en",
       "group": "machine",
       "max_age_days": 7,
-      "accepted": 1,
-      "raw": 3,
-      "inspected": 3,
-      "date_eligible": 3,
+      "accepted": 0,
+      "raw": 2,
+      "inspected": 2,
+      "date_eligible": 2,
       "rejected": {
         "no_industry_signal": 2
       },
@@ -1181,8 +1189,8 @@
       "inspected": 6,
       "date_eligible": 6,
       "rejected": {
-        "no_industry_signal": 4,
-        "market_report_spam": 2
+        "market_report_spam": 2,
+        "no_industry_signal": 4
       },
       "status": "ok"
     },
@@ -1204,12 +1212,11 @@
       "group": "packaging",
       "max_age_days": 7,
       "accepted": 1,
-      "raw": 5,
-      "inspected": 5,
-      "date_eligible": 5,
+      "raw": 6,
+      "inspected": 6,
+      "date_eligible": 6,
       "rejected": {
-        "market_report_spam": 1,
-        "no_industry_signal": 3
+        "no_industry_signal": 5
       },
       "status": "ok"
     },
@@ -1235,8 +1242,8 @@
       "inspected": 6,
       "date_eligible": 6,
       "rejected": {
-        "no_industry_signal": 4,
-        "market_report_spam": 2
+        "no_industry_signal": 5,
+        "market_report_spam": 1
       },
       "status": "ok"
     },
@@ -1245,13 +1252,13 @@
       "language": "en",
       "group": "packaging",
       "max_age_days": 7,
-      "accepted": 0,
-      "raw": 4,
-      "inspected": 4,
-      "date_eligible": 4,
+      "accepted": 1,
+      "raw": 8,
+      "inspected": 8,
+      "date_eligible": 8,
       "rejected": {
-        "no_industry_signal": 2,
-        "market_report_spam": 2
+        "no_industry_signal": 3,
+        "market_report_spam": 4
       },
       "status": "ok"
     },
@@ -1260,12 +1267,12 @@
       "language": "en",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 7,
+      "accepted": 6,
       "raw": 22,
       "inspected": 22,
       "date_eligible": 22,
       "rejected": {
-        "no_industry_signal": 11,
+        "no_industry_signal": 12,
         "outside_supply_chain_scope": 4
       },
       "status": "ok"
@@ -1276,13 +1283,12 @@
       "group": "palletizer",
       "max_age_days": 7,
       "accepted": 2,
-      "raw": 29,
-      "inspected": 29,
-      "date_eligible": 29,
+      "raw": 28,
+      "inspected": 28,
+      "date_eligible": 28,
       "rejected": {
-        "no_industry_signal": 24,
-        "outside_supply_chain_scope": 1,
-        "market_report_spam": 2
+        "no_industry_signal": 25,
+        "market_report_spam": 1
       },
       "status": "ok"
     },
@@ -1292,12 +1298,12 @@
       "group": "palletizer",
       "max_age_days": 7,
       "accepted": 4,
-      "raw": 39,
-      "inspected": 39,
-      "date_eligible": 39,
+      "raw": 34,
+      "inspected": 34,
+      "date_eligible": 34,
       "rejected": {
-        "outside_supply_chain_scope": 8,
-        "no_industry_signal": 27
+        "no_industry_signal": 25,
+        "outside_supply_chain_scope": 5
       },
       "status": "ok"
     },
@@ -1307,10 +1313,12 @@
       "group": "palletizer",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 0,
-      "inspected": 0,
-      "date_eligible": 0,
-      "rejected": {},
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {
+        "market_report_spam": 1
+      },
       "status": "ok"
     },
     {
@@ -1331,11 +1339,11 @@
       "group": "palletizer",
       "max_age_days": 7,
       "accepted": 1,
-      "raw": 3,
-      "inspected": 3,
-      "date_eligible": 3,
+      "raw": 2,
+      "inspected": 2,
+      "date_eligible": 2,
       "rejected": {
-        "no_industry_signal": 2
+        "market_report_spam": 1
       },
       "status": "ok"
     },
@@ -1345,10 +1353,12 @@
       "group": "palletizer",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 0,
-      "inspected": 0,
-      "date_eligible": 0,
-      "rejected": {},
+      "raw": 1,
+      "inspected": 1,
+      "date_eligible": 1,
+      "rejected": {
+        "market_report_spam": 1
+      },
       "status": "ok"
     },
     {
@@ -1371,11 +1381,11 @@
       "group": "rivals",
       "max_age_days": 7,
       "accepted": 1,
-      "raw": 8,
-      "inspected": 8,
-      "date_eligible": 8,
+      "raw": 9,
+      "inspected": 9,
+      "date_eligible": 9,
       "rejected": {
-        "no_industry_signal": 6,
+        "no_industry_signal": 7,
         "outside_supply_chain_scope": 1
       },
       "status": "ok"
@@ -1386,11 +1396,11 @@
       "group": "rivals",
       "max_age_days": 7,
       "accepted": 1,
-      "raw": 37,
-      "inspected": 37,
-      "date_eligible": 37,
+      "raw": 40,
+      "inspected": 40,
+      "date_eligible": 40,
       "rejected": {
-        "no_industry_signal": 36
+        "no_industry_signal": 39
       },
       "status": "ok"
     },
@@ -1400,11 +1410,11 @@
       "group": "rivals",
       "max_age_days": 7,
       "accepted": 1,
-      "raw": 12,
-      "inspected": 12,
-      "date_eligible": 12,
+      "raw": 10,
+      "inspected": 10,
+      "date_eligible": 10,
       "rejected": {
-        "no_industry_signal": 10,
+        "no_industry_signal": 8,
         "market_report_spam": 1
       },
       "status": "ok"
@@ -1451,11 +1461,11 @@
       "group": "machine",
       "max_age_days": 7,
       "accepted": 2,
-      "raw": 31,
-      "inspected": 31,
-      "date_eligible": 31,
+      "raw": 33,
+      "inspected": 33,
+      "date_eligible": 33,
       "rejected": {
-        "no_industry_signal": 29
+        "no_industry_signal": 31
       },
       "status": "ok"
     },
@@ -1479,11 +1489,11 @@
       "group": "packaging",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 4,
-      "inspected": 4,
-      "date_eligible": 4,
+      "raw": 3,
+      "inspected": 3,
+      "date_eligible": 3,
       "rejected": {
-        "no_industry_signal": 4
+        "no_industry_signal": 3
       },
       "status": "ok"
     },
@@ -1492,12 +1502,12 @@
       "language": "zh",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 1,
-      "raw": 15,
-      "inspected": 15,
-      "date_eligible": 15,
+      "accepted": 0,
+      "raw": 13,
+      "inspected": 13,
+      "date_eligible": 13,
       "rejected": {
-        "no_industry_signal": 14
+        "no_industry_signal": 13
       },
       "status": "ok"
     },
@@ -1506,12 +1516,12 @@
       "language": "zh",
       "group": "palletizer",
       "max_age_days": 7,
-      "accepted": 1,
-      "raw": 30,
-      "inspected": 30,
-      "date_eligible": 30,
+      "accepted": 0,
+      "raw": 32,
+      "inspected": 32,
+      "date_eligible": 32,
       "rejected": {
-        "no_industry_signal": 29
+        "no_industry_signal": 32
       },
       "status": "ok"
     },
@@ -1535,11 +1545,11 @@
       "group": "rivals",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 3,
-      "inspected": 3,
-      "date_eligible": 3,
+      "raw": 5,
+      "inspected": 5,
+      "date_eligible": 5,
       "rejected": {
-        "no_industry_signal": 3
+        "no_industry_signal": 5
       },
       "status": "ok"
     },
@@ -1549,11 +1559,11 @@
       "group": "rivals",
       "max_age_days": 7,
       "accepted": 0,
-      "raw": 18,
-      "inspected": 18,
-      "date_eligible": 18,
+      "raw": 20,
+      "inspected": 20,
+      "date_eligible": 20,
       "rejected": {
-        "no_industry_signal": 18
+        "no_industry_signal": 20
       },
       "status": "ok"
     },
@@ -1578,23 +1588,23 @@
       "group": "academic",
       "academic": true,
       "accepted": 0,
-      "raw": 16,
-      "inspected": 16,
-      "date_eligible": 16,
+      "raw": 15,
+      "inspected": 15,
+      "date_eligible": 15,
       "rejected": {
-        "no_industry_signal": 16
+        "no_industry_signal": 15
       },
       "status": "ok"
     }
   ],
-  "discovery_candidates": 98,
-  "discovery_verified": 50,
-  "rss_verified": 36,
-  "rss_raw": 986,
+  "discovery_candidates": 96,
+  "discovery_verified": 44,
+  "rss_verified": 32,
+  "rss_raw": 1003,
   "by_group": {
     "academic": {
       "queries": 1,
-      "raw": 16,
+      "raw": 15,
       "candidates": 0,
       "verified": 0
     },
@@ -1606,41 +1616,41 @@
     },
     "machine": {
       "queries": 17,
-      "raw": 54,
-      "candidates": 3,
+      "raw": 57,
+      "candidates": 2,
       "verified": 0
     },
     "packaging": {
       "queries": 16,
-      "raw": 41,
-      "candidates": 9,
-      "verified": 0
+      "raw": 54,
+      "candidates": 12,
+      "verified": 1
     },
     "palletizer": {
       "queries": 25,
-      "raw": 461,
-      "candidates": 86,
-      "verified": 44
+      "raw": 457,
+      "candidates": 89,
+      "verified": 39
     },
     "rivals": {
       "queries": 17,
-      "raw": 141,
-      "candidates": 6,
+      "raw": 149,
+      "candidates": 7,
       "verified": 0
     },
     "tissue": {
       "queries": 6,
-      "raw": 28,
+      "raw": 24,
       "candidates": 4,
-      "verified": 1
+      "verified": 0
     },
     "wet": {
       "queries": 5,
-      "raw": 14,
-      "candidates": 4,
+      "raw": 16,
+      "candidates": 3,
       "verified": 0
     }
   },
-  "new_verified_news": 57,
+  "new_verified_news": 52,
   "errors": []
 }
