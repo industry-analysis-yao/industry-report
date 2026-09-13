@@ -24,6 +24,7 @@ from news_scoring import apply_fallback
 from fetch_news import assess_relevance, extract_company, CATEGORY_NAMES
 from official_sources import official_relevance
 from source_catalog import equipment_section
+from news_scope import classify_scope
 
 try:
     from dotenv import load_dotenv
@@ -48,7 +49,8 @@ DAILY_DIGEST_LOOKBACK_DAYS = int(os.environ.get('DAILY_DIGEST_LOOKBACK_DAYS', '3
 DAILY_DIGEST_MAX_AGE_DAYS = 5  # Inclusive calendar window: today plus four previous JST dates.
 DAILY_DIGEST_HISTORY_DAYS = int(os.environ.get('DAILY_DIGEST_HISTORY_DAYS', '30'))
 SPECIALTY_MAX_AGE_DAYS = int(os.environ.get('SPECIALTY_MAX_AGE_DAYS', '60'))
-REVIEW_VERSION = 4
+REVIEW_VERSION = 5
+RULE_EXTRACT_PREFIX = 'RULE_EXTRACT_REQUIRED: '
 
 
 def publication_day(reference_date):
@@ -60,6 +62,12 @@ def scope_reason(item):
         return None
     title = item.get('title', '')
     body = item.get('source_excerpt') or item.get('summary', '')
+    scope = classify_scope(title, body, item.get('company', ''))
+    if scope['verdict'] == 'exclude':
+        # Keep the existing spam reason stable for downstream validation.
+        if 'market_report_spam' in scope['evidence']:
+            return 'market_report_spam'
+        return scope['rule']
     relevant, flags = assess_relevance(title, body, item.get('source_name', ''))
     # Manufacturer indexes have a separately maintained corporate scope; spam
     # exclusions still take priority, including for retained records.
@@ -104,8 +112,9 @@ def prepare_daily_candidates(data, previous, reference_date, *, published_today=
     decisions, eligible = [], []
     for item in data:
         reason = eligibility_reason(item, reference_date, previous)
+        item['scope_decision'] = classify_scope(item.get('title'), item.get('source_excerpt') or item.get('summary'), item.get('company'))
         record = dict(url=item.get('url'), title=item.get('title'), date=item.get('date'),
-                      section=assign_daily_section(item), outcome=reason or 'eligible')
+                      section=assign_daily_section(item), outcome=reason or 'eligible', scope=item['scope_decision'])
         decisions.append(record)
         if reason is None:
             eligible.append((item, record))
@@ -138,6 +147,7 @@ def prepare_daily_candidates(data, previous, reference_date, *, published_today=
             item.get('score_method') == 'ai' and item.get('impact_analysis'))
         if not frozen and not already_reviewed and os.environ.get('OPENROUTER_API_KEY') and reviewed < limit:
             reviewed += 1
+            item.pop('ai_scope_disagreement', None)
             item.setdefault('source_excerpt', strip_html(item.get('summary', '')))
             if not process_item_with_retry(item):
                 reason = item.pop('ai_rejection_reason', 'model_relevance_rejection')
@@ -146,9 +156,10 @@ def prepare_daily_candidates(data, previous, reference_date, *, published_today=
                 record.update(outcome='ai_rejected', reason=reason)
                 print(f"[AI-REJECT] {item.get('title', '')[:100]}: {reason}")
                 continue
-            if item.get('score_method') == 'ai':
-                item['ai_review'] = dict(fingerprint=key, status='accepted', version=REVIEW_VERSION,
-                                         reviewed_on=reference_date.isoformat())
+            if item.get('score_method') == 'ai' or item.get('ai_scope_disagreement'):
+                item['ai_review'] = dict(fingerprint=review_fingerprint(item), status='accepted', version=REVIEW_VERSION,
+                                         reviewed_on=reference_date.isoformat(),
+                                         method='rule_extract' if item.get('ai_scope_disagreement') else 'ai')
         evidence = item.get('title', '') + ' ' + (item.get('source_excerpt') or '') + ' ' + item.get('date', '')
         if item.get('summary_method') == 'ai' and unsupported_numeric_claims(item.get('summary', ''), evidence):
             item['quality_flags'] = list(set(item.get('quality_flags', []) + ['ai_unsupported_numeric_claim']))
@@ -156,6 +167,8 @@ def prepare_daily_candidates(data, previous, reference_date, *, published_today=
         if not item.get('score') or item.get('score_method') != 'ai':
             apply_fallback(item, reference_date=reference_date)
         record['outcome'] = 'ready'
+        if item.get('ai_scope_disagreement'):
+            record['ai_scope_disagreement'] = item['ai_scope_disagreement']
         ready.append(item)
     return ready, dict(counts=dict(Counter(r['outcome'] for r in decisions)),
                       ai_calls_items=reviewed, cached_rejections=cache_hits, decisions=decisions)
@@ -408,6 +421,9 @@ def _openrouter_generate(prompt):
 # ============================================================
 def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None, lenient_mode=False):
     clean_snippet = (snippet or '').strip()
+    scope = classify_scope(title, clean_snippet, company)
+    if scope['verdict'] == 'exclude':
+        return False, 'RULE_EXCLUDED: ' + scope['rule']
     COMPETITOR_COMPANIES = [
         'ユニ・チャーム', 'unicharm', '花王', 'p&g', 'ライオン',
         'essity', 'kimberly', 'キンバリー', 'vinda', '维达', 'hengan', '恒安',
@@ -451,6 +467,12 @@ def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None, len
         )
         text = _openrouter_generate(prompt)
         if text and text.strip().upper().startswith('IRRELEVANT'):
+            if scope['verdict'] == 'include':
+                # A model's scope opinion cannot undo explicit, source-grounded
+                # admission. Keep the article as an extract, never label a
+                # rejected model answer as a successful AI-written summary.
+                print(f'[SCOPE-DISAGREEMENT] {scope["rule"]}: {title[:80]}: {text[:300]}')
+                return True, RULE_EXTRACT_PREFIX + text[:500]
             return False, text[:500]
         return True, (text or '')[:300]
     except Exception as e:
@@ -556,6 +578,12 @@ def process_item_with_retry(item, api_key=None, lenient_mode=False):
         if not is_relevant:
             item['ai_rejection_reason'] = new_summary or 'insufficient_source_text'
             return False
+        if new_summary and new_summary.startswith(RULE_EXTRACT_PREFIX):
+            item['ai_scope_disagreement'] = new_summary[len(RULE_EXTRACT_PREFIX):]
+            item['scope_decision'] = classify_scope(title, snippet, company)
+            item['quality_flags'] = list(set(item.get('quality_flags', []) + ['ai_scope_disagreement']))
+            apply_fallback(item, reference_date=datetime.now(pytz.timezone('Asia/Tokyo')).date())
+            return True
         if new_summary == 'AI Summary Pending':
             apply_fallback(item, reference_date=datetime.now(pytz.timezone('Asia/Tokyo')).date())
             return True

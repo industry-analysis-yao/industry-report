@@ -1,6 +1,11 @@
-"""Live model contract checks with synthetic cases; never publish these fixtures."""
+"""Live production scope-policy checks; never publish these synthetic fixtures.
+
+Explicit admission rules own high-confidence scope. The live model may disagree;
+production then uses a labeled publisher extract, not a fabricated AI summary.
+Service failures still fail this contract, rather than passing on fallback alone.
+"""
 import os
-from generate_dashboard import ai_summarize
+from generate_dashboard import ai_summarize, RULE_EXTRACT_PREFIX
 
 CASES = [
     ('competitor_factory', True, '日本製紙 工場事故の調査を開始', '日本製紙',
@@ -25,7 +30,8 @@ def main():
     for name, expected, title, company, body in CASES:
         accepted, result = ai_summarize(title, body, company)
         valid = accepted == expected and result != 'AI Summary Pending'
-        print(f'[SCOPE-CONTRACT] {name}: {"PASS" if valid else "FAIL"}; {result}')
+        mode = 'rule_extract' if result.startswith(RULE_EXTRACT_PREFIX) else 'rule_exclusion' if result.startswith('RULE_EXCLUDED:') else 'model'
+        print(f'[SCOPE-CONTRACT] {name}: {"PASS" if valid else "FAIL"}; mode={mode}; {result}')
         if not valid:
             failed.append(name)
     if failed:
