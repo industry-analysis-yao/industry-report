@@ -130,3 +130,17 @@ class PublicationPipelineTests(unittest.TestCase):
         result=fetch_article_details(response.url,session=session)
         self.assertIn('金属異物検査',result['excerpt'])
         self.assertNotIn('血圧計',result['excerpt'])
+
+    def test_invented_year_falls_back_without_losing_candidate(self):
+        candidate=item(5)
+        with patch.object(g,'ai_summarize',return_value=(True,'メーカーは2023年に包装機を発売した。')), \
+                patch.object(g,'audit_item') as audit:
+            self.assertTrue(g.process_item_with_retry(candidate))
+            audit.assert_not_called()
+        self.assertEqual(candidate['summary_method'],'publisher_excerpt')
+        self.assertIn('ai_unsupported_numeric_claim',candidate['quality_flags'])
+        self.assertNotIn('2023',candidate['summary'])
+
+    def test_numeric_guard_preserves_supported_formats(self):
+        self.assertFalse(g.unsupported_numeric_claims('2026年9月、1,000台', '2026-09-11 １０００台'))
+        self.assertTrue(g.unsupported_numeric_claims('年間100万台', '年間10万台'))

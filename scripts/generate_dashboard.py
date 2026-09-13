@@ -149,6 +149,10 @@ def prepare_daily_candidates(data, previous, reference_date, *, published_today=
             if item.get('score_method') == 'ai':
                 item['ai_review'] = dict(fingerprint=key, status='accepted', version=REVIEW_VERSION,
                                          reviewed_on=reference_date.isoformat())
+        evidence = item.get('title', '') + ' ' + (item.get('source_excerpt') or '') + ' ' + item.get('date', '')
+        if item.get('summary_method') == 'ai' and unsupported_numeric_claims(item.get('summary', ''), evidence):
+            item['quality_flags'] = list(set(item.get('quality_flags', []) + ['ai_unsupported_numeric_claim']))
+            apply_fallback(item, reference_date=reference_date)
         if not item.get('score') or item.get('score_method') != 'ai':
             apply_fallback(item, reference_date=reference_date)
         record['outcome'] = 'ready'
@@ -355,6 +359,19 @@ def filter_old_patents_from_items(items, max_age_days=PATENT_RETENTION_DAYS):
 def strip_html(text):
     return re.sub(r'<[^>]+>', '', text or '').strip()
 
+
+def unsupported_numeric_claims(text, evidence):
+    """Conservative factual guard: no invented years, quantities or model IDs.
+
+    Equivalent unit conversions may fall back to an extract; freshness and
+    quantity never justify guessing a value absent from the source.
+    """
+    def numbers(value):
+        value = unicodedata.normalize('NFKC', value or '')
+        value = re.sub(r'(?<=\d),(?=\d)', '', value)
+        return {str(float(n)) for n in re.findall(r'\d+(?:\.\d+)?', value)}
+    return sorted(numbers(text) - numbers(evidence))
+
 def _openrouter_generate(prompt):
     global _OPENROUTER_UNAVAILABLE
     if _OPENROUTER_UNAVAILABLE:
@@ -546,6 +563,12 @@ def process_item_with_retry(item, api_key=None, lenient_mode=False):
         current_summary = new_summary or best_summary
         if not current_summary:
             break
+        current_summary = re.sub(r'[（(]\s*\d+\s*字\s*[）)]\s*$', '', current_summary).strip()
+        evidence = title + ' ' + snippet + ' ' + date_str
+        if unsupported_numeric_claims(current_summary, evidence):
+            item['quality_flags'] = list(set(item.get('quality_flags', []) + ['ai_unsupported_numeric_claim']))
+            apply_fallback(item, reference_date=datetime.now(pytz.timezone('Asia/Tokyo')).date())
+            return True
         
         score, impact_analysis, fmt_feedback = audit_item(
             title, current_summary, company, 
@@ -687,6 +710,8 @@ def select_daily_digest(
             1 if item.get('fulltext_status') == 'excerpt_extracted' else 0,
             item.get('published_at', item.get('date', '')),
         )
+        if unsupported_numeric_claims(impact_analysis, evidence):
+            impact_analysis = ''  # Do not publish unsupported ROI/capacity claims.
 
     recent.sort(key=rank, reverse=True)
     fallback.sort(key=rank, reverse=True)
