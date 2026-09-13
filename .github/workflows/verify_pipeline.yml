@@ -35,6 +35,7 @@ jobs:
             echo "::error::Real-AI verification requires the configured OPENROUTER_API_KEY. No fallback success claim."
             exit 1
           fi
+          python scripts/verify_ai_scope.py
           python scripts/generate_dashboard.py --data-dir "$RUNNER_TEMP/industry-preview" --allow-weekend-preview
           python scripts/validate_digest.py --data-dir "$RUNNER_TEMP/industry-preview"
       - name: Upload preview and per-candidate decisions

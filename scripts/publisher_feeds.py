@@ -13,6 +13,7 @@ PUBLISHER_FEEDS = [
     ('Automation News', 'https://www.automation-news.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc', 'equipment', 'ja'),
     ('PR TIMES', 'https://prtimes.jp/index.rdf', 'general', 'ja'),
     ('ロボスタ', 'https://robotstart.info/rss20/index.rdf', 'palletizer', 'ja'),
+    ('IoTNEWS', 'https://iotnews.jp/feed/', 'equipment', 'ja'),
 ]
 
 

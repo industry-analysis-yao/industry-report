@@ -105,3 +105,28 @@ class PublicationPipelineTests(unittest.TestCase):
         rows=parse_index('aandd',html,'https://www.aandd.co.jp/whatsnew/')
         self.assertEqual(rows[0][1],'https://www.aandd.co.jp/whatsnew/event/7094/')
         self.assertEqual(rows[0][2],'2026年09月11日')
+
+    def test_corporate_and_equipment_are_independent_ai_scopes(self):
+        with patch.object(g,'_openrouter_generate',return_value='test summary') as call:
+            g.ai_summarize('日本製紙 工場調査', '原文の工場事故調査情報。'*20, '日本製紙')
+        prompt=call.call_args.args[0]
+        self.assertIn('ANDではなくOR',prompt)
+        self.assertIn('会社名と企業活動',prompt)
+        self.assertIn('使用先の業種を限定しない',prompt)
+        self.assertNotIn('当社ラインへ応用可能なら',prompt)
+
+    def test_equipment_official_indexes_bind_each_row(self):
+        html='<div class="newsroom_news"><div class="date">2026年09月09日</div><div class="title"><a href="https://news.panasonic.com/jp/press/jn260909-1">搬送ロボット発表</a></div></div>'
+        self.assertEqual(parse_index('panasonic_connect',html,'https://connect.panasonic.com')[0][2],'2026年09月09日')
+        html='<div class="newsroom-release-list"><p class="newsroom-release-list__txt__date">2026年09月09日 ニュース</p><p class="newsroom-release-list__txt__ttl"><a href="/one">包装システム受賞</a></p></div>'
+        self.assertEqual(parse_index('konica',html,'https://www.konicaminolta.com')[0][1],'https://www.konicaminolta.com/one')
+
+    def test_aandd_products_not_company_navigation(self):
+        from unittest.mock import Mock
+        from fetch_news import fetch_article_details
+        body='<h1>Company Logo</h1><meta name="description" content="'+('血圧計や体重計の会社紹介。'*15)+'"><div><h4 class="boxTit">主な出展製品</h4><p>'+('金属異物検査と重量チェックが可能な包装検査設備を出展します。'*8)+'</p></div>'
+        response=Mock(url='https://www.aandd.co.jp/whatsnew/event/7094/',headers={'Content-Type':'text/html'},encoding='utf-8',text=body,content=body.encode())
+        session=Mock();session.get.return_value=response
+        result=fetch_article_details(response.url,session=session)
+        self.assertIn('金属異物検査',result['excerpt'])
+        self.assertNotIn('血圧計',result['excerpt'])

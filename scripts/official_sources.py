@@ -49,6 +49,8 @@ def parse_index(source, content, index_url):
         'valmet': ('.content-card', 'a.card', 'h3.card-title', 'time'),
         'andritz': ('a:has(.ci-teaser-content)', None, '.h-4', '.ci-kicker'),
         'aandd': ('.newsbox', 'a[href]', '.txt', '.data'),
+        'panasonic_connect': ('.newsroom_news', '.title a[href]', '.title', '.date'),
+        'konica': ('.newsroom-release-list', '.newsroom-release-list__txt__ttl a[href]', '.newsroom-release-list__txt__ttl', '.newsroom-release-list__txt__date'),
     }
     row_selector, link_selector, title_selector, date_selector = selectors[source]
     rows = []
@@ -133,6 +135,8 @@ def collect_official_news(*, now=None, get=None, sources=None):
         ('andritz', 'ANDRITZ', 'https://www.andritz.com/newsroom-en/nonwoven-and-textile'),
         ('orbbec', 'Orbbec', 'https://www.orbbec.com/wp-json/wp/v2/news?per_page=30&orderby=date&order=desc'),
         ('aandd', 'エー・アンド・デイ', 'https://www.aandd.co.jp/whatsnew/'),
+        ('panasonic_connect', 'パナソニックコネクト', 'https://connect.panasonic.com/jp-ja/newsroom'),
+        ('konica', 'コニカミノルタ', 'https://www.konicaminolta.com/jp-ja/newsroom/'),
     ]
 
     def fetch(spec):

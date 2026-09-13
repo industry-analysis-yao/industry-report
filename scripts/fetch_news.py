@@ -761,6 +761,12 @@ def fetch_article_details(url: str, *, session: Any = None, follow_original: boo
             preferred = soup.select_one('#article .post_content')
         elif urlsplit(response.url).hostname == 'www.fujikikai-inc.co.jp':
             preferred = soup.select_one('.area-cmn-article')
+        elif urlsplit(response.url).hostname == 'www.aandd.co.jp':
+            # The page h1 is the corporate logo; generic meta descriptions list
+            # blood-pressure meters, unrelated to the packaging inspection news.
+            heading = next((h for h in soup.select('h4.boxTit') if '主な出展製品' in h.get_text()), None)
+            if heading:
+                preferred = heading.parent
         elif urlsplit(response.url).hostname == 'www.automation-news.jp':
             preferred = soup.select_one('article .post_content')
             # This trade paper explicitly embeds the manufacturer's source
