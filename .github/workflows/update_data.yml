@@ -2,7 +2,8 @@ name: Update Dashboard Data
 
 on:
   schedule:
-    # Daily at 22:05 UTC = 07:05 JST (UTC+9)
+    # Collect daily, including weekends, at 07:05 JST. The generator publishes
+    # only Mon-Fri by the actual JST execution date (including delayed runs).
     - cron: '5 22 * * *'
   workflow_dispatch:
 
@@ -44,6 +45,7 @@ jobs:
         run: python scripts/fetch_news.py
 
       - name: Generate summaries and highlights
+        id: digest
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           PATENT_MAX_AGE_DAYS: '365'
@@ -53,12 +55,24 @@ jobs:
           DAILY_DIGEST_LOOKBACK_DAYS: '3'
           DAILY_DIGEST_HISTORY_DAYS: '30'
           SPECIALTY_MAX_AGE_DAYS: '60'
+          MAX_AI_ITEMS_PER_RUN: '80'
         run: python scripts/generate_dashboard.py
 
       - name: Validate publication dates and 30-day deduplication
+        if: steps.digest.outputs.published == 'true'
         run: |
           python scripts/validate_digest.py
           node tests/dashboard_sections.cjs
+
+      - name: Upload selection evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: collection-and-selection-evidence
+          path: |
+            data/collection_health.json
+            data/selection_audit.json
+          retention-days: 30
 
       - name: Cleanup data older than 90 days
         run: python scripts/cleanup_old_data.py

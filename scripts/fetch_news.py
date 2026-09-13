@@ -319,14 +319,17 @@ def assess_relevance(title: str, snippet: str, source_name: str = "", *, academi
             'stock holds', 'is abb', 'sa mines', 'mining operat', '株価', '投資分野', '平均年収', '人気ランキング',
             'ティッシュ収納', '価格を解剖', '知事表彰')):
         return False, ['outside_supply_chain_scope']
-    if any(term in subject for term in ('見逃し配信', '市場動向セミナー', '助手ロボット',
+    if any(term in subject for term in ('見逃し配信', '再配信', '市場動向セミナー', '助手ロボット', 'ロボット住宅',
                                        'lovot', 'aibo', 'アニマルウェア', '愛玩ロボット', 'ロボホン')):
         return False, ['not_a_manufacturer_or_production_technology_event']
     if any(term in subject for term in ('薬局', '児童養護施設', '無償提供', '寄贈')) and extract_company(title) == '不明':
         return False, ['local_community_story_without_target_manufacturer']
     if any(term in subject for term in ('gpt-', 'chatgpt')) and not any(term in subject for term in ('導入', '製造', '工場', '制御')):
         return False, ['general_ai_not_production_application']
-    if any(term in subject for term in ('market growth', 'market forecast', 'market size', 'market report')):
+    if any(term in subject for term in ('market growth', 'market forecast', 'market size', 'market report',
+                                       'market to reach', 'market is projected', 'market to hit')):
+        return False, ['market_report_spam']
+    if 'market' in subject and 'cagr' in lowered and any(term in lowered for term in ('forecast', 'projected', 'billion', 'sample report')):
         return False, ['market_report_spam']
     if any(term.lower() in lowered for term in MARKET_REPORT_SPAM_TERMS):
         return False, ["market_report_spam"]
@@ -1220,13 +1223,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-enrich", action="store_true", help="skip publisher URL and article excerpt extraction")
     parser.add_argument("--enrich-limit", type=int, default=MAX_ENRICH_ARTICLES, help="maximum articles enriched per run")
     parser.add_argument("--json-output", help="write dry-run results to this JSON file")
+    parser.add_argument("--data-dir", help="isolated data directory for integration testing")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_path = os.path.normpath(os.path.join(script_dir, "..", "data", "news_data.json"))
+    data_path = os.path.normpath(os.path.join(args.data_dir or os.path.join(script_dir, '..', 'data'), 'news_data.json'))
     regular, patents, highlights = load_existing(data_path)
     diagnostics = {'collected_at': isoformat_utc(utc_now())}
     if not args.dry_run:

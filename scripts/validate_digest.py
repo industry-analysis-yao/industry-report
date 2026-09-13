@@ -1,9 +1,10 @@
 """Fail publication on invalid dates, duplicates, empty bodies or bad counts."""
 import json
+import argparse
 from datetime import datetime
 from pathlib import Path
 from news_dates import JST, verified_news
-from generate_dashboard import load_previous_digest_items, same_news_story, assign_daily_section, DAILY_DIGEST_MAX_AGE_DAYS
+from generate_dashboard import load_previous_digest_items, same_news_story, assign_daily_section, DAILY_DIGEST_MAX_AGE_DAYS, scope_reason
 
 
 def validate_digest(data_dir, reference_date):
@@ -16,6 +17,8 @@ def validate_digest(data_dir, reference_date):
     counts = {}
     for i, item in enumerate(items):
         label = item.get('title', str(i))
+        if scope_reason(item) == 'market_report_spam':
+            errors.append('Market forecast sales report: ' + label)
         if not verified_news(item):
             errors.append('Unverified publication date: ' + label)
         try:
@@ -41,4 +44,7 @@ def validate_digest(data_dir, reference_date):
 
 
 if __name__ == '__main__':
-    validate_digest(Path(__file__).resolve().parent.parent / 'data', datetime.now(JST).date())
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data-dir', default=str(Path(__file__).resolve().parent.parent / 'data'))
+    args = parser.parse_args()
+    validate_digest(args.data_dir, datetime.now(JST).date())

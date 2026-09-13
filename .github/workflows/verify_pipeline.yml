@@ -1,0 +1,46 @@
+name: Verify Real AI Pipeline (no publication)
+on:
+  push:
+    branches: [main]
+    paths: ['scripts/**', 'tests/**', '.github/workflows/verify_pipeline.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: industry-report-verification
+  cancel-in-progress: true
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -v
+      - name: Copy data into an isolated preview directory
+        run: cp -R data "$RUNNER_TEMP/industry-preview"
+      - name: Collect real sources without publishing
+        run: python scripts/fetch_news.py --data-dir "$RUNNER_TEMP/industry-preview"
+      - name: Exercise the real production AI credential
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          MAX_AI_ITEMS_PER_RUN: '80'
+        run: |
+          if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "::error::Real-AI verification requires the configured OPENROUTER_API_KEY. No fallback success claim."
+            exit 1
+          fi
+          python scripts/generate_dashboard.py --data-dir "$RUNNER_TEMP/industry-preview" --allow-weekend-preview
+          python scripts/validate_digest.py --data-dir "$RUNNER_TEMP/industry-preview"
+      - name: Upload preview and per-candidate decisions
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-ai-preview-not-published
+          path: ${{ runner.temp }}/industry-preview
+          retention-days: 7

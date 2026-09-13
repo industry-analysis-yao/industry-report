@@ -48,6 +48,7 @@ def parse_index(source, content, index_url):
         'universal': ('.sir-card-body', 'a.sir-card__link', 'h3', 'time'),
         'valmet': ('.content-card', 'a.card', 'h3.card-title', 'time'),
         'andritz': ('a:has(.ci-teaser-content)', None, '.h-4', '.ci-kicker'),
+        'aandd': ('.newsbox', 'a[href]', '.txt', '.data'),
     }
     row_selector, link_selector, title_selector, date_selector = selectors[source]
     rows = []
@@ -80,7 +81,7 @@ def official_relevance(title, company):
                'マミーポコ', 'グーン', 'エリス', 'ロリエ', 'マスク', '失禁', '衛生',
                'ティシュ', 'ティッシュ', 'ティシュー', 'ウエット', 'ウェット', 'おしりふき',
                '家庭紙', 'ペーパー', 'ふきん', 'ハンドタオル', '不織布', 'パルプ', '吸収',
-               '加工機', '包装', '設備', '自動化', '製造', '生産', '工場', '火災',
+               '加工機', '包装', 'tokyo pack', '設備', '自動化', '製造', '生産', '工場', '火災',
                '投資', '買収', '業績', '決算', '損失', '事業', '株式', '需要計画',
                '研究', '技術', '新素材', 'セルロース', 'バイオ', 'リサイクル', '再資源',
                '環境', '脱炭素', 'esg', 'gx', '人権', 'サプライ', 'ppe', 'packplus')
@@ -131,6 +132,7 @@ def collect_official_news(*, now=None, get=None, sources=None):
         ('valmet', 'Valmet', 'https://www.valmet.com/tissue/tissue-news/'),
         ('andritz', 'ANDRITZ', 'https://www.andritz.com/newsroom-en/nonwoven-and-textile'),
         ('orbbec', 'Orbbec', 'https://www.orbbec.com/wp-json/wp/v2/news?per_page=30&orderby=date&order=desc'),
+        ('aandd', 'エー・アンド・デイ', 'https://www.aandd.co.jp/whatsnew/'),
     ]
 
     def fetch(spec):

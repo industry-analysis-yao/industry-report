@@ -235,7 +235,7 @@
   </div>
   <div class="header-right">
     <div class="header-date" id="last-updated-date">―</div>
-    <div>最終更新: <span id="last-updated-time">―</span> JST</div>
+    <div>最終収集: <span id="last-updated-time">―</span> JST</div>
   </div>
 </header>
 
@@ -292,6 +292,7 @@
   <select class="filter-input" id="date-select" onchange="selectDate(this.value)" style="max-width:160px;"></select>
   <span class="date-nav-count" id="date-nav-count"></span>
 </div>
+<p id="publication-status" style="margin:8px 24px;color:var(--text-muted);font-size:13px" role="status">平日版は20件を目標に配信。土日は収集のみ継続します。</p>
 
   <!-- ① OVERVIEW -->
   <div class="section active" id="s-overview">
@@ -708,6 +709,8 @@ function filterCards(gridId, kw, cat, type) {
 // Also loads and caches the date's highlights, updating the highlight block.
 // Uses cached DATES[dateStr] if already loaded.
 function loadDateData(dateStr, callback) {
+  var status = document.getElementById('publication-status');
+  if (status) status.textContent = '平日版は20件を目標に配信。土日は収集のみ継続。表示中の発行日: ' + dateStr;
   if (DATES[dateStr] && DATES[dateStr] !== null) {
     renderHighlights(DATE_HIGHLIGHTS[dateStr] || []);
     callback(DATES[dateStr]);
@@ -717,6 +720,7 @@ function loadDateData(dateStr, callback) {
     .then(function(r) { if (!r.ok) throw new Error('not found'); return r.json(); })
     .then(function(dateData) {
       var items = dateData.items || [];
+      if (status) status.textContent += ' ／ ' + items.length + '件' + (items.length < (dateData.target_count || 20) ? '（目標20件に未達。古い記事・重複で補充しません）' : '');
       items.sort(function(a, b) {
         var sd = (b.score || 0) - (a.score || 0);
         return sd !== 0 ? sd : (b.date || '').localeCompare(a.date || '');
@@ -1108,6 +1112,16 @@ function init() {
         SORTED_DATES = Object.keys(DATES).sort().reverse();
       }
       SELECTED_DATE_IDX = 0;
+      // Keep historical weekend editions accessible, but default to the latest
+      // working-day edition on weekends. Never relabel Friday as today's news.
+      var jstDay = new Date(new Date().toLocaleString('en-US', {timeZone:'Asia/Tokyo'})).getDay();
+      if (jstDay === 0 || jstDay === 6) {
+        var weekdayIdx = SORTED_DATES.findIndex(function(d) {
+          var day = new Date(d + 'T12:00:00+09:00').getUTCDay();
+          return day !== 0 && day !== 6;
+        });
+        if (weekdayIdx >= 0) SELECTED_DATE_IDX = weekdayIdx;
+      }
 
       // Sort each already-loaded date's items by score desc, then date desc
       SORTED_DATES.forEach(function(d) {
@@ -1122,7 +1136,7 @@ function init() {
       buildDateSelect();
       updateDateNav();
       if (SORTED_DATES.length > 0) {
-        loadDateData(SORTED_DATES[0], function(items) {
+        loadDateData(SORTED_DATES[SELECTED_DATE_IDX], function(items) {
           DATA = items;
           updateDateNav();
           initGrids();
