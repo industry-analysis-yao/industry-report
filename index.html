@@ -230,7 +230,7 @@
     <div class="header-logo">大王製紙 技術開発部限定</div>
     <div>
       <div class="header-title">家庭紙・衛生用品 業界インテリジェンスダッシュボード</div>
-      <div class="header-subtitle">自動収集・AI要約 ／ 毎日更新</div>
+      <div class="header-subtitle">自動収集・AI要約 ／ 平日配信・収集は毎日</div>
     </div>
   </div>
   <div class="header-right">
@@ -245,7 +245,7 @@
 <aside id="sidebar">
   <div class="sidebar-section">
     <div class="sidebar-label">ナビゲーション</div>
-    <div class="sidebar-group-label">本日のニュース<span class="sidebar-group-note">各項目の合計 ＝ 総合件数</span></div>
+    <div class="sidebar-group-label">選択日のニュース<span class="sidebar-group-note">各項目の合計 ＝ 総合件数</span></div>
     <a class="nav-item active" data-section="s-overview" onclick="showSection('s-overview',this)">
       <span class="nav-icon">🏠</span> 総合（トップ）<span class="nav-count" id="cnt-overview"></span>
     </a>
@@ -323,7 +323,7 @@
 
     <!-- TOP 3 HIGHLIGHTS -->
     <div class="highlights" id="highlights-section">
-      <div class="highlights-title">🚨 本日のトップ3ハイライト <span style="font-size:12px;font-weight:400;color:#94a3b8;">― 大王製紙へのインパクト大</span></div>
+      <div class="highlights-title">🚨 選択日のトップ3ハイライト <span style="font-size:12px;font-weight:400;color:#94a3b8;">― 大王製紙へのインパクト大</span></div>
       <div class="highlight-cards" id="highlight-cards">
         <!-- populated by renderHighlights() -->
       </div>
@@ -568,7 +568,7 @@ function buildCard(item, idx) {
           <div class="card-badges">
             <span class="badge badge-company">🏢 ${item.company}</span>
             <span class="badge badge-cat" style="background:${catColor}">${item.category_id} ${item.category_name}</span>
-            <span class="badge ${typeClass}">${item.info_type}</span>
+            <span class="badge ${typeClass}">${item.info_type || 'その他'}</span>
             ${scoreBadge}
             ${verifyBadge}
             ${permanentBadge}
@@ -712,6 +712,7 @@ function loadDateData(dateStr, callback) {
   var status = document.getElementById('publication-status');
   if (status) status.textContent = '平日版は20件を目標に配信。土日は収集のみ継続。表示中の発行日: ' + dateStr;
   if (DATES[dateStr] && DATES[dateStr] !== null) {
+    if (status) status.textContent += ' ／ ' + DATES[dateStr].length + '件' + (DATES[dateStr].length < 20 ? '（目標20件に未達）' : '');
     renderHighlights(DATE_HIGHLIGHTS[dateStr] || []);
     callback(DATES[dateStr]);
     return;
@@ -760,6 +761,7 @@ function selectDate(dateStr) {
 }
 
 function updateDateNav() {
+  setTodayDate();
   var date = SORTED_DATES[SELECTED_DATE_IDX] || '';
   var el = document.getElementById('date-nav-display');
   if (el) el.textContent = date || '―';
@@ -812,16 +814,10 @@ function closeMobileMenu() {
 // SET TODAY DATE
 // ============================================================
 function setTodayDate() {
-  var today = new Date();
-  var year = today.getFullYear();
-  var month = today.getMonth() + 1;
-  var date = today.getDate();
-  var days = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
-  var dayName = days[today.getDay()];
-  var dateStr = year + '年' + month + '月' + date + '日（' + dayName + '）';
+  var dateStr = SORTED_DATES[SELECTED_DATE_IDX];
   var el = document.getElementById('todayDate');
   if (el) {
-    el.textContent = '全カテゴリーの最新業界情報を集約表示 ― ' + dateStr;
+    el.textContent = '全カテゴリーの業界情報を集約表示' + (dateStr ? ' ― 発行日: ' + dateStr : '');
   }
 }
 
