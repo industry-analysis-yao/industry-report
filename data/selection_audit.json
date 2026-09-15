@@ -1,19 +1,263 @@
 {
-  "date": "2026-09-14",
+  "date": "2026-09-15",
   "counts": {
-    "already_published_in_30_days": 8,
-    "ready": 5,
-    "ai_rejected": 12,
-    "unverified_publication_date": 56,
+    "ready": 6,
+    "ai_rejected": 6,
+    "unverified_publication_date": 63,
+    "same_run_duplicate": 5,
+    "existing_scope_exclusion": 2,
+    "already_published_in_30_days": 6,
+    "ai_rejected_cached": 6,
     "missing_publisher_body": 3,
-    "market_report_spam": 4,
-    "existing_scope_exclusion": 1,
-    "outside_five_calendar_days": 98,
+    "market_report_spam": 1,
+    "outside_five_calendar_days": 115,
     "separate_patent_vault": 8
   },
-  "ai_calls_items": 17,
-  "cached_rejections": 0,
+  "ai_calls_items": 12,
+  "cached_rejections": 6,
   "decisions": [
+    {
+      "url": "https://news.mynavi.jp/techplus/article/20260915-4968351",
+      "title": "ユニバーサルロボット、フィジカルAI時代の協働ロボット「Gen 7」を発表",
+      "date": "2026-09-15",
+      "section": "palletizer",
+      "outcome": "selected",
+      "scope": {
+        "verdict": "include",
+        "rule": "industrial_equipment_event",
+        "evidence": [
+          "協働ロボット",
+          "物流",
+          "製造",
+          "導入",
+          "発売",
+          "開発",
+          "発表"
+        ],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://fabscene.com/new/news/universal-robots-gen-7-g-series-cb7-polyscope-x-imts-2026",
+      "title": "Universal Robotsが第7世代を発表、手首の先でカメラと電源を直結",
+      "date": "2026-09-15",
+      "section": "palletizer",
+      "outcome": "selected",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://www.automation-news.jp/2026/09/108612",
+      "title": "パーカープロセッシング、兵庫県加西市に化成処理のひょうご加西工場を建設",
+      "date": "2026-09-15",
+      "section": "rivals",
+      "outcome": "ai_rejected",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      },
+      "reason": "IRRELEVANT: 対象区分A（衛生用品関連）、B（指定メーカーの企業活動）、C（製造・物流向け技術）のいずれにも該当しないため。"
+    },
+    {
+      "url": "https://ng.investing.com/news/stock-market-news/universal-robots-launches-gen-7-collaborative-robot-platform-93CH-2695013",
+      "title": "Universal Robots launches Gen 7 collaborative robot platform By Investing.com",
+      "date": "2026-09-15",
+      "section": "palletizer",
+      "outcome": "unverified_publication_date",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://www.morningstar.com/news/business-wire/20260914974443/universal-robots-unveils-gen-7-a-new-platform-for-industrial-automation-and-physical-ai-deployment",
+      "title": "Universal Robots Unveils Gen 7, a New Platform for Industrial Automation and Physical AI Deployment",
+      "date": "2026-09-15",
+      "section": "palletizer",
+      "outcome": "selected",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://www.therobotreport.com/universal-robots-launches-its-seventh-generation-robot-platform-at-imts",
+      "title": "Universal Robots launches its seventh generation robot platform at IMTS",
+      "date": "2026-09-14",
+      "section": "palletizer",
+      "outcome": "same_run_duplicate",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://nubiapage.com/top-10-best-robotics-and-automation-companies-in-india",
+      "title": "Top 10 Best Robotics And Automation Companies In India 2026",
+      "date": "2026-09-14",
+      "section": "palletizer",
+      "outcome": "same_run_duplicate",
+      "scope": {
+        "verdict": "include",
+        "rule": "industrial_equipment_event",
+        "evidence": [
+          "industrial robot",
+          "warehouse",
+          "manufacturing",
+          "deploy"
+        ],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://www.marketscreener.com/news/kimberly-clark-weighs-asset-sales-to-secure-eu-approval-for-kenvue-acquisition-ce785bdcdd8ef125",
+      "title": "Kimberly-Clark Weighs Asset Sales to Secure EU Approval for Kenvue Acquisition",
+      "date": "2026-09-14",
+      "section": "rivals",
+      "outcome": "unverified_publication_date",
+      "scope": {
+        "verdict": "include",
+        "rule": "target_manufacturer_activity",
+        "evidence": [
+          "kimberly-clark",
+          "acquisition"
+        ],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://www.mmsonline.com/articles/fanuc-demonstrates-practical-physical-automation",
+      "title": "FANUC Demonstrates Practical Physical Automation",
+      "date": "2026-09-14",
+      "section": "palletizer",
+      "outcome": "unverified_publication_date",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://news.livedoor.com/topics/detail/32322315",
+      "title": "マツコ、トイレットペーパーは「シングル派」理由は明確「なんなら指で…」独自理論を展開 (2026年9月14日掲載)",
+      "date": "2026-09-14",
+      "section": "toilet",
+      "outcome": "unverified_publication_date",
+      "scope": {
+        "verdict": "review",
+        "rule": "insufficient_body_for_rule_admission",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://robotstart.info/article/2026/09/14/382415.html",
+      "title": "開発中の変形ヒューマノイド「勇者ファイバリオン」を東京・有楽町で期間限定公開 BRAVE ROBOTICS",
+      "date": "2026-09-14",
+      "section": "palletizer",
+      "outcome": "ai_rejected",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      },
+      "reason": "IRRELEVANT: 開発中の変形ヒューマノイド「勇者ファイバリオン」の展示会情報であり、A（衛生用品関連）、B（指定メーカーの企業活動）、C（製造・物流向け設備技術）のいずれにも該当しない。展示内容は一般向けのエンターテインメント要素が強く、産業用ロボット制御や工場設備とは無関係。"
+    },
+    {
+      "url": "https://prtimes.jp/main/html/rd/p/000000029.000065626.html",
+      "title": "キビテク、ベンダーフリーのロボット制御ソフトウェア「HATS」の製品ラインナップを刷新",
+      "date": "2026-09-14",
+      "section": "palletizer",
+      "outcome": "selected",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://cargo-news.online/news/detail.php?id=12084",
+      "title": "アイオイ、ピッキング表示器の新モデル発売",
+      "date": "2026-09-14",
+      "section": "palletizer",
+      "outcome": "selected",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://cargo-news.online/news/detail.php?id=12070",
+      "title": "ダイフク ２タイプの自動倉庫を新たに開発",
+      "date": "2026-09-14",
+      "section": "palletizer",
+      "outcome": "selected",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://p-prom.com/feature?p=84668",
+      "title": "DICグループ 「TOKYO PACK 2026」に出展 コンセプトは「価値を包み、未来を創る」 10月14日～16日",
+      "date": "2026-09-14",
+      "section": "packaging",
+      "outcome": "unverified_publication_date",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://www.daio-paper.co.jp/news/%e3%82%a2%e3%83%86%e3%83%b3%e3%83%88-%e3%81%8a%e3%82%80%e3%81%a4%e3%81%ae%e9%81%b8%e5%ae%9a%e3%81%ab%e3%82%88%e3%82%8b%e3%82%b1%e3%82%a2%e3%81%ae%e8%b3%aa%e5%90%91%e4%b8%8a%e3%81%ae%e3%82%bb%e3%83%9f/",
+      "title": "アテント おむつの選定によるケアの質向上のセミナーを開催",
+      "date": "2026-09-14",
+      "section": "rivals",
+      "outcome": "existing_scope_exclusion",
+      "scope": {
+        "verdict": "exclude",
+        "rule": "existing_scope_exclusion",
+        "evidence": [
+          "off_topic"
+        ],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://robotstart.info/article/2026/09/14/382411.html",
+      "title": "ヒューマノイド格闘イベント「CyberHero」世界8都市で行う計画 サウジアラビアの首都リヤドではEngineAI「T800」同士が対戦",
+      "date": "2026-09-14",
+      "section": "rivals",
+      "outcome": "ai_rejected",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      },
+      "reason": "IRRELEVANT: ヒューマノイドロボットの格闘イベントやeスポーツ関連の内容であり、A/B/Cのいずれのカテゴリにも該当しない。また、産業用ロボットや製造設備に関する具体的な情報も含まれていない。"
+    },
     {
       "url": "https://www.automation-news.jp/2026/09/108616",
       "title": "住友精化、兵庫県姫路市の姫路工場で紙おむつの吸水性樹脂リサイクルのパイロット設備稼働",
@@ -32,7 +276,7 @@
       "title": "日本製紙の米工場11人死亡事故、3度の警告届かず 日米で主力工場が生産停止",
       "date": "2026-09-14",
       "section": "rivals",
-      "outcome": "selected",
+      "outcome": "already_published_in_30_days",
       "scope": {
         "verdict": "include",
         "rule": "target_manufacturer_activity",
@@ -48,11 +292,78 @@
       }
     },
     {
+      "url": "https://xtech.nikkei.com/atcl/nxt/column/18/03747/090800002?P=2&i_cid=nbpnxt_nextpage_child_a",
+      "title": "知財分析で見たフィジカルAI開発、日本勢の強みは産業用ロボット企業群（2ページ目）",
+      "date": "2026-09-14",
+      "section": "palletizer",
+      "outcome": "ai_rejected",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      },
+      "reason": "IRRELEVANT: 産業用ロボット全般の競争動向やAI開発に関する解説記事であり、特定の製造設備情報や衛生用品メーカーの競合情報に直接関連しないため。"
+    },
+    {
+      "url": "https://www.universal-robots.com/news-and-media/news-center/universal-robots-unveils-gen-7-new-platform-industrial-automation-physical-ai/",
+      "title": "Universal Robots unveils Gen 7, a new platform for industrial automation and physical AI deployment",
+      "date": "2026-09-14",
+      "section": "palletizer",
+      "outcome": "same_run_duplicate",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://www.konicaminolta.com/jp-ja/newsroom/2026/0914-01-01.html",
+      "title": "ラベル印刷の品質安定性と生産性をさらに向上 デジタルラベル印刷システム「AccurioLabel 231」を発売",
+      "date": "2026-09-14",
+      "section": "rivals",
+      "outcome": "ai_rejected",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      },
+      "reason": "IRRELEVANT: デジタルラベル印刷システムの新商品発表であり、家庭紙・衛生用品（A）、主要競合企業の活動（B）、製造設備技術（C）のいずれにも該当しないため。"
+    },
+    {
+      "url": "https://www.automationworld.com/factory/robotics/news/55404812/universal-robots-unveils-gen-7-platform-at-imts-2026-in-chicago",
+      "title": "Universal Robots Unveils Gen 7 Platform At IMTS 2026 In Chicago",
+      "date": "2026-09-14",
+      "section": "palletizer",
+      "outcome": "same_run_duplicate",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://www.unite.ai/universal-robots-debuts-gen-7-cobot-platform-for-physical-ai",
+      "title": "Universal Robots Debuts Gen 7 Cobot Platform for Physical AI",
+      "date": "2026-09-14",
+      "section": "palletizer",
+      "outcome": "same_run_duplicate",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
       "url": "https://www.automation-news.jp/2026/09/108714",
       "title": "安川電機、e-メカサイトでFOOMA JAPAN 2026出展のAIロボティクスなどデモ動画を公開",
       "date": "2026-09-13",
       "section": "palletizer",
-      "outcome": "ai_rejected",
+      "outcome": "ai_rejected_cached",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -66,7 +377,7 @@
       "title": "「アイアンマン」スタイルの家――ロボット開発競争に参戦する日本のスタートアップ企業の新たな野望。",
       "date": "2026-09-12",
       "section": "palletizer",
-      "outcome": "ai_rejected",
+      "outcome": "ai_rejected_cached",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -74,6 +385,19 @@
         "version": 1
       },
       "reason": "IRRELEVANT: 本文の内容は家庭紙や衛生用品に関連する製品・素材・企業特許（A）には該当せず、対象企業の経営・工場活動（B）や製造設備技術（C）にも該当しない。一般住宅向けのロボットシステム開発に関するスタートアップ企業の記事であり、A/B/Cのいずれの条件も満たさない。"
+    },
+    {
+      "url": "https://mdpr.jp/other/detail/4843217",
+      "title": "下着感覚で身に着けやすい。NaturaMoon、オーガニックコットンを使用した肌にやさしいショーツ型ナプキンを発売",
+      "date": "2026-09-12",
+      "section": "rivals",
+      "outcome": "unverified_publication_date",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
     },
     {
       "url": "https://news.at-s.com/article/2054197",
@@ -106,7 +430,7 @@
       "title": "STマイクロ韓国支社長が語る分散知能でロボット市場を先取り価格競争力は1〜2年で確保 - CHOSUNBIZ",
       "date": "2026-09-12",
       "section": "palletizer",
-      "outcome": "ai_rejected",
+      "outcome": "ai_rejected_cached",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -148,7 +472,7 @@
       "title": "キリンビール千歳工場にBoston Dynamicsの四足歩行ロボット「Spot」活用の巡回点検システムを導入 TECOとIIUが共同開発",
       "date": "2026-09-11",
       "section": "palletizer",
-      "outcome": "selected",
+      "outcome": "already_published_in_30_days",
       "scope": {
         "verdict": "include",
         "rule": "industrial_equipment_event",
@@ -158,6 +482,22 @@
           "製造",
           "導入",
           "開発"
+        ],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://www.sanyonews.jp/article/1901961",
+      "title": "木材チップ供給開始 大王製紙へ美作市 パルプ製造に活用",
+      "date": "2026-09-11",
+      "section": "rivals",
+      "outcome": "unverified_publication_date",
+      "scope": {
+        "verdict": "include",
+        "rule": "target_manufacturer_activity",
+        "evidence": [
+          "大王製紙",
+          "工場"
         ],
         "version": 1
       }
@@ -180,7 +520,7 @@
       "title": "GENIAC採択事業者による事業計画発表会レポート フィジカルAI時代のデータとロボットをどう育てるか",
       "date": "2026-09-11",
       "section": "palletizer",
-      "outcome": "ai_rejected",
+      "outcome": "ai_rejected_cached",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -209,7 +549,7 @@
       "title": "HD Hyundai Robotics、ロボット感覚センサー企業Aidin Roboticsに130億ウォン（約15億円）を投資",
       "date": "2026-09-11",
       "section": "palletizer",
-      "outcome": "ai_rejected",
+      "outcome": "ai_rejected_cached",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -236,7 +576,7 @@
       "title": "フィジカルAIの安全評価・運用基盤整備を推進 ElithがAIロボット協会に育成会員として入会",
       "date": "2026-09-11",
       "section": "palletizer",
-      "outcome": "ai_rejected",
+      "outcome": "ai_rejected_cached",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -257,6 +597,20 @@
         "evidence": [],
         "version": 1
       }
+    },
+    {
+      "url": "https://biz.chosun.com/jp/jp-industry/2026/09/11/BE4CQAYR6NGKJMT2YFFQS63AOU",
+      "title": "HD現代ロボティクスがエイディンロボティクスに130億ウォン出資 造船・重工向けロボット手開発 - CHOSUNBIZ",
+      "date": "2026-09-11",
+      "section": "palletizer",
+      "outcome": "ai_rejected",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      },
+      "reason": "IRRELEVANT: 造船・重工向けロボット手開発に関する記事であり、A/B/Cのいずれの条件にも該当しない。製造・物流向け技術の具体性がなく、衛生用品または対象企業の活動とも無関係。"
     },
     {
       "url": "https://www.newswiretoday.com/news/186824/BASF-Introduces-Low-VOC-Polyurethane-Catalyst-Lupragen-BisDMAPU",
@@ -285,11 +639,24 @@
       }
     },
     {
+      "url": "https://thebridge.jp/2026/09/lyte-robot-vision-165m-series-c",
+      "title": "ロボットの認識基盤を開発するLyte、Maverick Silicon主導で1.65億ドル調達・評価額16億ドル",
+      "date": "2026-09-11",
+      "section": "palletizer",
+      "outcome": "unverified_publication_date",
+      "scope": {
+        "verdict": "review",
+        "rule": "insufficient_body_for_rule_admission",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
       "url": "https://www.whalesbook.com/news/English/technology/Mbodi-Teams-With-ABB-Robotics-To-Simplify-Factory-Automation-With-AI/6aa3215c75fe79b492e2caa7",
       "title": "Mbodi Teams With ABB Robotics To Simplify Factory Automation With AI",
       "date": "2026-09-11",
       "section": "palletizer",
-      "outcome": "selected",
+      "outcome": "already_published_in_30_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -315,7 +682,7 @@
       "title": "展示会「TOKYO PACK 2026（東京国際包装展）」出展のご案内",
       "date": "2026-09-11",
       "section": "packaging",
-      "outcome": "selected",
+      "outcome": "already_published_in_30_days",
       "scope": {
         "verdict": "include",
         "rule": "industrial_equipment_event",
@@ -382,7 +749,7 @@
       "title": "安川電機が協働ロボットの新モデル、新開発のトルクセンサー採用",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "already_published_in_30_days",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -391,18 +758,17 @@
       }
     },
     {
-      "url": "https://news.yahoo.co.jp/articles/d0f8cfb428bc828c6c2b9378f3a7bf9312260030",
-      "title": "進む研究・開発 最新ロボット技術を防災に【いま動こう！みんなで防災プロジェクト】（広島テレビ ニュース）",
+      "url": "https://news.ntv.co.jp/n/htv/category/society/ht2fc8b2e51a2a48d0a06df724dfd9cf72",
+      "title": "進む研究・開発 最新ロボット技術を防災に【いま動こう！みんなで防災プロジェクト】",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "ai_rejected",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
         "evidence": [],
         "version": 1
-      },
-      "reason": "IRRELEVANT: 防災向け最新技術の一般紹介であり、A（衛生用品関連）、B（指定メーカーの企業活動）、C（製造・物流向けロボット技術）のいずれにも該当しない。本文に具体的な業界関連技術や企業活動の記述が存在しない。"
+      }
     },
     {
       "url": "https://news.livedoor.com/article/detail/32293012",
@@ -426,7 +792,7 @@
       "title": "アイオイ・システム／【新製品】大型LEDピッキング表示器に商品投入検知機能を搭載した新モデルを発売",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "already_published_in_30_days",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -439,21 +805,20 @@
       "title": "人工知能(AI)が工場現場に入ってきて決まった動作を繰り返すロボットではなく、周辺環境を認識し変化に適応する「フィジカルAI」が大勢に位置している。 労働力不足と多品種少量生産に直面した韓国製造業が競..",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "ai_rejected",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
         "evidence": [],
         "version": 1
-      },
-      "reason": "IRRELEVANT: 本文には特定の企業や製造設備技術の具体的事実が記載されておらず、一般的なAIロボットのトレンドについての議論に留まっているため。A/B/Cのどの区分にも該当しない。"
+      }
     },
     {
       "url": "https://robotstart.info/article/2026/09/10/382404.html",
       "title": "矢崎総業・山善・Cuebus、ロボット倉庫にヒューマノイドを導入する実証実験を開始",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "already_published_in_30_days",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -466,7 +831,7 @@
       "title": "国際物流総合展／MUJIN、フィジカルAI実装へ最新実機を公開、Exotecと共同出展も",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "already_published_in_30_days",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -479,7 +844,7 @@
       "title": "Cuebus、矢崎総業、山善／リニアモータ式ロボット倉庫でヒューマノイド連携実証",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "already_published_in_30_days",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -492,7 +857,7 @@
       "title": "Muso Action／GENIACに採択、アスクルなど3社の倉庫でピッキングロボット基盤開発へ実証",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "already_published_in_30_days",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
@@ -505,35 +870,33 @@
       "title": "GENIACの活動はAI×ロボティクスへ、ロボット基盤モデル開発の採択事業者を発表：人工知能ニュース",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "ai_rejected",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
         "evidence": [],
         "version": 1
-      },
-      "reason": "IRRELEVANT: 本文には家庭紙、ティッシュ、トイレットペーパー、おむつ、生理用品、ウェットワイプ、不織布、吸収体の製品・素材・企業特許（A）、競合・自社の経営、工場事故・調査、投資、原材料、GX（B）、または包装機、装箱機、搬送設備、工場点検、協働ロボット、産業用ロボット制御・動作シミュレーション、ピッキング、グリッパー、包装検査の開発・展示・実導入・企業投資（C）に関する具体的事実が含まれていない。"
+      }
     },
     {
       "url": "https://robotstart.info/article/2026/09/10/382403.html",
       "title": "AGIBOTのヒューマノイド「A3」「X2」、IFA 2026でイノベーションアワードを受賞",
       "date": "2026-09-10",
       "section": "rivals",
-      "outcome": "ai_rejected",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
         "evidence": [],
         "version": 1
-      },
-      "reason": "IRRELEVANT: ヒューマノイドロボットの受賞や展示会でのデモンストレーションに関する内容であり、衛生用品・特定メーカーの経営活動・製造設備技術のいずれにも該当しないため。"
+      }
     },
     {
       "url": "https://www.nipponpapergroup.com/news/2026/news260910145930.html",
       "title": "令和8年熊本地震による八代工場における煙突の損傷・倒壊に関する被害調査委員会の設置について",
       "date": "2026-09-10",
       "section": "rivals",
-      "outcome": "selected",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "include",
         "rule": "target_manufacturer_activity",
@@ -563,7 +926,7 @@
       "title": "具現化AIヒューマノイドロボットの世界市場（2026年～2032年）、市場規模（二足歩行ヒューマノイド、脚部車輪型ヒューマノイド、車輪ベース型ヒューマノイド、その他）・分...",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "market_report_spam",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "exclude",
         "rule": "existing_scope_exclusion",
@@ -578,7 +941,7 @@
       "title": "AMDがフィジカルAI戦略を本格化 NVIDIAにどう対抗？ CPU＋GPU＋NPU＋FPGAで「頭脳から身体」まで",
       "date": "2026-09-10",
       "section": "rivals",
-      "outcome": "market_report_spam",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "exclude",
         "rule": "existing_scope_exclusion",
@@ -593,7 +956,7 @@
       "title": "Tissue Paper Converting Machine Market to Reach USD 7.4 Billion by 2036 as Automation Drives Capacity Expansion",
       "date": "2026-09-10",
       "section": "machine",
-      "outcome": "market_report_spam",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "exclude",
         "rule": "existing_scope_exclusion",
@@ -617,14 +980,14 @@
       }
     },
     {
-      "url": "https://japan.zdnet.com/article/35252470",
+      "url": "https://news.yahoo.co.jp/articles/590e18b16d40af518b6b4a671d842f3fd488060b",
       "title": "パナソニック コネクト、ロボット導入の壁をAIで打破する--「RoboSync for Mobility」発表",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "unverified_publication_date",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
-        "rule": "insufficient_body_for_rule_admission",
+        "rule": "requires_contextual_review",
         "evidence": [],
         "version": 1
       }
@@ -714,28 +1077,26 @@
       "title": "NVIDIA Details Skild AI Collaboration Behind S1 Robot Foundation Model",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "ai_rejected",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
         "evidence": [],
         "version": 1
-      },
-      "reason": "IRRELEVANT: 本文の内容はロボット基盤モデルの研究開発とAIインフラ構築に関するもので、対象区分A（衛生用品関連）、B（特定メーカーの経営活動）、C（製造・物流向け技術の具体的事実）のいずれにも該当しない。"
+      }
     },
     {
       "url": "https://www.todaysmedicaldevelopments.com/news/imts-2026-conference-cnc-driven-robotics-how-siemens-and-kuka-are-simplifying-automation-for-the-modern-shopfloor",
       "title": "IMTS 2026 Conference: CNC Driven Robotics: How Siemens and KUKA are Simplifying Automation for the Modern Shopfloor",
       "date": "2026-09-10",
       "section": "palletizer",
-      "outcome": "ai_rejected",
+      "outcome": "outside_five_calendar_days",
       "scope": {
         "verdict": "review",
         "rule": "requires_contextual_review",
         "evidence": [],
         "version": 1
-      },
-      "reason": "IRRELEVANT: 本文の内容はCNCと産業用ロボットの統合に関する技術プレゼンテーションであり、対象区分A（衛生用品関連）、B（指定メーカーの企業活動）、C（製造・物流向け技術の具体的事実）のいずれにも該当しないため。"
+      }
     },
     {
       "url": "https://article.auone.jp/be56024d-7c9c-405f-8a87-5449f2fe346f",
@@ -877,6 +1238,19 @@
           "導入",
           "開発"
         ],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://mf-p.jp/news_matehan/2813-2",
+      "title": "イシダ、計量検品と自律搬送を組み合わせたAMR開発",
+      "date": "2026-09-09",
+      "section": "palletizer",
+      "outcome": "outside_five_calendar_days",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
         "version": 1
       }
     },
@@ -1233,6 +1607,19 @@
     {
       "url": "https://hainan.ifeng.com/c/8wFJr4NGL1V",
       "title": "9月天津国际工业自动化及机器人展，工业机器人、移动AGV、具身智能、核心零部件企业集中参展",
+      "date": "2026-09-08",
+      "section": "palletizer",
+      "outcome": "outside_five_calendar_days",
+      "scope": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      }
+    },
+    {
+      "url": "https://prtimes.jp/main/html/rd/p/000000071.000107270.html",
+      "title": "Industry Alpha、WES領域に対応する実行制御層「Alpha-OCS」の開発を強化 — Smart Softwareのモジュラー構造で、搬送・保管・計量・検査を横断して統括",
       "date": "2026-09-08",
       "section": "palletizer",
       "outcome": "outside_five_calendar_days",
@@ -2667,32 +3054,6 @@
       }
     },
     {
-      "url": "https://www.unicharm.co.jp/ja/company/news/2026/0716-01.html",
-      "title": "初経教育支援サイト「みんなで話そう！ソフィ からだの教室」が 1日に8校の勢いで急拡大。開設約5カ月で全国の利用校が1,200校を突破！ 〜98.7%の利用教員が満足、81.0%が「授業の準備時間を短縮できた」と回答〜",
-      "date": "2026-07-16",
-      "section": "rivals",
-      "outcome": "outside_five_calendar_days",
-      "scope": {
-        "verdict": "review",
-        "rule": "requires_contextual_review",
-        "evidence": [],
-        "version": 1
-      }
-    },
-    {
-      "url": "https://www.ojiholdings.co.jp/uploads/news/docs/JP07nt16.pdf",
-      "title": "「うんち教室」が自由研究動画を公開！見落としがちな「トイレの備え」を子どもたちにもわかりやすく紹介",
-      "date": "2026-07-16",
-      "section": "rivals",
-      "outcome": "outside_five_calendar_days",
-      "scope": {
-        "verdict": "review",
-        "rule": "requires_contextual_review",
-        "evidence": [],
-        "version": 1
-      }
-    },
-    {
       "url": "https://patents.google.com/patent/JP7848249B2/en",
       "title": "Nonwoven fabrics for absorbent articles, top sheets for absorbent articles, and …",
       "date": "2026-04-20",
@@ -2801,14 +3162,16 @@
     }
   ],
   "final_counts": {
-    "already_published_in_30_days": 8,
-    "selected": 5,
-    "ai_rejected": 12,
-    "unverified_publication_date": 56,
+    "selected": 6,
+    "ai_rejected": 6,
+    "unverified_publication_date": 63,
+    "same_run_duplicate": 5,
+    "existing_scope_exclusion": 2,
+    "already_published_in_30_days": 6,
+    "ai_rejected_cached": 6,
     "missing_publisher_body": 3,
-    "market_report_spam": 4,
-    "existing_scope_exclusion": 1,
-    "outside_five_calendar_days": 98,
+    "market_report_spam": 1,
+    "outside_five_calendar_days": 115,
     "separate_patent_vault": 8
   }
 }
