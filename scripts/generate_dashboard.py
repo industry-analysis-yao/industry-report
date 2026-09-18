@@ -176,6 +176,10 @@ def prepare_daily_candidates(data, previous, reference_date, *, published_today=
 
 def assign_daily_section(item):
     """Assign a digest item to exactly one mutually-exclusive news section."""
+    if item.get('summary_method') == 'codex_editorial' and item.get('dashboard_section') in {
+        'rivals', 'machine', 'packaging', 'palletizer', 'tissue', 'wet', 'toilet'
+    }:
+        return item['dashboard_section']
     category_id = item.get('category_id', '')
     text = unicodedata.normalize(
         'NFKC',
@@ -241,6 +245,8 @@ def _ngram_containment(left, right, size=3):
 
 def same_news_story(left, right):
     """Match exact articles and syndicated headlines describing one event."""
+    if left.get('event_id') and left.get('event_id') == right.get('event_id'):
+        return True
     left_url = (left.get('url') or '').strip()
     right_url = (right.get('url') or '').strip()
     if left_url and right_url and left_url == right_url:
@@ -836,6 +842,15 @@ def main(data_dir=None, reference_date=None, allow_weekend=False):
     data_path = os.path.join(data_dir or os.path.join(os.path.dirname(__file__), '..', 'data'), 'news_data.json')
     data_path = os.path.normpath(data_path)
     data_dir = os.path.dirname(data_path)
+
+    # An explicitly edited edition is not replaced by a same-day automatic run.
+    edited_path = os.path.join(data_dir, reference_date.isoformat() + '.json')
+    if os.path.exists(edited_path):
+        with open(edited_path, encoding='utf-8') as handle:
+            edited = json.load(handle)
+        if edited.get('publication_mode') == 'codex_editorial':
+            print('[EDITORIAL] Preserve reviewed edition; no model calls for this date.')
+            return
 
     data, last_updated, existing_highlights = load_data(data_path)
     if not data:

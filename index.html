@@ -507,6 +507,7 @@ let DATA = [];      // items for the currently selected date
 let PATENTS = [];   // permanent patent archive (all dates)
 let DATES = {};     // {YYYY-MM-DD: [items] | null}  null = placeholder (not yet loaded)
 let DATE_HIGHLIGHTS = {}; // {YYYY-MM-DD: [highlight objects]} cached per-date highlights
+let DATE_NOTES = {}; // editorial counts, distinct from the cumulative patent archive
 let SORTED_DATES = []; // dates sorted newest-first
 let SELECTED_DATE_IDX = 0;
 let VAULT = [];     // permanent_vault.json — all Bucket C items across all dates
@@ -537,6 +538,10 @@ function getCatColor(cid) {
 // CARD BUILDER
 // ============================================================
 function buildCard(item, idx) {
+  const escapeText = value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  // Editorial fields are text, not executable HTML from a source page.
+  item = Object.fromEntries(Object.entries(item).map(([k,v]) => [k, typeof v === 'string' ? escapeText(v) : v]));
+  if (!/^https?:\/\//i.test(item.url || '')) item.url = '#';
   const dateLabel = item.permanent_record || item.info_type === '特許'
     ? '公開日' : item.publication_date_status === 'verified' ? '原文公開日' : '検索日時・原文日付未確認';
   const typeClass = getTypeBadgeClass(item.info_type);
@@ -544,6 +549,10 @@ function buildCard(item, idx) {
   const verifyBadge = item.confidence === '要確認' ? '<span class="badge badge-verify">⚠️ 要確認</span>' : '';
   const permanentBadge = item.permanent_record ? '<span class="badge badge-patent">📌 永久保存</span>' : '';
   const cardId = 'card-' + idx;
+  const editorialBadge = item.summary_method === 'codex_editorial'
+    ? `<span class="badge badge-company">Codex編集・${item.priority === '重点' ? '重点' : '観察'}</span>` : '';
+  const evidenceSection = item.summary_method === 'codex_editorial'
+    ? `<details style="margin-top:12px"><summary>出典確認・日付・注意事項</summary><p>${item.date_evidence}</p><p>${item.verification_level}</p><p>${item.caution}</p>${item.info_type === '特許' ? `<p>公開番号: ${item.publication_number}<br>出願日: ${item.application_date}<br>登録日: ${item.grant_date || '未確認'}<br>${item.legal_status}<br>${item.patent_family_status}</p>` : ''}</details>` : '';
 
   // Score badge (red ≥80, orange ≥60, blue ≥40, grey otherwise)
   const score = item.score || 0;
@@ -572,6 +581,7 @@ function buildCard(item, idx) {
             ${scoreBadge}
             ${verifyBadge}
             ${permanentBadge}
+            ${editorialBadge}
           </div>
         </div>
         <div class="card-date">📅 ${dateLabel}: ${item.date}</div>
@@ -579,9 +589,10 @@ function buildCard(item, idx) {
       <div class="card-body">
         <div class="card-title">${item.title}</div>
         <div class="card-source">🔗 ソース: <a href="${item.url}" target="_blank" rel="noopener">${item.source_name}</a></div>
-        <div class="card-summary-label">${item.summary_method === 'publisher_excerpt' ? '📄 公式・原文抜粋（AI要約ではありません）' : '🤖 AI要約'}</div>
+        <div class="card-summary-label">${item.summary_method === 'codex_editorial' ? '📄 Codex編集要約（原文照合）' : item.summary_method === 'publisher_excerpt' ? '📄 公式・原文抜粋（AI要約ではありません）' : '🤖 AI要約'}</div>
         <div class="card-summary">${item.summary}</div>
         ${impactSection}
+        ${evidenceSection}
         <div class="card-memo-label">📝 編集者メモ</div>
         <textarea class="card-memo" placeholder="ここにメモを入力できます..."></textarea>
       </div>
@@ -713,6 +724,7 @@ function loadDateData(dateStr, callback) {
   if (status) status.textContent = '平日版は20件を目標に配信。土日は収集のみ継続。表示中の発行日: ' + dateStr;
   if (DATES[dateStr] && DATES[dateStr] !== null) {
     if (status) status.textContent += ' ／ ' + DATES[dateStr].length + '件' + (DATES[dateStr].length < 20 ? '（目標20件に未達）' : '');
+    if (status && DATE_NOTES[dateStr]) status.textContent = dateStr + ' ／ ' + DATE_NOTES[dateStr];
     renderHighlights(DATE_HIGHLIGHTS[dateStr] || []);
     callback(DATES[dateStr]);
     return;
@@ -721,8 +733,12 @@ function loadDateData(dateStr, callback) {
     .then(function(r) { if (!r.ok) throw new Error('not found'); return r.json(); })
     .then(function(dateData) {
       var items = dateData.items || [];
+      DATE_NOTES[dateStr] = dateData.publication_note || '';
       if (status) status.textContent += ' ／ ' + items.length + '件' + (items.length < (dateData.target_count || 20) ? '（目標20件に未達。古い記事・重複で補充しません）' : '');
+      if (status && DATE_NOTES[dateStr]) status.textContent = dateStr + ' ／ ' + DATE_NOTES[dateStr];
       items.sort(function(a, b) {
+        var priority = Number(b.priority === '重点') - Number(a.priority === '重点');
+        if (priority) return priority;
         var sd = (b.score || 0) - (a.score || 0);
         return sd !== 0 ? sd : (b.date || '').localeCompare(a.date || '');
       });
@@ -909,6 +925,7 @@ function dedupeByUrl(arr) {
 // Every item in the selected daily digest belongs to exactly one news section.
 // This keeps the seven sidebar news counts additive and equal to the overview.
 function dailyNewsSection(d) {
+  if (d.summary_method === 'codex_editorial' && ['rivals','machine','packaging','palletizer','tissue','wet','toilet'].includes(d.dashboard_section)) return d.dashboard_section;
   var text = [d.title, d.summary, d.company, d.info_type].filter(Boolean).join(' ').toLowerCase();
   // Equipment processing wet wipes is still equipment, not a wet-wipe product.
   if (d.category_id === '③') return 'machine';
