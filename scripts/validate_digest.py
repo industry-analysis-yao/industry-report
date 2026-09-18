@@ -4,6 +4,7 @@ import argparse
 from datetime import datetime
 from pathlib import Path
 from news_dates import JST, verified_news
+from editorial_language import validate_japanese_item
 from generate_dashboard import load_previous_digest_items, same_news_story, assign_daily_section, DAILY_DIGEST_MAX_AGE_DAYS, scope_reason
 
 
@@ -15,6 +16,9 @@ def validate_digest(data_dir, reference_date):
     if len(items) > payload['target_count']:
         errors.append('More items than target')
     counts = {}
+    if payload.get('publication_mode') == 'codex_editorial':
+        for record in items + payload.get('new_patents', []):
+            validate_japanese_item(record)
     for i, item in enumerate(items):
         label = item.get('title', str(i))
         if scope_reason(item) == 'market_report_spam':

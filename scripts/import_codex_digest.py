@@ -11,6 +11,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from generate_dashboard import load_previous_digest_items, same_news_story
+from editorial_language import validate_japanese_item
 
 SECTIONS = {
     '卫生用品・吸收护理': ('rivals', '①', '日用品・衛生用品メーカー'),
@@ -29,8 +30,8 @@ def read(path, default):
 
 
 def public_item(raw, issue_date):
-    required = ('id', 'kind', 'section', 'date', 'event_id', 'company', 'title',
-                'summary_ja', 'relevance_zh', 'url', 'date_evidence', 'verification_level',
+    required = ('id', 'kind', 'section', 'date', 'event_id', 'company', 'title_ja',
+                'summary_ja', 'relevance_ja', 'url', 'date_evidence', 'verification_level',
                 'caution', 'priority', 'region', 'relationship')
     if any(not isinstance(raw.get(k), str) or not raw[k].strip() for k in required):
         raise ValueError('Missing editorial evidence: ' + str(raw.get('id')))
@@ -47,15 +48,16 @@ def public_item(raw, issue_date):
         raise ValueError('Patent/news section mismatch')
     if len(raw['summary_ja']) < 60:
         raise ValueError('Insufficient source-reviewed summary')
-    if raw['priority'] not in ('重点', '观察'):
+    if raw['priority'] not in ('重点', '観察'):
         raise ValueError('Unknown editorial priority')
     # Whitelist output fields: never publish local evidence paths or raw captures.
-    result = {k: raw[k] for k in ('id', 'event_id', 'company', 'title', 'date', 'url',
+    result = {k: raw[k] for k in ('id', 'event_id', 'company', 'date', 'url',
                                   'date_evidence', 'verification_level', 'caution',
                                   'priority', 'region', 'relationship')}
     result.update(
-        title=raw.get('title_ja') or raw['title'], summary=raw['summary_ja'],
-        impact_analysis=raw['relevance_zh'], category_id=cid, category_name=category,
+        title=raw['title_ja'], summary=raw['summary_ja'],
+        impact_analysis=raw['relevance_ja'], category_id=cid, category_name=category,
+        content_language=raw.get('content_language'),
         info_type='特許' if patent else '業界動向', dashboard_section=section,
         source_name=parts.hostname, summary_method='codex_editorial',
         publication_date_status='verified', publisher_date=raw['date'],
@@ -74,6 +76,7 @@ def public_item(raw, issue_date):
             raise ValueError('Patent application after publication')
         result.update(patent_number=raw['publication_number'], grant_date=raw.get('grant_date'),
                       legal_status='未確認（公開公報を確認。登録・有効性は未確認）')
+    validate_japanese_item(result)
     return result
 
 

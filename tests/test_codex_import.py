@@ -14,15 +14,28 @@ import generate_dashboard as g
 
 def fixture():
     return dict(id='test', kind='news', section='包装设备・包装材料', date='2026-09-18',
-                event_id='event-1', company='メーカー', title='包装設備とロボット連携を展示',
+                event_id='event-1', company='メーカー', title_ja='包装設備とロボット連携を展示',
                 summary_ja='包装設備と連携するロボットの展示予定を企業原文と照合して紹介します。新機種の発売ではなく展示会の予告です。設備導入の実績と混同しないように注意します。',
-                relevance_zh='供包装工程团队参考。', url='https://example.com/news/1',
+                relevance_ja='包装工程の検討に役立つ情報として扱う。', content_language='ja', url='https://example.com/news/1',
                 date_evidence='原文の署期を確認', verification_level='本文を照合',
-                caution='展示会予告', priority='重点', region='日本', relationship='供货商',
+                caution='展示会予告', priority='重点', region='日本', relationship='供給元',
                 evidence_file='C:/private/not-for-publication.txt')
 
 
 class CodexImportTests(unittest.TestCase):
+    def test_no_chinese_fallback_and_nested_notes_checked(self):
+        for key in ('title_ja', 'relevance_ja', 'content_language'):
+            raw = fixture()
+            del raw[key]
+            raw.update(title='中文标题', relevance_zh='中文分析')
+            with self.subTest(missing=key), self.assertRaises(ValueError):
+                public_item(raw, date(2026, 9, 18))
+        for key in ('title_ja', 'relevance_ja', 'caution', 'date_evidence', 'verification_level'):
+            raw = fixture()
+            raw[key] = '原文の情報：关注设备与产品的变化'
+            with self.subTest(field=key), self.assertRaises(ValueError):
+                public_item(raw, date(2026, 9, 18))
+
     def test_public_projection_and_section(self):
         item = public_item(fixture(), date(2026, 9, 18))
         self.assertNotIn('evidence_file', item)
