@@ -311,41 +311,5 @@
       "evidence": [],
       "version": 1
     }
-  },
-  {
-    "title": "kitchen towel roll",
-    "summary": "日本製紙は、高体積ティッシュペーパーを製造するためのティッシュペーパー製造機において、湿った繊維質ウェブを押し込むための凹凸ベルトの凹凸層に関する特許を公開しました。この特許技術は、不織布を用いており、プレスセクションでの効率的な加工を可能にします。具体的な数値は明記されていませんが、高品質なティッシュペーパーの生産に寄与する技術として注目されています。",
-    "company": "日本製紙",
-    "date": "2025-09-18",
-    "published_at": "2025-09-18T00:00:00Z",
-    "collected_at": "2026-09-02T22:35:34Z",
-    "category_id": "⑦",
-    "category_name": "学術論文・特許情報",
-    "info_type": "特許",
-    "url": "https://patents.google.com/patent/JP7741845B2/en",
-    "source_name": "Google Patents",
-    "source_url": "https://patents.google.com/",
-    "discovery_provider": "Google Patents direct",
-    "discovery_query": "(\"absorbent article\" OR \"disposable diaper\" OR \"sanitary napkin\" OR \"tissue paper\" OR \"wet wipe\" OR \"absorbent sheet\" OR \"diaper manufacturing\")",
-    "confidence": "高",
-    "quality_flags": [
-      "direct_patent_source"
-    ],
-    "fulltext_status": "excerpt_extracted",
-    "patent_number": "JP7741845B2",
-    "is_academic": true,
-    "permanent_record": true,
-    "fingerprint": "7516df24c369ce0f5d6d57d6",
-    "score": 1,
-    "impact_analysis": "日本製紙の凹凸ベルト技術はティッシュ製造効率化の潜在的可能性を示すが、競合他社の特許かつ349日前の情報であるため、大王製紙の現行R&D戦略への直接的影響は限定的。不織布加工技術の業界トレンド分析資料としての参照価値のみ。",
-    "scope_decision": {
-      "verdict": "include",
-      "rule": "target_manufacturer_activity",
-      "evidence": [
-        "日本製紙",
-        "生産"
-      ],
-      "version": 1
-    }
   }
 ]
