@@ -1,0 +1,172 @@
+{
+  "date": "2026-09-24",
+  "digest_window_days": 5,
+  "target_count": 20,
+  "selection_health": {
+    "target": 20,
+    "selected": 2,
+    "shortfall": 18,
+    "preferred_calendar_days": 3,
+    "maximum_calendar_days": 5,
+    "fresh_verified_news": 33,
+    "candidate_news": 410,
+    "date_verified_news": 296,
+    "ai_rejected": 6,
+    "funnel": {
+      "counts": {
+        "ai_rejected": 6,
+        "unverified_publication_date": 114,
+        "existing_scope_exclusion": 1,
+        "ready": 2,
+        "ai_rejected_cached": 10,
+        "already_published_in_30_days": 14,
+        "outside_five_calendar_days": 263,
+        "separate_patent_vault": 9
+      },
+      "ai_calls_items": 8,
+      "cached_rejections": 10
+    },
+    "history_records_checked": 211,
+    "history_duplicate_candidates": 185,
+    "section_counts": {
+      "palletizer": 2
+    }
+  },
+  "items": [
+    {
+      "title": "パナソニックコネクトのロボット導入・運用基盤「Robo Sync」にモビリティ運用サービスが追加 既存工場に後付け適用可能",
+      "summary": "パナソニックコネクトは、「人とロボットが共に働く社会をもっと身近に」というビジョンのもと、ロボットの企画・導入・運用をトータルで支援する 「Robo Sync（ロボシンク）」 プロダクト群を展開している。 「Robo Sync」は特に中小企業や現場の生産技術者、システムインテグレーター（SIer）を主なターゲットとし、ロボットを「導入する」段階の障壁のみならず、導入後に「使い続ける」ための運用基盤を提供することを目的としている。 主要な構成要素は、導入判断を支援する 「Robo Sync Planner」 、協働ロボットを制御する 「Robo Sync for Cobot」 、そして複数メーカーの自律走行搬送ロボット（AMR）や周辺設備を一元管理する 「Robo Sync for Mobility」 の3点である。",
+      "company": "パナソニックコネクト",
+      "date": "2026-09-23",
+      "published_at": "2026-09-23T09:02:07Z",
+      "collected_at": "2026-09-24T00:26:40Z",
+      "category_id": "④",
+      "rss_published_at": "2026-09-23T09:02:07Z",
+      "publication_date_status": "verified",
+      "category_name": "包装機・パレタイジング設備メーカー",
+      "info_type": "其他",
+      "url": "https://note.com/kmoriyama/n/n48dfb83c389d",
+      "source_name": "note",
+      "source_url": "https://note.com/",
+      "discovery_provider": "Google News RSS",
+      "discovery_query": "(協働ロボット OR パレタイジング OR ピッキング OR ロボットハンド) (発売 OR 開発 OR 導入 OR 展示)",
+      "discovery_language": "ja",
+      "discovery_group": "palletizer",
+      "confidence": "中",
+      "quality_flags": [
+        "ai_unsupported_numeric_claim"
+      ],
+      "fingerprint": "af8b158735e7d401dd3f06d3",
+      "extraction_version": 2,
+      "discovery_url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE15Z1gzZU02Vl80eTFSVjVrY050ZzRTa1dxeHF0ejl4cTFmR20wZU1Hd0t0OWp4OFQ2c1hLUy10Um9NcFVoMUJnbUFfUjQwejQzc3hGSA?oc=5",
+      "publisher_published_at": "2026-09-23T09:02:07Z",
+      "publisher_date": "2026-09-23",
+      "publication_date_source": "jsonld:datePublished",
+      "publication_date_raw": "2026-09-23T18:02:07.000+09:00",
+      "publication_date_url": "https://note.com/kmoriyama/n/n48dfb83c389d",
+      "publication_date_version": 1,
+      "source_excerpt": "パナソニックコネクトは、「人とロボットが共に働く社会をもっと身近に」というビジョンのもと、ロボットの企画・導入・運用をトータルで支援する 「Robo Sync（ロボシンク）」 プロダクト群を展開している。 「Robo Sync」は特に中小企業や現場の生産技術者、システムインテグレーター（SIer）を主なターゲットとし、ロボットを「導入する」段階の障壁のみならず、導入後に「使い続ける」ための運用基盤を提供することを目的としている。 主要な構成要素は、導入判断を支援する 「Robo Sync Planner」 、協働ロボットを制御する 「Robo Sync for Cobot」 、そして複数メーカーの自律走行搬送ロボット（AMR）や周辺設備を一元管理する 「Robo Sync for Mobility」 の3点である。「Robo Sync」は基本的にベンダーニュートラルであり、AIやノーコード技術を活用することで高度な専門知識がなくても現場主導で自動化を継続・改善できる仕組みだとされている。2026年9月9日には「Robo Sync for Mobility」を中心とした発表会と、展示会でのデモ紹介が行われた。レポートする。 これまでのロボット導入は、多額の初期投資と高度な専門スキルを必要とする、いわば「特定企業の特権」だった。パナソニックコネクトは、自社工場を含む100年の製造知見とソフトウェア技術を融合させることで、導入検討から運用、さらには異常時の対応までを一気通貫で支援する仕組みを構築し、現場が自ら「使い続けられる」環境の提供を目指している。それが「Robo Sync」である。 Robo Syncは、自動化の各フェーズ（設計、導入・運用、将来構想）に対応した包括的なソリューションである。以下の３種類からなる。 Robo Sync Planner（ロボシンク プランナー） 機能: AIを使って工程分析やボトルネック特定を行い、ROI（投資対効果）を算出。 現場へのインパクト: 熟練者の経験に頼っていた導入判断をデータ化し、投資の意思決定と見積もり工程を劇的に迅速化する。 Robo Sync for Cobot（ロボシンク フォー コボット） 機能: ビジュアルプログラミングとAIを組み合わせ、専門スキルが低くてもロボット動作の作成・変更が可能。画像認識機能もビルトインされている。 現場へのインパクト: 専門コードの記述を不要にし、現場担当者がチャット形式等で自らロボットの「スキル」を構築可能にする。 Robo Sync for Mobility（ロボシンク フォー モビリティ） 機能: 複数メーカーのAMR、エレベーター、自動ドア、PLCなどを一元管理。ノーコードでの搬送ワークフロー設計や、トラブル時の原因究明を支援する。 現場へのインパクト: メーカー間の仕様差を吸収し、工場全体の搬送ワークフローをノーコードで最適化する。 これらの製品群は、単なる制御ソフトウェアではなく、ロボットを「導入して終わり」にしないための運用基盤である。特に「Planner」で算出されたシナリオを「Cobot」や「Mobility」へシームレスに引き継ぐ流れは、中小企業が直面する「技術者不足」という障壁を乗り越えるためにも重要だ。 なお、「Planner」は、その場で即座に見積もりができるため、SIerによる営業ツールとしても活用できる。 最新の提供サービス「Robo Sync for Mobility」は、AMR導入後の「運用定着」に焦点を当てている。マルチベンダー対応で、異なるメーカーのAMRを同一環境で管理可能。現在4社のメーカーに対応しており、APIの公開状況やシェアに基づき順次拡大予定。 また、物理的な設備（自動ドア、エレベーター等）や通信（PLC）との連携を標準化し、検証作業の負担を軽減することができる。搬送ルートや目的地の変更を現場でノーコードで行えるという。 無線強度ヒートマップやタスク履歴、設備イベントを可視化するダッシュボード機能があり、エラー発生時の原因特定（通信不良か機器故障か等）と迅速な初動復旧を支援することもできる。 料金は基本ライセンスが月額 70,000円（1テナントあたりの基本料金）。AMR接続ライセンスは月額 6,00",
+      "fulltext_status": "excerpt_extracted",
+      "scope_decision": {
+        "verdict": "include",
+        "rule": "industrial_equipment_event",
+        "evidence": [
+          "搬送ロボット",
+          "協働ロボット",
+          "工場",
+          "製造",
+          "展示",
+          "導入",
+          "発表"
+        ],
+        "version": 1
+      },
+      "score_components": {
+        "relevance": 28,
+        "impact": 28,
+        "reliability": 12,
+        "recency": 15
+      },
+      "score": 83,
+      "score_method": "rules_v1",
+      "impact_analysis": "",
+      "summary_method": "publisher_excerpt",
+      "dashboard_section": "palletizer"
+    },
+    {
+      "title": "ABB launches E-Device safety interface for OmniCore robots",
+      "summary": "ABBは2026年9月23日、OmniCore対応ロボットと協働ロボット（cobot）の操作、プログラミング、監視をタブレットやPCで行えるコンパクトな安全インターフェース「E-Device」を発売した。E-DeviceはOmniCoreユーザーインターフェース（UI）に基づき、タブレット、PC、ロボットティーチペンダント間で一貫した操作を提供し、物理的な安全制御を統合。RobotStudioによるオフラインプログラミングやシミュレーション、ノーコードツール「AppStudio」を利用可能で、生産ラインから離れた場所での開発と検証が可能。これにより、複数ロボットを運用する施設や訓練環境での効率",
+      "company": "ABB",
+      "date": "2026-09-23",
+      "published_at": "2026-09-23T08:34:44Z",
+      "collected_at": "2026-09-24T00:26:42Z",
+      "category_id": "④",
+      "rss_published_at": "2026-09-23T10:23:24Z",
+      "publication_date_status": "verified",
+      "category_name": "包装機・パレタイジング設備メーカー",
+      "info_type": "新製品",
+      "url": "https://www.designworldonline.com/abb-launches-e-device-safety-interface-for-omnicore-robots",
+      "source_name": "Design World",
+      "source_url": "https://www.designworldonline.com/",
+      "discovery_provider": "Google News RSS",
+      "discovery_query": "ABB Robotics",
+      "discovery_language": "en",
+      "discovery_group": "palletizer",
+      "confidence": "中",
+      "quality_flags": [],
+      "fingerprint": "d1b7c8a89e5f8b75b331e634",
+      "extraction_version": 2,
+      "discovery_url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOZUxuMlBYWFpXUF9YeVFxNDB6eEJRVml4czhCYnFwUDItenpheFRDMWlmM2hjMnZBRkxMcGY2YUFqa25nWWYzbDhhdTIwbi1OMHo4WWZMUEhwd05LTlVieldiWE5aRHZxUFVUNlN5dmQ1WHhfbnJUZnhVM19WX3BJUmlBcDJYdnBpdk1razUzb3E5cmVXSjhENg?oc=5",
+      "publisher_published_at": "2026-09-23T08:34:44Z",
+      "publisher_date": "2026-09-23",
+      "publication_date_source": "meta:article:published_time",
+      "publication_date_raw": "2026-09-23T08:34:44+00:00",
+      "publication_date_url": "https://www.designworldonline.com/abb-launches-e-device-safety-interface-for-omnicore-robots/",
+      "publication_date_version": 1,
+      "source_excerpt": "By Puja Mitra | September 23, 2026 ABB Robotics has launched E-Device, a compact safety interface that allows users to operate, program and monitor OmniCore-powered robots and cobots with their own tablet or PC. Based on the OmniCore User Interface (UI), E-Device provides the same robot controls across tablets, PCs and robot teach pendants, with integrated physical safety controls. The OmniCore UI provides a consistent interface across ABB Robotics’ robot and cobot portfolio, which can help reduce training requirements during deployment. Users can access programming tools including RobotStudio for offline programming and simulation and AppStudio, a no-code tool for creating application-specific screens. Applications can be developed and simulated away from the production line before the device is connected to the robot. E-Device and the OmniCore UI support a workflow in which users develop and simulate a robot program on a tablet or PC before deploying it on the production line. The same device can be used with multiple E-Device-equipped robots, which may be useful in facilities with multiple robots and in training environments. This workflow is intended to reduce engineering and commissioning time. The tablet or PC can also provide access to online resources such as manuals through an internet connection. Its camera can be used to capture troubleshooting images and save them directly to the robot’s backup folder. E-Device includes physical safety controls for manual robot operation, including an emergency-stop button and a three-position enabling switch. ABB says the device complies with ISO 10218:2025 and has CE and UL certifications. For more information, visit abb.com .",
+      "fulltext_status": "excerpt_extracted",
+      "scope_decision": {
+        "verdict": "review",
+        "rule": "requires_contextual_review",
+        "evidence": [],
+        "version": 1
+      },
+      "score": 12,
+      "impact_analysis": "ABBのE-Deviceの発表は、ロボット工学分野での技術革新を示しており、大王製紙のR&D戦略に直接的なインパクトはないものの、自動化設備やロボット導入を検討する際の参考情報となる可能性がある。市場・業界構造への影響度は限定的であり、情報の具体性と信頼性は高いが、緊急性や時宜性は低い。",
+      "summary_method": "ai",
+      "score_method": "ai",
+      "ai_review": {
+        "fingerprint": "d41ad9e88129033c5c3301221857c66e8bf7d4e77cd3ab6d07c314bb90d0e996",
+        "status": "accepted",
+        "version": 5,
+        "reviewed_on": "2026-09-24",
+        "method": "ai"
+      },
+      "dashboard_section": "palletizer"
+    }
+  ],
+  "highlights": [
+    {
+      "rank": 1,
+      "title": "パナソニックコネクトのロボット導入・運用基盤「Robo Sync」にモビリティ運用サービスが追加 既存工場に後付け適用可能",
+      "url": "https://note.com/kmoriyama/n/n48dfb83c389d",
+      "company": "パナソニックコネクト",
+      "category": "包装機・パレタイジング設備メーカー / 其他",
+      "date": "2026-09-23",
+      "impact": "パナソニックコネクトは、「人とロボットが共に働く社会をもっと身近に」というビジョンのもと、ロボットの企画・導入・運用をトータルで支援する 「Robo Sync（ロボシンク）」 プロダクト群を展開している。 「Robo Sync」は特に中小企業や現場の生産技術者、システムインテグレーター（SIer）を主なターゲットとし、ロボットを「導入する」段階の障壁のみならず、導入後に「使い続ける」ための運用基盤を提供することを目的としている。 主要な構成要素は、導入判断を支援する 「Robo Sync Planner」 、協働ロボットを制御する 「Robo Sync for Cobot」 、そして複数メーカーの自律走行搬送ロボット（AMR）や周辺設備を一元管理する 「Robo Sync for Mobility」 の3点である。",
+      "score": 83,
+      "is_patent": false
+    },
+    {
+      "rank": 2,
+      "title": "ABB launches E-Device safety interface for OmniCore robots",
+      "url": "https://www.designworldonline.com/abb-launches-e-device-safety-interface-for-omnicore-robots",
+      "company": "ABB",
+      "category": "包装機・パレタイジング設備メーカー / 新製品",
+      "date": "2026-09-23",
+      "impact": "ABBのE-Deviceの発表は、ロボット工学分野での技術革新を示しており、大王製紙のR&D戦略に直接的なインパクトはないものの、自動化設備やロボット導入を検討する際の参考情報となる可能性がある。市場・業界構造への影響度は限定的であり、情報の具体性と信頼性は高いが、緊急性や時宜性は低い。",
+      "score": 12,
+      "is_patent": false
+    }
+  ]
+}
