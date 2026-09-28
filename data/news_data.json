@@ -1,42 +1,369 @@
 {
   "schema_version": 2,
-  "last_updated": "2026-09-27T00:31:04Z",
+  "last_updated": "2026-09-28T00:41:12Z",
   "highlights": [
     {
       "rank": 1,
-      "title": "食の現場を変える多彩なロボットソリューションを東京・札幌・大阪の展示会で披露",
-      "url": "https://prtimes.jp/main/html/rd/p/000000252.000069393.html",
+      "title": "わずか1カ月で320億円 清華大発AIロボット企業、家庭市場への進出を視野【動画あり】",
+      "url": "https://36kr.jp/502676",
       "company": "不明",
       "category": "包装機・パレタイジング設備メーカー / 其他",
-      "date": "2026-09-24",
-      "impact": "ソフトバンクロボティクス株式会社（本社：東京都港区、代表取締役社長 兼 CEO：冨澤 文秀、以下「ソフトバンクロボティクス」）は、2026年9月から10月にかけて東京・札幌・大阪で開催される、食品・ホテル・外食産業向けの3つの展示会に出展します。 ・「 観光・ホテル・外食産業展 HOKKAIDO 2026 」 食品・ホテル・外食産業では、人手不足や業務負荷の増大が課題となっています。ソフトバンクロボティクスは、ロボットを活用して店舗や厨房のオペレーションを効率化するソリューションを展開しています。各会場では、自動調理ロボットの「STEAMA」、「FLAMA」、「BOTINKIT Omni」などを活用し、人の負担を軽減しながら、生産性やサービス品質の向上につなげる新しい調理オペレーションを紹介します。",
+      "date": "2026-09-27",
+      "impact": "ロボット本体からエンボディドAI基盤モデルまでを開発する中国のスタートアップ「求之科技（DISCOVER Robotics）」はこのほど、追加のエンジェルラウンドで1億ドル（約160億円）を調達した。前回の1億ドル超の調達からわずか約1カ月で、累計で2億ドル（約320億円）を超えた。 本ラウンドにはIDG資本（IDG Capital）、星連資本（Link-X Capital）、武岳峰（Summitview Capital）、達晨財智（Fortune Venture Capital）、九陽（Joyoung）などが共同で参加した。 求之科技は2023年に清華大学スマート産業研究院（AIR）からインキュベートされた。技術体系は、ロボット本体からエンボディドAIのインフラへと進んできている。24年に産業用ロボット「AIRBOT」シリーズを発売し、続いてシミュレーター「DISCOVERSE」、閉ループ・データシステム「LOOP」を発表。",
       "score": 83,
       "is_patent": false
     },
     {
       "rank": 2,
-      "title": "Procter & Gamble (PG): Buy, Sell, or Hold Post Q2 Earnings?",
-      "url": "https://www.tradingview.com/news/stockstory:4a27b3d7e094b:0-procter-gamble-pg-buy-sell-or-hold-post-q2-earnings",
-      "company": "P&G",
-      "category": "日用品・衛生用品メーカー / 其他",
-      "date": "2026-09-24",
-      "impact": "Procter & Gamble currently trades at $147.39 per share and has shown little upside over the past six months, posting a middling return of 3%. The stock also fell short of the S&P 500’s 18.4% gain during that period. Is there a buying opportunity in Procter & Gamble, or does it present a risk to your portfolio? Dive into our full research report to see our analyst team’s opinion, it’s free . Why Is Procter & Gamble No…",
-      "score": 54,
+      "title": "〈もう工場実装が進むフィジカルAI〉産業ロボットの雄ファナックがグーグルの独占オファーに応じず貫くオープン化の肝",
+      "url": "https://toyokeizai.net/articles/-/958610?display=b",
+      "company": "ファナック",
+      "category": "包装機・パレタイジング設備メーカー / 其他",
+      "date": "2026-09-28",
+      "impact": "ファナックのオープン化戦略やフィジカルAIの実装が進むことで、製造業全体の効率化や自動化が加速する可能性があります。大王製紙が製造工程や物流分野でAIやロボット技術を活用する検討余地が広がるかもしれません。ただし、大王製紙との直接的な関連性は明確ではなく、あくまで業界全体の動向としての影響が予想されます。",
+      "score": 35,
       "is_patent": false
     },
     {
       "rank": 3,
-      "title": "UBTECHヒューマノイドCruzr S2が音声指示で荷物搬送 GA Roboticsが北陸技術交流テクノフェア2026で実演予定",
-      "url": "https://robotstart.info/article/2026/09/24/382445.html",
-      "company": "不明",
-      "category": "包装機・パレタイジング設備メーカー / ",
-      "date": "2026-09-24",
-      "impact": "UBTECHのヒューマノイドロボット「Cruzr S2」のデモンストレーションは、大王製紙のR&D戦略に直接的なインパクトを与える可能性がある。特に、工場内での自動化や効率化に向けた技術導入の検討余地を示唆している。また、市場・業界構造への影響度としては、ロボット技術の進化が製造業全体の自動化推進に寄与する可能性がある。ただし、具体的な大王製紙の戦略や課題への直接言及はなく、情報の具体性・信頼性は限定的である。緊急性・時宜性については、イベントが2026年に開催されるため、現時点での緊急性は低い。",
-      "score": 45,
+      "title": "ダイフクが物流倉庫の完全自動化へヒューマノイドを開発、2030年に実証実験：国際物流総合展2026",
+      "url": "https://monoist.itmedia.co.jp/mn/articles/2609/28/news058.html",
+      "company": "ダイフク",
+      "category": "包装機・パレタイジング設備メーカー / 其他",
+      "date": "2026-09-28",
+      "impact": "大王製紙のR&D戦略への直接的インパクトは限定的。物流自動化技術の進展は大王製紙のサプライチェーン効率化に検討余地を提供する可能性があるが、具体的な連携や応用は不明。市場・業界構造への影響度は中程度で、物流業界の変革が間接的に波及する可能性がある。情報の具体性・信頼性は高く、ニュースソースが明確。ただし、緊急性・時宜性は低く、2030年の実証実験目標は将来的な話題であり、即時の影響は小さい。",
+      "score": 30,
       "is_patent": false
     }
   ],
   "dates": {
+    "2026-09-28": [
+      {
+        "title": "ダイフクが物流倉庫の完全自動化へヒューマノイドを開発、2030年に実証実験：国際物流総合展2026",
+        "summary": "ダイフクは、2030年の実証実験を目指し、物流倉庫の完全自動化に向けたヒューマノイド開発を進めている。同社は「国際物流総合展2026」で、自動倉庫やAMRを活用した自動化ソリューションを展示し、ヒューマノイドの開発方針も示した。この取り組みは、物流業界の効率化と人材不足への対応を目的としている。",
+        "company": "ダイフク",
+        "date": "2026-09-28",
+        "published_at": "2026-09-28T07:15:00Z",
+        "collected_at": "2026-09-28T00:36:58Z",
+        "category_id": "④",
+        "rss_published_at": "2026-09-27T22:15:00Z",
+        "publication_date_status": "verified",
+        "category_name": "包装機・パレタイジング設備メーカー",
+        "info_type": "其他",
+        "url": "https://monoist.itmedia.co.jp/mn/articles/2609/28/news058.html",
+        "source_name": "MONOist",
+        "source_url": "https://monoist.itmedia.co.jp/",
+        "discovery_provider": "Google News RSS",
+        "discovery_query": "(協働ロボット OR パレタイジング OR ピッキング OR ロボットハンド) (発売 OR 開発 OR 導入 OR 展示)",
+        "discovery_language": "ja",
+        "discovery_group": "palletizer",
+        "confidence": "中",
+        "quality_flags": [],
+        "fingerprint": "2fd769e88c8daf62e19af3a1",
+        "extraction_version": 2,
+        "discovery_url": "https://news.google.com/rss/articles/CBMib0FVX3lxTFB0REo0dnhsMEdCSm1ZektUTHZMRGZsbGVkOTRsbjItRnpNbFpib3l6S2E4NVIxZGlpdGZDejlDVERUS3lDVUkySjBzWFNfTUQ2RTFJUEJTdkVlMTZ2ekN4V2FubDgweDE5Q2hDZDI4bw?oc=5",
+        "publisher_published_at": "2026-09-28T07:15:00Z",
+        "publisher_date": "2026-09-28",
+        "publication_date_source": "jsonld:datePublished",
+        "publication_date_raw": "2026-09-28T07:15:00Z",
+        "publication_date_url": "https://monoist.itmedia.co.jp/mn/articles/2609/28/news058.html",
+        "publication_date_version": 1,
+        "source_excerpt": "ダイフクは、「国際物流総合展2026」において、自動倉庫やAMRを組み合わせた物流倉庫向けの自動化ソリューションを披露。併せて、物流倉庫の完全自動化の鍵となるヒューマノイド開発の方向性についても言及した。",
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "score": 30,
+        "impact_analysis": "大王製紙のR&D戦略への直接的インパクトは限定的。物流自動化技術の進展は大王製紙のサプライチェーン効率化に検討余地を提供する可能性があるが、具体的な連携や応用は不明。市場・業界構造への影響度は中程度で、物流業界の変革が間接的に波及する可能性がある。情報の具体性・信頼性は高く、ニュースソースが明確。ただし、緊急性・時宜性は低く、2030年の実証実験目標は将来的な話題であり、即時の影響は小さい。",
+        "summary_method": "ai",
+        "score_method": "ai",
+        "ai_review": {
+          "fingerprint": "dc053ecca90bd9a9011a4eab473478db4d42b9d945e8fb2e662a4fab230e765d",
+          "status": "accepted",
+          "version": 5,
+          "reviewed_on": "2026-09-28",
+          "method": "ai"
+        }
+      },
+      {
+        "title": "造船再生、カギはAIロボットか…国交省が日米で共同開発",
+        "summary": "国土交通省は造船業の再生に向け生産性の抜本的な改善を図るため、日米で連携しＡＩ（人工知能）を活用した造船ロボットの共同開発に取り組む。このほど関係者が米側の開発拠点となるミシガン州を訪れ、ミシガン大学...",
+        "company": "不明",
+        "date": "2026-09-28",
+        "published_at": "2026-09-27T21:01:57Z",
+        "collected_at": "2026-09-28T00:36:58Z",
+        "category_id": "④",
+        "rss_published_at": "2026-09-27T21:01:57Z",
+        "publication_date_status": "unverified",
+        "category_name": "包装機・パレタイジング設備メーカー",
+        "info_type": "其他",
+        "url": "https://newswitch.jp/p/50366",
+        "source_name": "ニュースイッチ by 日刊工業新聞社",
+        "source_url": "https://newswitch.jp/",
+        "discovery_provider": "Google News RSS",
+        "discovery_query": "(ロボット OR ピッキング) (ビジョン OR センサー OR 制御装置) (発売 OR 開発 OR 新製品)",
+        "discovery_language": "ja",
+        "discovery_group": "palletizer",
+        "confidence": "高",
+        "quality_flags": [
+          "publication_date_unverified"
+        ],
+        "fingerprint": "55a6a016ec6865c4eb14694d",
+        "extraction_version": 2,
+        "discovery_url": "https://news.google.com/rss/articles/CBMiQkFVX3lxTE1aOTdnQllfMl9VVzNaUHFfNF9uQlJ0VXd0Q1cza1dsbjVpakF2MTE2dTQ3Zk1ISkhuY1lZR25ueEp0UQ?oc=5",
+        "source_excerpt": "国土交通省は造船業の再生に向け生産性の抜本的な改善を図るため、日米で連携しＡＩ（人工知能）を活用した造船ロボットの共同開発に取り組む。このほど関係者が米側の開発拠点となるミシガン州を訪れ、ミシガン大学...",
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        }
+      },
+      {
+        "title": "〈もう工場実装が進むフィジカルAI〉産業ロボットの雄ファナックがグーグルの独占オファーに応じず貫くオープン化の肝",
+        "summary": "ファナックは、昨年12月の国際ロボット展でPythonプログラミング言語対応の産業ロボットとエヌビディアとの協業事例を4点展示し、特に音声認識ロボットが注目を集めた。音声認識ロボットは100カ国語に対応し、サイコロを転がすデモを見た現場関係者が自社での用途を考え、導入が進んでいる。フィジカルAI関連の受注は数千台に達し、生産現場への実装が加速している。",
+        "company": "ファナック",
+        "date": "2026-09-28",
+        "published_at": "2026-09-27T20:30:00Z",
+        "collected_at": "2026-09-28T00:36:57Z",
+        "category_id": "④",
+        "rss_published_at": "2026-09-27T20:30:00Z",
+        "publication_date_status": "verified",
+        "category_name": "包装機・パレタイジング設備メーカー",
+        "info_type": "其他",
+        "url": "https://toyokeizai.net/articles/-/958610?display=b",
+        "source_name": "東洋経済オンライン",
+        "source_url": "https://toyokeizai.net/",
+        "discovery_provider": "Google News RSS",
+        "discovery_query": "ファナック ロボット",
+        "discovery_language": "ja",
+        "discovery_group": "palletizer",
+        "confidence": "中",
+        "quality_flags": [],
+        "fingerprint": "b78dbd8f9720cac15c468a94",
+        "extraction_version": 2,
+        "discovery_url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9VVDlwNnNzd1ZmdUxjMkp5UUJtWXlmYmc5WlZ3cERQSjY0WnF2VUEtMXVtMF82dUtnRGFCUnBvaWRNX3ljLUVuZXFLQXdOSVVhRWVadnRPM1hDODFKXzVv?oc=5",
+        "publisher_published_at": "2026-09-27T20:30:00Z",
+        "publisher_date": "2026-09-28",
+        "publication_date_source": "meta:article:published_time",
+        "publication_date_raw": "2026-09-28T05:30:00+09:00",
+        "publication_date_url": "https://toyokeizai.net/articles/-/958610?display=b",
+        "publication_date_version": 1,
+        "source_excerpt": "――昨年12月にオープン化を発表してから半年あまり。反響は想定どおりですか。 想定以上だった。「一緒に使いたい」「こういう課題を解決したい」という具体的な相談が、怒濤のように入ってきている。以前は人手でやるしかないと諦めていた顧客が、「そんなことができるのか」と考えるようになった。 具体例を見せたことも大きい。Pythonというプログラミング言語で使えるといっても、それだけでは何ができるかわからない。ロボット展で実演を見て、「自分の現場ならこう使える」と発想を広げてもらえた。 ――昨年12月、東京ビッグサイトで催された国際ロボット展ではエヌビディアの協業事例を4点展示しました。特に反応がよかった実演は。 マイクを通して言葉で指示すると、サイコロを転がしたり、積み上げたりする音声認識ロボットだ。来場者に「好きなことを指示してください」と言えるところまで開発した。 当初は英語、日本語、中国語に対応すると説明していた。従業員が動作を確認できるのが、その3言語だったからだ。その後、台湾やベトナム、フランス、イタリアなど、海外のお客さんが次々に試してくれた。私たちは何を言っているのかわからない。でもロボットは理解して動く。「正しくできましたか」と聞くと、「ばっちり、ばっちり」と。今では100カ国語対応と説明している。 サイコロを転がす自動化なんて、本来は製造現場にはいらない。でも、それを見た現場の方が自社での用途を考え、すでに導入が始まっている。 ――年初に公表したフィジカルAIに関連する受注数千台は、実証実験向けですか。それとも、生産現場への導入が進んでいますか。 各タグの フォローボタン をクリックしフォローすると、関連する新着記事をメールで受け取ることができます 生まれも育ちも山梨県。神戸大学経済学部卒。入社後は精密業界を担当し、ロボットやピアノ、腕時計業界などを取材してきた。2026年5月からは、ソニーやパナソニックなど電機業界を担当。好きなことは工場見学や企業ミュージアム巡り。仕事との境目はあまりない。 連絡先:misa-yamashita[at]toyokeizai.co.jp",
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "score": 35,
+        "impact_analysis": "ファナックのオープン化戦略やフィジカルAIの実装が進むことで、製造業全体の効率化や自動化が加速する可能性があります。大王製紙が製造工程や物流分野でAIやロボット技術を活用する検討余地が広がるかもしれません。ただし、大王製紙との直接的な関連性は明確ではなく、あくまで業界全体の動向としての影響が予想されます。",
+        "summary_method": "ai",
+        "score_method": "ai",
+        "ai_review": {
+          "fingerprint": "2d362782731fd0601cb78486e7a0e5ae311220a8956cc98c956451e40f68806c",
+          "status": "accepted",
+          "version": 5,
+          "reviewed_on": "2026-09-28",
+          "method": "ai"
+        }
+      },
+      {
+        "title": "【科学スコープ】日常は仕事、災害時も出動！そんなロボット 早稲田大、三菱電機などが開発開始｜全国のニュース｜Web東奥",
+        "summary": "早稲田大や三菱電機などのチームは、日常の業務に加え災害などの非常時も人間をサポートする「フェーズフリーロボット」の開発を始めた。人工知能（ＡＩ）などの技術を活用し、自律的に幅広い作業をこなせるようにする。これまでも過酷な環境に特化したロボットの開発例はあったが、用途が限定的なため普及しなかった。近年の災害の激甚化や被災地の深刻な人手不足を受け、発想を「多用途」に転換した。▽すぐに対応普段は工場で部品の運搬や組み立て作業の補助をし、災害時は避難所で救援物資の仕分けや清掃などをこなす—。チームが２…",
+        "company": "三菱電機",
+        "date": "2026-09-28",
+        "published_at": "2026-09-27T20:00:10Z",
+        "collected_at": "2026-09-28T00:36:57Z",
+        "category_id": "④",
+        "rss_published_at": "2026-09-27T20:00:10Z",
+        "publication_date_status": "verified",
+        "category_name": "包装機・パレタイジング設備メーカー",
+        "info_type": "其他",
+        "url": "https://www.toonippo.co.jp/articles/-/2370895",
+        "source_name": "東奥日報社",
+        "source_url": "https://www.toonippo.co.jp/",
+        "discovery_provider": "Google News RSS",
+        "discovery_query": "三菱電機 ロボット",
+        "discovery_language": "ja",
+        "discovery_group": "palletizer",
+        "confidence": "中",
+        "quality_flags": [],
+        "fingerprint": "04e323f9d391234b0cbc949c",
+        "extraction_version": 2,
+        "discovery_url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5GVGlOSGZWdVhRNE9Ob0t3VXFhWERvSm5wdGdOb3pxa1BDdTg5ZVhqWmtveW05bkV3aVJWUTJ5Rmo5MWN0Uk0yLURmb3VxZ21aeVloUHUtZTY?oc=5",
+        "publisher_published_at": "2026-09-27T20:00:10Z",
+        "publisher_date": "2026-09-28",
+        "publication_date_source": "jsonld:datePublished",
+        "publication_date_raw": "2026-09-28T05:00:10+09:00",
+        "publication_date_url": "https://www.toonippo.co.jp/articles/-/2370895",
+        "publication_date_version": 1,
+        "source_excerpt": "早稲田大や三菱電機などのチームは、日常の業務に加え災害などの非常時も人間をサポートする「フェーズフリーロボット」の開発を始めた。人工知能（ＡＩ）などの技術を活用し、自律的に幅広い作業をこなせるようにする。これまでも過酷な環境に特化したロボットの開発例はあったが、用途が限定的なため普及しなかった。近年の災害の激甚化や被災地の深刻な人手不足を受け、発想を「多用途」に転換した。▽すぐに対応普段は工場で部品の運搬や組み立て作業の補助をし、災害時は避難所で救援物資の仕分けや清掃などをこなす—。チームが２…",
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "ai_review": {
+          "fingerprint": "18adb2dcd11ed5f75a2e2d05611e50383bf933037d1d6a67a5130668bdd5eb52",
+          "status": "rejected",
+          "reason": "IRRELEVANT: 本文には製造設備情報や競合企業の活動、衛生用品関連の具体的な記述がなく、A/B/Cのいずれにも該当しないため。",
+          "reviewed_on": "2026-09-28",
+          "version": 5
+        }
+      }
+    ],
+    "2026-09-27": [
+      {
+        "title": "ロボットは中国における新たな生産力になりつつある。",
+        "summary": "VTV.vn - 数万ものスマートファクトリーがロボットとAIを生産に取り入れ、生産性に大きな変化をもたらし、労働市場にも変化をもたらしている。 かつて中国は 世界 の工場と称され、その工場群は世界中に輸出される膨大な量の製品を生産していた。現在でも、これらの工場では組立ラインが昼夜を問わず稼働しているが、人間の存在は徐々にインテリジェントロボット、自動化、そして人工知能に取って代わられつつある。 中国のスマートファクトリーは「無灯工場」として知られています。これは工場が暗闇の中で稼働するという意味ではなく、労働コストの削減と生産効率の大幅な向上に貢献するスマート製造システムを指します。 中国の東風襄陽汽車工場では、ロボットアームが小型トラックのフロントガラスを組み立てている。必要な工程すべてを高精度で完了させるのにかかる時間はわずか1分強だ。 中国は、より効率的な製造を目指し、AI、ロボット工学、自動化の分野での取り組みを強化している。 中国の東風襄陽汽車工場は、年間22万台の小型トラックとバンを生産しており、プレス加工、溶接、塗装などの主要工程の75%以上が自動化されている。また、同工場では300台以上のAGV（無人搬送車）を使用して組立ラインの部品を搬送している。その結果、組立工程はわずか150秒で完了し、1つの生産ラインで600種類以上の車種を柔軟に生産することが可能となっている。 中国東風襄陽汽車工場の党委員会副書記である張志虎氏は、「当社では、インテリジェントデータシステムを用いて製品の品質管理を行っています。車両が生産ラインのどの段階にあっても、システムは品質パラメータをチェックし、比較することができます。エラーが検出されると、システムはそれを記録し、アラートを発し、品質が基準を満たすまで調整を行います」と述べました。 中国には現在5万6000以上のスマートファクトリーがあり、これらは新エネルギー車、半導体、先端材料、生物医学工学といった戦略産業の「中核」と位置づけられている。特筆すべきは、中国の製造業における人工知能の活用率が今年上半期に34.2%に達したことである。 中国電子情報産業発展研究所の張力所長は、「中国は、ハイエンド産業機械、半導体チップ、重要材料などのコア技術において画期的な進歩を遂げました。同時に、『 人工知能 ＋製造』構想を推進し、研究開発、設計、製造、運用管理、マーケティングなど、バリューチェーンのあらゆる段階に人工知能技術を深く統合しています」と述べました。 成長の原動力が鈍化する兆候が見られる中、中国はスマート製造業を推進し、次の段階では質の高い成長を目指している。グランドビューリサーチのレポートによると、中国のスマート製造業は2030年までに1582億ドル規模に達し、中国は世界のスマート製造拠点としての地位を確立する可能性があると予測されている。 中国広西チワン族自治区に建設された初の超スマート工場では、クローズドループ型の「ロボット間製造」プロセスが実現した。あらゆる側面を調整する包括的な「デジタルブレイン」を備えたこの工場は、完全自動化された生産ラインを稼働させている。ロボットは、他のロボットの組み立て、検査、および主要な操作を担う。 この工場は、実際の製造現場で稼働するように設計された産業用ヒューマノイドロボットの製造に特化している。10分ごとに1台のヒューマノイドロボットが生産ラインから出荷され、年間1万台以上の生産能力を目指している。 この工場の開設は新時代の幕開けを告げるものだ。ロボットは反復作業において人間に取って代わるだけでなく、次世代の機械を自ら生み出す存在にもなっている。 中国の製造業では、組み立てや検査から管理に至るまで、AIとロボット技術が深く統合されつつあり、工場における雇用の構造を変えつつある。 しかし、スマートファクトリーの急速な発展は、特に労働市場への圧力といった新たな課題も生み出している。 スマート製造への移行は、中国の労働市場に大きな圧力をかけている。上海交通大学が行った農村からの出稼ぎ労働者を対象とした調査によると、産業用ロボットを活用したスマート工場では、こうした労働者が行う反復作業が大幅に削減されることが示されている。 避難民のうち、約40％が 農業 ",
+        "company": "不明",
+        "date": "2026-09-27",
+        "published_at": "2026-09-27T06:12:00Z",
+        "collected_at": "2026-09-28T00:36:58Z",
+        "category_id": "④",
+        "rss_published_at": "2026-09-27T07:06:59Z",
+        "publication_date_status": "verified",
+        "category_name": "包装機・パレタイジング設備メーカー",
+        "info_type": "其他",
+        "url": "https://www.vietnam.vn/ja/robot-tro-thanh-luc-luong-san-xuat-moi-tai-trung-quoc",
+        "source_name": "vietnam.vn",
+        "source_url": "https://www.vietnam.vn/",
+        "discovery_provider": "Google News RSS",
+        "discovery_query": "(物流自動化 OR AMR OR AGV) (工場 OR 出荷 OR パレット OR 包装)",
+        "discovery_language": "ja",
+        "discovery_group": "palletizer",
+        "confidence": "中",
+        "quality_flags": [],
+        "fingerprint": "29e4955913d56fcd144d536f",
+        "extraction_version": 2,
+        "discovery_url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxQV3FlcjNKMVJscXZHaGtiNEJBcVBJSGRrTDNEeVk1OEUyeGhnZlU5Q0NmdVdiZEFPd0RUR1FUSnRITWdQWEhDODJ0T1MwcjFtVE1IZU9pV043VFlJeXBEOTlLa2dOTDVQWTFlUHRvWVo0d0tqNldaSGo4ZkpxdHdkY0NXc1pnUQ?oc=5",
+        "publisher_published_at": "2026-09-27T06:12:00Z",
+        "publisher_date": "2026-09-27",
+        "publication_date_source": "meta:article:published_time",
+        "publication_date_raw": "2026-09-27T06:12:00+00:00",
+        "publication_date_url": "https://www.vietnam.vn/ja/robot-tro-thanh-luc-luong-san-xuat-moi-tai-trung-quoc",
+        "publication_date_version": 1,
+        "source_excerpt": "VTV.vn - 数万ものスマートファクトリーがロボットとAIを生産に取り入れ、生産性に大きな変化をもたらし、労働市場にも変化をもたらしている。 かつて中国は 世界 の工場と称され、その工場群は世界中に輸出される膨大な量の製品を生産していた。現在でも、これらの工場では組立ラインが昼夜を問わず稼働しているが、人間の存在は徐々にインテリジェントロボット、自動化、そして人工知能に取って代わられつつある。 中国のスマートファクトリーは「無灯工場」として知られています。これは工場が暗闇の中で稼働するという意味ではなく、労働コストの削減と生産効率の大幅な向上に貢献するスマート製造システムを指します。 中国の東風襄陽汽車工場では、ロボットアームが小型トラックのフロントガラスを組み立てている。必要な工程すべてを高精度で完了させるのにかかる時間はわずか1分強だ。 中国は、より効率的な製造を目指し、AI、ロボット工学、自動化の分野での取り組みを強化している。 中国の東風襄陽汽車工場は、年間22万台の小型トラックとバンを生産しており、プレス加工、溶接、塗装などの主要工程の75%以上が自動化されている。また、同工場では300台以上のAGV（無人搬送車）を使用して組立ラインの部品を搬送している。その結果、組立工程はわずか150秒で完了し、1つの生産ラインで600種類以上の車種を柔軟に生産することが可能となっている。 中国東風襄陽汽車工場の党委員会副書記である張志虎氏は、「当社では、インテリジェントデータシステムを用いて製品の品質管理を行っています。車両が生産ラインのどの段階にあっても、システムは品質パラメータをチェックし、比較することができます。エラーが検出されると、システムはそれを記録し、アラートを発し、品質が基準を満たすまで調整を行います」と述べました。 中国には現在5万6000以上のスマートファクトリーがあり、これらは新エネルギー車、半導体、先端材料、生物医学工学といった戦略産業の「中核」と位置づけられている。特筆すべきは、中国の製造業における人工知能の活用率が今年上半期に34.2%に達したことである。 中国電子情報産業発展研究所の張力所長は、「中国は、ハイエンド産業機械、半導体チップ、重要材料などのコア技術において画期的な進歩を遂げました。同時に、『 人工知能 ＋製造』構想を推進し、研究開発、設計、製造、運用管理、マーケティングなど、バリューチェーンのあらゆる段階に人工知能技術を深く統合しています」と述べました。 成長の原動力が鈍化する兆候が見られる中、中国はスマート製造業を推進し、次の段階では質の高い成長を目指している。グランドビューリサーチのレポートによると、中国のスマート製造業は2030年までに1582億ドル規模に達し、中国は世界のスマート製造拠点としての地位を確立する可能性があると予測されている。 中国広西チワン族自治区に建設された初の超スマート工場では、クローズドループ型の「ロボット間製造」プロセスが実現した。あらゆる側面を調整する包括的な「デジタルブレイン」を備えたこの工場は、完全自動化された生産ラインを稼働させている。ロボットは、他のロボットの組み立て、検査、および主要な操作を担う。 この工場は、実際の製造現場で稼働するように設計された産業用ヒューマノイドロボットの製造に特化している。10分ごとに1台のヒューマノイドロボットが生産ラインから出荷され、年間1万台以上の生産能力を目指している。 この工場の開設は新時代の幕開けを告げるものだ。ロボットは反復作業において人間に取って代わるだけでなく、次世代の機械を自ら生み出す存在にもなっている。 中国の製造業では、組み立てや検査から管理に至るまで、AIとロボット技術が深く統合されつつあり、工場における雇用の構造を変えつつある。 しかし、スマートファクトリーの急速な発展は、特に労働市場への圧力といった新たな課題も生み出している。 スマート製造への移行は、中国の労働市場に大きな圧力をかけている。上海交通大学が行った農村からの出稼ぎ労働者を対象とした調査によると、産業用ロボットを活用したスマート工場では、こうした労働者が行う反復作業が大幅に削減されることが示されている。 避難民のうち、約40％が 農業 ",
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "exclude",
+          "rule": "existing_scope_exclusion",
+          "evidence": [
+            "market_report_spam"
+          ],
+          "version": 1
+        }
+      },
+      {
+        "title": "わずか1カ月で320億円 清華大発AIロボット企業、家庭市場への進出を視野【動画あり】",
+        "summary": "ロボット本体からエンボディドAI基盤モデルまでを開発する中国のスタートアップ「求之科技（DISCOVER Robotics）」はこのほど、追加のエンジェルラウンドで1億ドル（約160億円）を調達した。前回の1億ドル超の調達からわずか約1カ月で、累計で2億ドル（約320億円）を超えた。 本ラウンドにはIDG資本（IDG Capital）、星連資本（Link-X Capital）、武岳峰（Summitview Capital）、達晨財智（Fortune Venture Capital）、九陽（Joyoung）などが共同で参加した。 求之科技は2023年に清華大学スマート産業研究院（AIR）からインキュベートされた。技術体系は、ロボット本体からエンボディドAIのインフラへと進んできている。24年に産業用ロボット「AIRBOT」シリーズを発売し、続いてシミュレーター「DISCOVERSE」、閉ループ・データシステム「LOOP」を発表。",
+        "company": "不明",
+        "date": "2026-09-27",
+        "published_at": "2026-09-27T02:30:29Z",
+        "collected_at": "2026-09-28T00:36:58Z",
+        "category_id": "④",
+        "rss_published_at": "2026-09-27T02:35:27Z",
+        "publication_date_status": "verified",
+        "category_name": "包装機・パレタイジング設備メーカー",
+        "info_type": "其他",
+        "url": "https://36kr.jp/502676",
+        "source_name": "36Kr Japan",
+        "source_url": "https://36kr.jp/",
+        "discovery_provider": "Google News RSS",
+        "discovery_query": "(協働ロボット OR パレタイジング OR ピッキング OR ロボットハンド) (発売 OR 開発 OR 導入 OR 展示)",
+        "discovery_language": "ja",
+        "discovery_group": "palletizer",
+        "confidence": "中",
+        "quality_flags": [
+          "ai_scope_disagreement"
+        ],
+        "fingerprint": "1dd2b7746774646bd4b964af",
+        "extraction_version": 2,
+        "discovery_url": "https://news.google.com/rss/articles/CBMiO0FVX3lxTFBkNGJxTExiTW5WekZMTmpNMm5DUGNqeS1FWkc5clBOTVFaOWdEdHdxQ1VMRDU5NFpNaFBj?oc=5",
+        "publisher_published_at": "2026-09-27T02:30:29Z",
+        "publisher_date": "2026-09-27",
+        "publication_date_source": "meta:article:published_time",
+        "publication_date_raw": "2026-09-27T02:30:29+00:00",
+        "publication_date_url": "https://36kr.jp/502676/",
+        "publication_date_version": 1,
+        "source_excerpt": "ロボット本体からエンボディドAI基盤モデルまでを開発する中国のスタートアップ「求之科技（DISCOVER Robotics）」はこのほど、追加のエンジェルラウンドで1億ドル（約160億円）を調達した。前回の1億ドル超の調達からわずか約1カ月で、累計で2億ドル（約320億円）を超えた。 本ラウンドにはIDG資本（IDG Capital）、星連資本（Link-X Capital）、武岳峰（Summitview Capital）、達晨財智（Fortune Venture Capital）、九陽（Joyoung）などが共同で参加した。 求之科技は2023年に清華大学スマート産業研究院（AIR）からインキュベートされた。技術体系は、ロボット本体からエンボディドAIのインフラへと進んできている。24年に産業用ロボット「AIRBOT」シリーズを発売し、続いてシミュレーター「DISCOVERSE」、閉ループ・データシステム「LOOP」を発表。さらに、26年にはエンボディドAI基盤モデル「ORION」を投入し、ロボット本体・シミュレーション・データ・モデルの技術体系を構築している。 ハードウエアでは、7軸ロボットアーム「AIRBOT P7」、6軸ロボットアーム「AIRBOT Play」、車輪移動式両腕ロボット「AIRBOT MMK2」、 ロボットハンド搭載四足歩行ロボット「QMMK」などを展開。現時点ではエンボディドAIの研究、教育・実習、データ収集などに活用されている。 LOOPはシミュレーション合成データや一人称視点映像、UMI（Universal Manipulation Interface）、実際のロボットの遠隔操作など多様なデータを取り込む。データ収集から、アノテーション、合成、モデル学習、検証、展開までの一連の流れを担い、DISCOVERSEやORIONと接続して閉ループを形成する。同社はこのシステムで、高品質な学習データの不足、実データ収集コストの高さ、モデルの汎化能力の限界といったエンボディドAIの課題の解決を目指す。 エンボディドAI企業の多くが工場など産業現場で商機を探すなか、求之科技は「ロボットを万戸（あらゆる家庭）に届ける」を長期目標に掲げる。最終的には研究や産業の現場から一般家庭などの消費者市場へ広げたい考えだ。 ヒューマノイド実用化、1000億件のデータがあっても足りない——中国で急拡大する「データ訓練」の現場 3D生成AIを手がける中国発ユニコーン企業「三啓万物（VAST）」はこのほど、シリーズBとその追加ラウンドで計約30億元（約720億円）を調達した。7月初めにもシリーズAの戦略的資金調達で10億元（約24億円）以上を調達 […] ロボット向けの高性能半導体および基盤技術を開発する中国「地瓜機器人（D-Robotics）」はこのほど、シリーズCで4億ドル（約630億円）を調達した。これまでに実施した2回のシリーズBを合わせると、2026年以降の累計 […] 第26回中国国際投資貿易商談会（福建省アモイ市）に出席したパナソニックホールディングスの中山正春執行役員が新華社の取材に応じ、中国市場が持つ潜在能力は非常に高いとの認識を示した。 中山氏は、中国は世界の工場からイノベーシ […] ロボット本体からエンボディドAI基盤モデルまでを開発する中国のスタートアップ「求之科技（DISCOVER Robotics）」はこのほど、追加のエンジェルラウンドで1億ドル（約160億円）を調達した。前回の1億ドル超の調 […] 3Dスキャン・モデリング技術を手がける中国発スタートアップ「KIRI Innovations（麒砺創新）」はこのほど、シリーズAで資金を調達し、調達額が累計で数億元（数十億円）に達した。出資には、ファーウェイ（華為技術） […] 中国北京市の首鋼園で9〜13日、サービス産業の見本市「2026年中国国際サービス貿易交易会」（CIFTIS）が開かれた。日本貿易振興機構（ジェトロ）は今年、日本企業20社を取りまとめて参加し、高齢者向けの福祉用具や介護用 […] 中国のシェアモビリティ大手「哈囉（Hello）」のロボタクシー事業はこのほど、約1億ドル（約160億円）を調達した。調達後の企業評価額は約30億ドル（約4700億",
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "include",
+          "rule": "industrial_equipment_event",
+          "evidence": [
+            "産業用ロボット",
+            "工場",
+            "発売",
+            "開発",
+            "発表"
+          ],
+          "version": 1
+        },
+        "ai_scope_disagreement": "IRRELEVANT: 本文は家庭市場向けロボットの開発と資金調達について記述しており、対象区分A（家庭紙、ティッシュ、トイレットペーパー等）、B（大王製紙、ユニ・チャーム等の企業活動）、C（製造・物流向け技術）のいずれにも該当しない。消費者向けロボットの開発は除外対象であり、製造設備や競合情報に関する具体的な記述もない。",
+        "score_components": {
+          "relevance": 28,
+          "impact": 28,
+          "reliability": 12,
+          "recency": 15
+        },
+        "score": 83,
+        "score_method": "rules_v1",
+        "impact_analysis": "",
+        "summary_method": "publisher_excerpt",
+        "ai_review": {
+          "fingerprint": "93ec2b10439e5dec16c9dd7087024b946c1f34cc939850d7a343e2bfb2757128",
+          "status": "accepted",
+          "version": 5,
+          "reviewed_on": "2026-09-28",
+          "method": "rule_extract"
+        }
+      },
+      {
+        "title": "根津鋼材／甲府事業所のスリッターライン、電気設備を全面更新／基幹システム導入で加工体制最適化",
+        "summary": "根津鋼材／甲府事業所のスリッターライン、電気設備を全面更新／基幹システム導入で加工体制最適化",
+        "company": "不明",
+        "date": "2026-09-27",
+        "published_at": "2026-09-26T20:50:34Z",
+        "collected_at": "2026-09-28T00:36:56Z",
+        "category_id": "③",
+        "rss_published_at": "2026-09-26T20:50:34Z",
+        "publication_date_status": "unverified",
+        "category_name": "不織布・吸収体加工機メーカー",
+        "info_type": "其他",
+        "url": "https://www.nikkinonline.com/premium/trendslist/425266",
+        "source_name": "nikkinonline.com",
+        "source_url": "https://www.nikkinonline.com/",
+        "discovery_provider": "Google News RSS",
+        "discovery_query": "(スリッター OR 巻取機 OR コンバーティング) (新製品 OR 開発 OR 導入)",
+        "discovery_language": "ja",
+        "discovery_group": "machine",
+        "confidence": "中",
+        "quality_flags": [
+          "fulltext_unavailable",
+          "publication_date_unverified",
+          "title_only_summary"
+        ],
+        "fingerprint": "a993962c9ca38a77dafc1e7a",
+        "extraction_version": 2,
+        "discovery_url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE4wRS1qY1NHQ0U0MzQ1dUZ3aHVjM1J6QVBJUHI5MmJTcERiMzltWDdud19qMGlPbVI2eDRuSFJWTk1lRFhkV3pVZUhSRTlqTHFLdTVOaXQ2UEtha0hyVlgxUkJDR1Q?oc=5",
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
+      }
+    ],
     "2026-09-26": [
       {
         "title": "おむつかぶれクリーム市場の規模、市場セグメンテーション、市場動向、および2033年までの",
@@ -66,7 +393,13 @@
         "fingerprint": "c9e779e2cd1d2558ab34fe05",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE1SdnNEcDFTZjVqREFLbU1vdWtVaWpIQ1pfMS1Qd0ZIX0JyUGlNeUQ1NjNael9Bano2Ni1YRXhUUFkxOW9PTFpicnFB?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "日本のロボットテクノロジー市場の最新動向",
@@ -96,7 +429,13 @@
         "fingerprint": "b66e04bca3f12ce2fbacfa26",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE9pT0dKd1I4QkItY3NaQTZSbXE0WXl1Vkl0Q1ZqSXE2bEpiZ0l4N0dNMV9ZNGsycGN1aGNHOE85Z19MVzd4V3BRZGl3?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "[写真]中国、世界の産業ロボット導入の59％占める―中国市場では自国産シェアが55％に",
@@ -126,7 +465,13 @@
         "fingerprint": "3267089058fd23ebdadf5ae3",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE8wNWJtZUxfa0FIN3lPY3dwVFlueVl5Vm14YVc4YnZrQUs4YjNvVW4tVFNZbW02c3kxSmplM09IbllTd3d3c0tRdXFRbHBTSUp4XzY5Xw?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "Shubham Automation to Present End-to-End Packaging Automation at Anuga FoodTec India 2026",
@@ -156,11 +501,17 @@
         "fingerprint": "daf8256908e4d2d9b7d7707f",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNaFNmVXYtaXlvUmVDT3hFaTZRNW5MUzRVdHI0SWtMeVV5aUQ1QTNJbU5FcVJEMS10SnNtS0pjUEhnV0YtNVF0aFp3ZGlmNDJlODZhSGxpaUVNdUduSmZsbWExQ3RnQWJKVHU2cDFCQkhyOVo1VHlHMTRaUDVPWVB0V2dFQU1vcFFtRzM4a20wUFNITXdfT0lRQXF0R2JkMGd0QW0tMUpWV2tMbGdFQjVyUGJ4TXZqVXV0dlBHdk1INy01MXBtNHNMR0hWWQ?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "高市総理が「スタートアップ大賞」表彰式に出席 AIロボット開発のMujinに内閣総理大臣賞 成長分野の担い手に期待",
-        "summary": "高市総理大臣は、「スタートアップ大賞」の表彰式に出席しました。 高市総理は、製造業や物流の現場で最適な動きを判断するAIロボットを開発した株式会社Mujinに内閣総理大臣賞を授与しました。 また、ゲノム編集技術による次世代養殖魚の開発を進める企業などから説明を受けました。 高市総理： 冷凍のカキフライばっかり食べているから…すごいですね。 高市総理は、スタートアップ企業がAIなど成長戦略の「17分野の国内投資をけん引する重要な担い手になることを大いに期待している」と述べました。 フジテレビ報道局が全国、世界の重要ニュースから身近な話題まで様々な情報を速報・詳報含めて発信します。 日本の将来に大きく影響する政治動向。永田町や霞が関を中心に、刻々と状況が変化する政局、政策決定、選挙、外交・安全保障など幅広い分野を最前線で取材し、視聴者・読者に分かりやすく伝えます。 総理大臣官邸や国会、各省庁、政党を担当する記者たちが、政治家や官僚、専門家など当事者・関係者に直接あたり、政局・政策の背景や社会への影響を丁寧に取材します。単なる事実伝達だけではなく、「なぜその決定が行われたのか」「社会や私たちの生活の何がどう変わるのか」といった本質に迫る報道を重視しています。歴史が動く瞬間に最前列で立ち会うのが政治部です。 変化の激しい時代だからこそ、確かな取材力と裏付け、現場感覚を武器に、社会にとって本当に価値あるニュースとは何かを追求し続けます。",
+        "summary": "高市総理大臣は、「スタートアップ大賞」の表彰式に出席しました。 高市総理は、製造業や物流の現場で最適な動きを判断するAIロボットを開発した株式会社Mujinに内閣総理大臣賞を授与しました。 また、ゲノム編集技術による次世代養殖魚の開発を進める企業などから説明を受けました。 高市総理： 冷凍のカキフライばっかり食べているから…すごいですね。 高市総理は、スタートアップ企業がAIなど成長戦略の「17分野の国内投資をけん引する重要な担い手になることを大いに期待している」と述べました。 フジテレビ報道局が全国、世界の重要ニュースから身近な話題まで様々な情報を速報・詳報含めて発信します。 日本の将来に大きく影響する政治動向。永田町や霞が関を中心に、刻々と状況が変化する政局、政策決定、選挙、外交・安全保障など幅広い分野を最前線で取材し、視聴者・読者に分かりやすく伝えます。",
         "company": "不明",
         "date": "2026-09-26",
         "published_at": "2026-09-25T23:20:00Z",
@@ -178,7 +529,9 @@
         "discovery_language": "ja",
         "discovery_group": "palletizer",
         "confidence": "中",
-        "quality_flags": [],
+        "quality_flags": [
+          "ai_unsupported_numeric_claim"
+        ],
         "fingerprint": "18318e88a08c7e7ff940e926",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBDVGJSeHZiR085SGlpd09OMU5YeFBOT2Y3SjV4YUo1bTh6ZXZFQTRiSTctV2xVOE16emk5YnVvcmkxN0Y4T3RpYVZJTG1idw?oc=5",
@@ -189,7 +542,23 @@
         "publication_date_url": "https://www.fnn.jp/articles/-/1121315",
         "publication_date_version": 1,
         "source_excerpt": "高市総理大臣は、「スタートアップ大賞」の表彰式に出席しました。 高市総理は、製造業や物流の現場で最適な動きを判断するAIロボットを開発した株式会社Mujinに内閣総理大臣賞を授与しました。 また、ゲノム編集技術による次世代養殖魚の開発を進める企業などから説明を受けました。 高市総理： 冷凍のカキフライばっかり食べているから…すごいですね。 高市総理は、スタートアップ企業がAIなど成長戦略の「17分野の国内投資をけん引する重要な担い手になることを大いに期待している」と述べました。 フジテレビ報道局が全国、世界の重要ニュースから身近な話題まで様々な情報を速報・詳報含めて発信します。 日本の将来に大きく影響する政治動向。永田町や霞が関を中心に、刻々と状況が変化する政局、政策決定、選挙、外交・安全保障など幅広い分野を最前線で取材し、視聴者・読者に分かりやすく伝えます。 総理大臣官邸や国会、各省庁、政党を担当する記者たちが、政治家や官僚、専門家など当事者・関係者に直接あたり、政局・政策の背景や社会への影響を丁寧に取材します。単なる事実伝達だけではなく、「なぜその決定が行われたのか」「社会や私たちの生活の何がどう変わるのか」といった本質に迫る報道を重視しています。歴史が動く瞬間に最前列で立ち会うのが政治部です。 変化の激しい時代だからこそ、確かな取材力と裏付け、現場感覚を武器に、社会にとって本当に価値あるニュースとは何かを追求し続けます。",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "score_components": {
+          "relevance": 28,
+          "impact": 28,
+          "reliability": 12,
+          "recency": 15
+        },
+        "score": 83,
+        "score_method": "rules_v1",
+        "impact_analysis": "",
+        "summary_method": "publisher_excerpt"
       },
       {
         "title": "AIがロボットの身体を得る…フィジカルAI、製造業が激戦地に",
@@ -222,7 +591,20 @@
         "publication_date_url": "https://finance.biggo.jp/news/9f5e297e-ae91-47b9-a5de-ef742fe3cc57",
         "publication_date_version": 1,
         "source_excerpt": "生成AIがデジタル空間で情報を理解し創り出すことに集中してきたとすれば、いまや競争の軸は現実世界へと移りつつある。AIが物理的環境を認識・判断したうえで、ロボットや設備を動かして実際の作業を遂行する「フィジカルAI」が次世代技術覇権の中核として浮上しているためだ。特に半導体、造船、鉄鋼、防衛産業など強固な製造業基盤を持つ韓国が、この流れにおいて有利な位置を占められるとの分析が出ている。 フィジカルAIは生成AIとは根本的に異なる。テキストや画像の理解にとどまらず、工場の騒音や振動、予測不可能な状況まで感知し、ロボットの実際の行動へとつなげる技術だ。製造・物流・造船現場がフィジカルAIの初期の激戦地とされる所以である。 グローバルビッグテックも速度を上げている。Google DeepMindは、ロボットが周辺環境を理解し作業を計画したうえで実際の行動に移せるようにする「Gemini Robotics」および「Gemini Robotics-ER」モデルを開発中だ。Boston Dynamicsと協力し、ヒューマノイドロボット「Atlas」のAI能力を高める作業も並行して進めている。Nvidiaはロボットそのものよりも、フィジカルAI開発に必要なモデルとシミュレーション、コンピューティングインフラを提供するエコシステム構築に注力している。 フィジカルAI競争が本格化するなかで核心的課題として浮上したのは「ロボット学習」だ。現実世界でロボットを繰り返し動かしてデータを確保する方式は、時間と費用がかかるだけでなく安全面の制約も大きい。工場や物流現場ではロボットの小さな誤作動が即座に事故につながりかねないためだ。 この限界を突破するため、デジタルツインとシミュレーション技術が活用されている。実際の作業環境を仮想空間に実装すれば、コストと安全の問題を軽減しつつ、多様な条件下でロボットの行動を反復的に学習・検証できる。Nvidiaもワールドモデルとシミュレーションを組み合わせ、ロボットの学習と評価を加速する技術を開発している。 YouTubeなどインターネット上に公開された膨大な人間の行動映像を学習データとして活用する研究も活発だ。人間が道具を扱い作業を遂行する場面を利用できる利点がある一方、2D映像だけでは物体の重さや摩擦力といった物理情報を得ることが難しい。そこで人間の映像データと実際のロボット行動データ、シミュレーションデータを組み合わせ、不足する物理情報を補完する方式が研究されている。 フィジカルAIの成否は、言語・画像の理解能力そのものよりも、現実環境の不確実性を安全に解釈し、それを多様なロボットや設備の行動へと変換する能力にかかっているとの見方が出ている。 この流れで注目される技術がRobot Foundation Model（RFM）だ。RFMは、多様なロボットと作業から確保したデータを学習し、複数の作業や環境に適用できる汎用ロボット知能を構築しようとするアプローチである。特定の作業のみを遂行するようロボットを個別に学習させる代わりに、複数のロボットと作業から得た知識を新たな環境へ拡張適用することを目指す。 RFMの知識を実際のロボットに適用するには、ロボットごとに異なる身体構造の差を克服しなければならない。腕の長さ、関節構造、モーターの作動方式がすべて異なるためだ。1台のロボットで学習した経験を別の形態のロボットに適用できるかどうかが、汎用ロボット知能の核心的課題とされる理由である。 これを「クロスエンボディメント」学習と呼ぶ。Google DeepMindをはじめとするグローバル研究機関が参加した「Open X-Embodiment」プロジェクトでは、22種類のロボットから収集した100万件以上の実際のロボット軌道データを統合し、異なるロボットで蓄積した経験を活用して複数のロボットの性能を高める転移効果を確認した。 汎用化の方向性は個別ロボットの能力向上にとどまらない。それぞれ異なる能力を持つロボットと装備を1つの目標のもとに連結する「オーケストレーション」も重要な技術課題として浮上している。 韓国政府はフィジカルAIを国家次元の中核技術として育成する戦略を本格化している。フィジカルAIは半導体、AIデータセンターとともに「大韓民",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "ai_review": {
+          "fingerprint": "44b057922b06aaaf6ff7cb1c11e636cf974b8093488345fe64bc3899f62d97a4",
+          "status": "rejected",
+          "reason": "IRRELEVANT: 本文には製造・物流向けの具体的技术（包装機、装箱機、搬送設備など）や特定企業（大王製紙、ユニ・チャームなど）の活動に関する記述がなく、汎用的なフィジカルAI技術の動向に留まっているため",
+          "reviewed_on": "2026-09-28",
+          "version": 5
+        }
       },
       {
         "title": "AMT Launches Flexible CRX-Based Collaborative Palletizing Solution From: Applied Manufacturing Technologies",
@@ -252,7 +634,13 @@
         "fingerprint": "b3b683ed27094efa17a5b644",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiggJBVV95cUxPSVo2SFdzUGJyNWxnZ01vLXdJUHEwRzc4ekE4dFBQSEFwVWdmRm1VM0lvX2toM0FJaDVnREhrRzViTEU2NG82cVhoNFpoNG9vUU1Pc1kyb0o1bWU5Sk5YZU5MUHF1bTJmc2NURHVtOTA2TzItX0diQTZ2Uzd1a0Ffbi1SNmhTZEk4MjVhUmZUdDRodFhDMk9YRmQ2Mk1xYzZ1Z19NTjh3dk5BWWliS1Qxd0k1U1M3Z1ozV3QyeWFuanZTMjFQd05NdnlhSXhGbGFybG81b3VHR0x0dGdsdDNaRW1EYzUzOTktdnFYQWRqbHVGcEk5OUdoM0JybzYweUNIdWc?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "日本の人工知能ロボット市場の最新動向",
@@ -282,13 +670,19 @@
         "fingerprint": "6a0d2956b786645c7fdb5493",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE01dXJmc0xNZFhDZ1NYa3lMMl9aU0VsWjNwc25XeHZLbnN5NkNqMHlGQjFUb1A2eEdXemxjSHQxU05UQ0ZOdzU4QTl3?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       }
     ],
     "2026-09-25": [
       {
         "title": "Valmet celebrates 60th anniversary of Perini tissue converting technology",
-        "summary": "Valmet is celebrating 60 years of its Perini tissue converting technology. The first machine based on Perini technology for tissue converting was developed in 1966 in Lucca, Italy. The region would later become one of the world’s major industrial hubs of tissue production and converting, known as the Tissue Valley. As Perini technology spread through Europe and to the Americas and Asia, it evolved from the first rewinders to advanced, integrated lines. Today, its heritage is part of Valmet’s vision across the entire tissue value chain. In addition, 2026 marks the 10th anniversary of Perini Constellation technology, which helped establish new quality, efficiency and performance benchmarks. It has been adopted by 45 of the world’s top tissue companies, achieving more than 160 installations around the globe.",
+        "summary": "Valmetは、Periniのティッシュ変換技術の60周年を記念しており、その起源は1966年にイタリアのルッカで開発された最初の機械に遡る。この技術は、後に「Tissue Valley」として知られる世界的なティッシュ生産・変換の主要工業地帯となる地域で発展し、欧州から米国、アジアに広がった。また、2026年にはPerini Constellation技術の10周年を迎え、これは品質、効率、パフォーマンスの新たなベンチマークを確立し、世界45社の主要ティッシュ企業に採用され、160以上の設備が導入されている。",
         "company": "Valmet",
         "date": "2026-09-25",
         "published_at": "2026-09-25T13:42:29Z",
@@ -317,7 +711,24 @@
         "publication_date_raw": "2026-09-25T09:42:29-04:00",
         "publication_date_url": "https://www.pulpandpapercanada.com/valmet-celebrates-60th-anniversary-of-perini-tissue-converting-technology/",
         "publication_date_version": 1,
-        "source_excerpt": "Valmet is celebrating 60 years of its Perini tissue converting technology. The first machine based on Perini technology for tissue converting was developed in 1966 in Lucca, Italy. The region would later become one of the world’s major industrial hubs of tissue production and converting, known as the Tissue Valley. As Perini technology spread through Europe and to the Americas and Asia, it evolved from the first rewinders to advanced, integrated lines. Today, its heritage is part of Valmet’s vision across the entire tissue value chain. In addition, 2026 marks the 10th anniversary of Perini Constellation technology, which helped establish new quality, efficiency and performance benchmarks. It has been adopted by 45 of the world’s top tissue companies, achieving more than 160 installations around the globe."
+        "source_excerpt": "Valmet is celebrating 60 years of its Perini tissue converting technology. The first machine based on Perini technology for tissue converting was developed in 1966 in Lucca, Italy. The region would later become one of the world’s major industrial hubs of tissue production and converting, known as the Tissue Valley. As Perini technology spread through Europe and to the Americas and Asia, it evolved from the first rewinders to advanced, integrated lines. Today, its heritage is part of Valmet’s vision across the entire tissue value chain. In addition, 2026 marks the 10th anniversary of Perini Constellation technology, which helped establish new quality, efficiency and performance benchmarks. It has been adopted by 45 of the world’s top tissue companies, achieving more than 160 installations around the globe.",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "score": 15,
+        "impact_analysis": "ValmetのPeriniティッシュ変換技術の60周年およびPerini Constellation技術の10周年は、ティッシュ産業における革新とその発展を示している。大王製紙にとって、これらの技術の進展は、ティッシュ生産プロセスの効率化や品質向上における検討余地を示唆する可能性がある。ただし、大王製紙のR&D戦略への直接的インパクトは明確ではなく、今後の動向に注視が必要である。",
+        "summary_method": "ai",
+        "score_method": "ai",
+        "ai_review": {
+          "fingerprint": "bd3e4f15ba5665549e752de8f9442297089ec0319a78aafc1f4a884b8a167849",
+          "status": "accepted",
+          "version": 5,
+          "reviewed_on": "2026-09-28",
+          "method": "ai"
+        }
       },
       {
         "title": "袋詰め工程を劇的に効率化！給袋式袋開口機「アシスト・ギア」をTOKYO PACK 2026に出展",
@@ -325,7 +736,7 @@
         "company": "不明",
         "date": "2026-09-25",
         "published_at": "2026-09-25T13:10:02Z",
-        "collected_at": "2026-09-27T00:30:15Z",
+        "collected_at": "2026-09-28T00:36:56Z",
         "category_id": "④",
         "rss_published_at": "2026-09-25T13:10:00Z",
         "publication_date_status": "verified",
@@ -352,7 +763,13 @@
         "publication_date_raw": "2026-09-25T22:10:02+09:00",
         "publication_date_url": "https://news.infoseek.co.jp/article/prtimes_000000003_000178652/",
         "publication_date_version": 1,
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "AIを搭載したロボット犬に関する詳細な市場調査：年平均成長率（CAGR）23.40%の分",
@@ -382,7 +799,13 @@
         "fingerprint": "6614ba66c915ea6768ae0192",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE5oOXFrX2xVSkpiLXRlclJvSEY2dlR0aWM1blppVHpTcmFQVUN1eGpGbE5lMGk4TXR5bXcxQ3MyakFVcUFrZWJDLVF3?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "包括型ピースピッキングロボット市場予測：地域別・セグメント別分析による年平均成長率10",
@@ -412,7 +835,13 @@
         "fingerprint": "a53cd8e3f26b578c592ebba2",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTFBjQzlJTjFEN3p3YVRqekI2WkFkdnZkWE9FOTM5WXF6UE9nXzl0UHdwQUdkUlNYMXJQQ1FMUzJZQlhDeGRjSVA5bmZR?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "スパンボンド不織布市場における主要な促進要因と、2026年から2033年にかけての年平",
@@ -442,7 +871,13 @@
         "fingerprint": "d40b537d6ab15f2235d5237b",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE1HaWdtNTByTDd6RXNjckNKT0lsVGpYMDBoT3hyaDJoY0s2bUtWSUlsaU1FVm5ERE1HTi1IREEyZVItZzBGbXg3eGtB?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "高市総理 スタートアップ大賞表彰式に出席「戦略投資１７分野のけん引を」内閣総理大臣賞に知能ロボットコントローラのＭｕｊｉｎ",
@@ -475,7 +910,13 @@
         "publication_date_url": "https://article.auone.jp/article/045d6ccd-c251-437b-81d2-b0a6fe63edfe",
         "publication_date_version": 1,
         "source_excerpt": "次世代を担う若者のロールモデルとなる新事業創出を後押しする政府主催「日本スタートアップ大賞」の表彰式が25日、総理大臣官邸で開かれました。 高市政権が成長戦略として官民で重点的に投資する17分野の「A",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "更年期障害・月経不順・冷え性などに。12種類の生薬を配合した第2類医薬品「リフラン」を新発売",
@@ -508,7 +949,20 @@
         "publication_date_url": "https://prtimes.jp/main/html/rd/p/000000004.000190894.html",
         "publication_date_version": 1,
         "source_excerpt": "長野県製薬株式会社（本社：長野県木曽郡王滝村）は、更年期障害、血の道症、月経不順、冷え性などを効能・効果とする第2類医薬品「リフラン」（42包、希望小売価格4,800円・税込）を、2026年10月1日より公式オンラインショップ「百草の郷本舗」で発売します。 本製品は、11種類の和漢生薬とサフランを配合した顆粒剤です。長野県製薬は、胃腸薬「御岳百草丸」をはじめとする一般用医薬品を通じて、長年にわたり人々の健康を支えてきました。今回、年齢やライフステージとともに変化する女性特有の症状でお悩みの方を対象とした製品、「リフラン」を新たにラインアップします。 女性ホルモンの減少などにより、４０代以上の女性の半数以上の方が「疲れやすい」「肩こり・腰痛・手足の痛みがある」「汗をかきやすい」「腰や手足が冷えやすい」「怒りやすく、すぐイライラする」「寝付きが悪い、眠りが浅い」など様々の症状で悩む方が多くその症状も千差万別と言われます。 女性のからだは、年齢やライフステージに伴って変化します。ホットフラッシュ、冷え性、月経痛、腰痛、頭痛、のぼせ、肩こり、めまい、どうきなど更年期障害によるや月経不順、現れる症状はさまざまです。長野県製薬は、生薬と向き合ってきた製薬会社として、胃腸の健康だけでなく、こうした女性の健康課題にも寄り添うため、「リフラン」の販売を開始します。 リフランには、シャクヤク、ビャクジュツ、センキュウ、トウキ、ケイヒ、ブクリョウ、ボタンピ、コウブシ、カンゾウ、カノコソウ、ニンジンの11種類の和漢生薬とサフランを配合しています。1日量3包（6.0g）中に、計12種類の生薬を配合した独自処方の和漢生薬製剤です。 · 更年期障害、血の道症、月経不順、冷え性などに用いられる第2類医薬品 更年期障害、血の道症、月経不順、冷え性、及びそれらに随伴する次の諸症状：月経痛、腰痛、頭痛、のぼせ、肩こり、めまい、どうき、息切れ、手足のしびれ、こしけ、血色不良、便秘、むくみ。 長野県製薬は、1938年に「百草丸」の製造を開始し、1943年の会社設立以降も、長野県木曽郡王滝村を拠点に、生薬を用いた医薬品づくりを続けてきました。現在も、自然由来の生薬原料を主とした胃腸薬「御岳百草丸」をはじめとする一般用医薬品などを製造・販売しています。 これからも、生薬とともに歩んできた製薬会社として、時代とともに変化する健康課題に向き合い、日々の健康を支える製品を届けてまいります。 長野県製薬株式会社 公式サイト： https://www.hyakuso.co.jp/ 公式オンラインショップ「百草の郷本舗」： https://hyakuso.online/ 長野県製薬株式会社は、1943年設立、長野県木曽郡王滝村に本社を置く医薬品メーカーです。古くから木曽・御嶽地域に受け継がれてきた生薬文化を背景に、「御岳百草丸」をはじめとする一般用医薬品などを製造・販売しています。 このプレスリリースには、 メディア関係者向けの情報があります メディアユーザー登録を行うと、企業担当者の連絡先や、 イベント・記者会見の情報など様々な特記情報を閲覧できます。 ※内容はプレスリリースにより異なります。 このプレスリリース内で使われている画像ファイルがダウンロードできます",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "ai_review": {
+          "fingerprint": "635cedbcfc974b5a93adbbbcc5aea27fe3018e5053937ab3bea80a4a5e9046ae",
+          "status": "rejected",
+          "reason": "IRRELEVANT: 医薬品の新製品発表であり、家庭紙・ティッシュ・トイレットペーパー・おむつ・生理用品等の衛生用品（区分A）、指定メーカーの経営活動（区分B）、製造設備技術（区分C）のいずれにも該当しないため。",
+          "reviewed_on": "2026-09-28",
+          "version": 5
+        }
       },
       {
         "title": "ダイフクの世界最高水準のフィジカルAI、巨大半導体製造工場向け自動搬送システムの全体像",
@@ -541,11 +995,19 @@
         "publication_date_url": "https://sattu-ai-agent.com/2026/09/25/daifuku-amhs/",
         "publication_date_version": 1,
         "source_excerpt": "現代の半導体産業は、極端紫外線（EUV）露光技術等を用いた前工程（フロントエンド）における微細化の物理的限界が意識される中、高度なパッケージング技術を用いて複数のチップを統合する「モアザンムーア（More-than-Moore）」の時代へと劇的なパラダイムシフトを遂げている。この技術的転換に伴い、かつては労働集約的であり相対的にクリーン度要求が低かった半導体後工程（バックエンド：組み立て・検査工程）は、前工程と同等水準の極めて清浄なクリーンルーム環境と、ナノメートルスケールの精度を要求される高度な製造プロセスへと変貌を遂げた。2.5D/3Dパッケージング、チップレット技術、そして大型の基板を活用するパネルレベルパッケージング（PLP）といった先端後工程技術の台頭は、月産数十万枚規模の生産能力を持つ巨大な半導体製造工場（メガファブおよびギガファブ）のサプライチェーンと工場内物流（イントラロジスティクス）に未曾有の複雑さをもたらしている。 このような背景のもと、半導体メーカー各社は工場の歩留まり（イールド）とスループットを最大化するための最重要インフラとして、自動搬送システム（AMHS: Automated Material Handling System）の全面的な刷新を進めている。本レポートでは、AMHS市場における世界的トップランナーである株式会社ダイフク（Daifuku Co., Ltd.）が公開したコンセプトおよび技術資料「Automated Material Handling System for Back-end Plant (Semiconductor): Multi-product transportation」を中核的な題材として取り上げる。さらに、2026年に竣工したメガファブ向けの新たな生産拠点の一次資料、最新の自律走行搬送ロボット（AMR）のハードウェア仕様、AI（人工知能）を活用した群制御アルゴリズムの実用化ロードマップ、およびデジタルツイン技術によるファブ全体の最適化動向について、網羅的かつ多角的な視点から詳細な分析を展開する。 半導体工場のAMHSを評価する際、前工程と後工程における搬送要件の根本的な違いを理解することが不可欠である。前工程の搬送システムは、高度に標準化された直径300mmのシリコンウェハを25枚単位で格納する密閉容器「FOUP（Front Opening Unified Pod）」の搬送に特化して最適化されてきた。これに対して後工程においては、搬送対象の形状、重量、およびプロセスフローが多岐にわたるため、単一の搬送手段では対応できないという物理的・システム的な制約が存在する。 ダイフクの技術映像「Automated Material Handling System for Back-end Plant(Semiconductor): Multi-product transportation」が視覚的に示唆するように、後工程のクリーンルーム内では多種多様なアイテムをそれぞれのプロセスに最適な経路で搬送する能力が問われる。後工程では、前工程から送られてきた300mmウェハに加え、ダイ（ベアチップ）を格納した各種トレイ、リードフレーム、テスト工程向けのテープ＆リール、完成品マガジンなど、多種多様なコンテナが混在している。 さらに近年では、ウェハレベルパッケージングの生産効率を凌駕する技術として、最大600mm × 600mmの大型角型基板を扱うパネルレベルパッケージング（PLP）の導入が加速している。これらの多様なコンテナや搬送物は、それぞれ異なる寸法、重心、重量、クリーン度要求を持っており、製造装置間のルーティングも前工程のように一方向的・反復的ではなく、検査や再加工（リワーク）を含む複雑な網目状（メッシュ状）のプロセスフローを形成する。 後工程物流の特殊性を明確にするため、前工程と後工程における自動搬送システムの要件と技術的フォーカスを以下の表に整理する。 ダイフクが展開する後工程向けAMHSは、これらの複雑な要求仕様に対し、各プロセスに最適な経路を動的に算出し、多様なアイテムを滞りなく搬送する総合的なイントラロジスティクス・ソリューションを提供している。24時間365日のノンストップ稼働を",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "exclude",
+          "rule": "existing_scope_exclusion",
+          "evidence": [
+            "market_report_spam"
+          ],
+          "version": 1
+        }
       },
       {
         "title": "ヒューマノイドが中国の伝統的な遊びを披露、点検ロボや貨物ドローンも実演 2026世界製造業大会",
-        "summary": "中国・安徽省合肥市のHefei Binhu International Convention and Exhibition Centerで、「2026 World Manufacturing Convention（世界製造業大会）」が9月20日～23日に開催された。 テーマは「Intelligent Manufacturing for a Better Future（より良い未来のためのスマート製造）」。開幕にあたっては、ヒューマノイドロボットが中国の伝統的な投げ遊戯「投壺（ピッチポット）」を披露したほか、点検ロボットが会場を巡回し、電動貨物ドローンがLuogang Parkで垂直離着陸を実演するなど、ロボットとフィジカルAIを印象づける演出が並んだ。 会場面積は70,000平米で、うち20,000平米を製造イノベーション・成果の展示に、50,000平米を商業展示に割り当てた。 900社を超える企業が1万点以上の製品・技術を出展し、展示は製造業のバリューチェーンに沿って構成されている。 製造イノベーション・成果パビリオンには、180量子ビットの超電導量子プロセッサ、核融合エネルギーへの道筋として開発が進む燃焼プラズマ実験用超電導トカマク装置「BEST」（通称”人工太陽”）、Scientific Intelligence Materials Creation Centerによる研究プラットフォーム「Lingjing Zaowu」、固体変圧器、地上型の惑星環境シミュレーション施設などが並んだ。 いずれも継続的な研究開発を要する分野であり、規模拡大型の成長からイノベーション主導型の成長へと製造業がシフトしていることを示す展示となった。 ロボスタでは、国産のヒューマノイドや四足歩行ロボットの開発・量産を目指すHighlandersの増岡宏哉CEOをお招きし、オンラインセミナー「 国産ヒューマノイド『N』量産と知能化への挑戦 Highlandersが描くフィジカルAIと実世界データ戦略 」を10月22日（木）に開催します。 Highlandersは、三菱自動車の工場で活用するヒューマノイドロボットの共同開発と、京都製作所京都工場におけるHighlanders製品の量産化について協議を進め、2027年の早い時期の生産開始を検討しています。 また、ロボットを製造、物流、インフラなどの現場で稼働させ、視覚、力覚、触覚、遠隔操作などの実世界データを蓄積。そのデータを独自のフィジカルAI基盤モデルの学習に活用し、進化したAIを再びロボットへ展開する「データフライホイール」の構築を掲げています。 セミナーでは、国産ヒューマノイドの社会実装と量産、日本発のフィジカルAI産業の可能性などについて深掘りしていきます。ぜひご参加ください。 詳しくはこちら",
+        "summary": "Highlandersは、2026 World Manufacturing Convention（世界製造業大会）において、ヒューマノイドロボットが中国の伝統的な遊び「投壺」を披露し、点検ロボットが会場を巡回、電動貨物ドローンが垂直離着陸を実演するなど注目を集めた。同社は三菱自動車の工場でヒューマノイドロボットの共同開発を進めており、2027年の早期生産開始を目指している。また、ロボットを製造・物流現場で稼働させ、実世界データを活用したフィジカルAI基盤モデルの構築にも注力している。10月22日にオンラインセミナーを開催し、国産ヒューマノイドの社会実装とフィジカルAI産業の可能性について議論す",
         "url": "https://robotstart.info/article/2026/09/25/382449.html",
         "date": "2026-09-25",
         "published_at": "2026-09-25T07:45:03Z",
@@ -559,7 +1021,7 @@
         "discovery_language": "ja",
         "category_id": "①",
         "category_name": "日用品・衛生用品メーカー",
-        "company": "不明",
+        "company": "Highlanders",
         "confidence": "中",
         "quality_flags": [],
         "permanent_record": false,
@@ -573,12 +1035,66 @@
         "publication_date_url": "https://robotstart.info/article/2026/09/25/382449.html",
         "publication_date_version": 1,
         "source_excerpt": "中国・安徽省合肥市のHefei Binhu International Convention and Exhibition Centerで、「2026 World Manufacturing Convention（世界製造業大会）」が9月20日～23日に開催された。 テーマは「Intelligent Manufacturing for a Better Future（より良い未来のためのスマート製造）」。開幕にあたっては、ヒューマノイドロボットが中国の伝統的な投げ遊戯「投壺（ピッチポット）」を披露したほか、点検ロボットが会場を巡回し、電動貨物ドローンがLuogang Parkで垂直離着陸を実演するなど、ロボットとフィジカルAIを印象づける演出が並んだ。 会場面積は70,000平米で、うち20,000平米を製造イノベーション・成果の展示に、50,000平米を商業展示に割り当てた。 900社を超える企業が1万点以上の製品・技術を出展し、展示は製造業のバリューチェーンに沿って構成されている。 製造イノベーション・成果パビリオンには、180量子ビットの超電導量子プロセッサ、核融合エネルギーへの道筋として開発が進む燃焼プラズマ実験用超電導トカマク装置「BEST」（通称”人工太陽”）、Scientific Intelligence Materials Creation Centerによる研究プラットフォーム「Lingjing Zaowu」、固体変圧器、地上型の惑星環境シミュレーション施設などが並んだ。 いずれも継続的な研究開発を要する分野であり、規模拡大型の成長からイノベーション主導型の成長へと製造業がシフトしていることを示す展示となった。 ロボスタでは、国産のヒューマノイドや四足歩行ロボットの開発・量産を目指すHighlandersの増岡宏哉CEOをお招きし、オンラインセミナー「 国産ヒューマノイド『N』量産と知能化への挑戦 Highlandersが描くフィジカルAIと実世界データ戦略 」を10月22日（木）に開催します。 Highlandersは、三菱自動車の工場で活用するヒューマノイドロボットの共同開発と、京都製作所京都工場におけるHighlanders製品の量産化について協議を進め、2027年の早い時期の生産開始を検討しています。 また、ロボットを製造、物流、インフラなどの現場で稼働させ、視覚、力覚、触覚、遠隔操作などの実世界データを蓄積。そのデータを独自のフィジカルAI基盤モデルの学習に活用し、進化したAIを再びロボットへ展開する「データフライホイール」の構築を掲げています。 セミナーでは、国産ヒューマノイドの社会実装と量産、日本発のフィジカルAI産業の可能性などについて深掘りしていきます。ぜひご参加ください。 詳しくはこちら",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "score": 25,
+        "impact_analysis": "Highlandersのロボット技術やフィジカルAIの進展は、大王製紙のR&D戦略に間接的な影響を与える可能性があります。特に、製造・物流現場でのロボット活用や実世界データの収集・活用は、製紙業界の自動化や効率化に検討余地を示唆しています。ただし、直接的な特許情報や技術的な関連性は不明であり、大王製紙の具体的な戦略への影響は限定的と考えられます。",
+        "summary_method": "ai",
+        "score_method": "ai",
+        "ai_review": {
+          "fingerprint": "7f87c2824ef57bebf34b479d27b1fdc163f4e67862c6204ac75ef8ce4ad49849",
+          "status": "accepted",
+          "version": 5,
+          "reviewed_on": "2026-09-28",
+          "method": "ai"
+        }
+      },
+      {
+        "title": "ユニ・チャーム(株)【8113】：決算情報",
+        "summary": "引用元： 2026年12月期 第2四半期（中間期）決算短信 （PDF） 2026年12月期中間期は売上高4,871億円（前年同期比4.9%増）、コア営業利益650億円（同14.1%増）と増収増益を達成しました。一方、親会社帰属中間利益は410億円と1.9%の小幅減益となりました。通期予想は下方修正されており、原材料・物流費の高騰が下期の収益圧迫要因として注視されます。 ユニ・チャームの主な事業セグメントは「パーソナルケア」「ペットケア」「その他」の3つです。パーソナルケアはウェルネスケア・フェミニンケア・ベビーケア関連商品、ペットケアはペットフード・ペットトイレタリー関連商品、その他は産業用資材関連商品の製造・販売を行っています。 2026年12月期中間期の業績は増収増益となりました。売上高は前年同期比4.9%増の4,871億円、コア営業利益は14.1%増の650億円と利益の伸びが売上を上回りました。一方、親会社帰属の中間利益は1.9%減の410億円と小幅な減益となっています。セグメント別では、パーソナルケアのコア営業利益が10.7%増、ペットケアが21.6%増と両セグメントで二桁成長を達成しました。ブラジルのペットフードメーカーNutrire社の子会社化（取得対価226億円）も実施されています。 資産合計は前年度末比0.7%増の1兆2,315億円とほぼ横ばいでした。無形資産が前年度末比17.3%増の1,138億円と大きく増加した一方、その他の流動金融資産は19.9%減の804億円に減少しています。自己株式は前年度末比13.3%増加し1,591億円となりました。 営業活動によるキャッシュ・フローは616億円の収入となり、前年同期の593億円から増加しました。投資活動によるキャッシュ・フローは170億円の支出となり、前年同期の12億円の支出から大幅に拡大しました。これはNutrire社取得による子会社株式取得支出220億円が主因です。財務活動によるキャッシュ・フローは476億円の支出で、自己株式取得190億円や配当金支払いが主な要因です。 2026年12月期通期の業績予想は、売上高が前期比7.4%増の1兆150億円、コア営業利益が3.8%増の1,130億円、親会社帰属当期利益が7.3%増の700億円とされています。ただし、前回（2026年5月8日）発表予想からコア営業利益を230億円、親会社帰属当期利益を165億円それぞれ下方修正しており、中東情勢悪化に伴う原材料・物流費の高騰が主因とされています。 2026年12月期の中間配当は1株当たり11円が実施予定です。通期の年間配当予想は1株当たり22円（前期実績18円）となっており、前期比4円の増配が予定されています。直近公表予想からの修正はありません。 業績・財務・キャッシュフローのデータは業績情報よりご確認いただけます。",
+        "company": "ユニ・チャーム",
+        "date": "2026-09-25",
+        "published_at": "2026-09-25T07:00:00Z",
+        "collected_at": "2026-09-28T00:36:54Z",
+        "category_id": "①",
+        "rss_published_at": "2026-09-25T07:00:00Z",
+        "publication_date_status": "unverified",
+        "category_name": "日用品・衛生用品メーカー",
+        "info_type": "投資",
+        "url": "https://finance.yahoo.co.jp/quote/8113.T/financials",
+        "source_name": "Yahoo!ファイナンス",
+        "source_url": "https://finance.yahoo.co.jp/",
+        "discovery_provider": "Google News RSS",
+        "discovery_query": "\"ユニ・チャーム\" (おむつ OR 生理用品 OR 衛生用品 OR 新製品 OR 決算 OR 投資)",
+        "discovery_language": "ja",
+        "discovery_group": "general",
+        "confidence": "中",
+        "quality_flags": [
+          "publication_date_unverified"
+        ],
+        "fingerprint": "0a9c6c4bd5c9e765ec072541",
+        "extraction_version": 2,
+        "discovery_url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1qQ09QNnJjRHhrY0p2VXdEdWlEN09UdC1jM1hlNUMzaHF6SGtFWVRmLVZ2N2cwVnFzakxsMElsZGVHbU8yem5TYzZ5ekl4OGQ4allMVUU4SXhoTTA2VGNRZg?oc=5",
+        "source_excerpt": "引用元： 2026年12月期 第2四半期（中間期）決算短信 （PDF） 2026年12月期中間期は売上高4,871億円（前年同期比4.9%増）、コア営業利益650億円（同14.1%増）と増収増益を達成しました。一方、親会社帰属中間利益は410億円と1.9%の小幅減益となりました。通期予想は下方修正されており、原材料・物流費の高騰が下期の収益圧迫要因として注視されます。 ユニ・チャームの主な事業セグメントは「パーソナルケア」「ペットケア」「その他」の3つです。パーソナルケアはウェルネスケア・フェミニンケア・ベビーケア関連商品、ペットケアはペットフード・ペットトイレタリー関連商品、その他は産業用資材関連商品の製造・販売を行っています。 2026年12月期中間期の業績は増収増益となりました。売上高は前年同期比4.9%増の4,871億円、コア営業利益は14.1%増の650億円と利益の伸びが売上を上回りました。一方、親会社帰属の中間利益は1.9%減の410億円と小幅な減益となっています。セグメント別では、パーソナルケアのコア営業利益が10.7%増、ペットケアが21.6%増と両セグメントで二桁成長を達成しました。ブラジルのペットフードメーカーNutrire社の子会社化（取得対価226億円）も実施されています。 資産合計は前年度末比0.7%増の1兆2,315億円とほぼ横ばいでした。無形資産が前年度末比17.3%増の1,138億円と大きく増加した一方、その他の流動金融資産は19.9%減の804億円に減少しています。自己株式は前年度末比13.3%増加し1,591億円となりました。 営業活動によるキャッシュ・フローは616億円の収入となり、前年同期の593億円から増加しました。投資活動によるキャッシュ・フローは170億円の支出となり、前年同期の12億円の支出から大幅に拡大しました。これはNutrire社取得による子会社株式取得支出220億円が主因です。財務活動によるキャッシュ・フローは476億円の支出で、自己株式取得190億円や配当金支払いが主な要因です。 2026年12月期通期の業績予想は、売上高が前期比7.4%増の1兆150億円、コア営業利益が3.8%増の1,130億円、親会社帰属当期利益が7.3%増の700億円とされています。ただし、前回（2026年5月8日）発表予想からコア営業利益を230億円、親会社帰属当期利益を165億円それぞれ下方修正しており、中東情勢悪化に伴う原材料・物流費の高騰が主因とされています。 2026年12月期の中間配当は1株当たり11円が実施予定です。通期の年間配当予想は1株当たり22円（前期実績18円）となっており、前期比4円の増配が予定されています。直近公表予想からの修正はありません。 業績・財務・キャッシュフローのデータは業績情報よりご確認いただけます。",
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "exclude",
+          "rule": "existing_scope_exclusion",
+          "evidence": [
+            "off_topic"
+          ],
+          "version": 1
+        }
       },
       {
         "title": "ナチュラル生理用品『ナチュラムーン』ブランド誕生15周年×国際ガールズ・デー／周年記念の限定セットを発売",
         "summary": "株式会社G-Place販売期間：2026年10月1日（木）～15日（木） 株式会社G-Place（本社：京都府長岡京市、代表取締役社長：綾部英寿）が自社展開するナチュラル生理用品ブ…- 写真 (1/1枚)",
-        "company": "不明",
+        "company": "G-Place",
         "date": "2026-09-25",
         "published_at": "2026-09-25T05:00:20Z",
         "collected_at": "2026-09-26T00:34:54Z",
@@ -602,11 +1118,17 @@
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOT29vVXkzVXNpWTl2UGg4eDA2U0pqdFhkdUp1a05QUTZSLUplaHZ1RkxHYTRhZTFzcVBGcFZadkJ6ZHNEY2EtRkxjMEVtVFoxd2tjV0ZLSWxnOEpiZHdSZURkM1dxUmJrRnJsdy1xMlFCY1N4Y1p0cHFvYkNIYWZoVVJmelQ5dzBT?oc=5",
         "source_excerpt": "株式会社G-Place販売期間：2026年10月1日（木）～15日（木） 株式会社G-Place（本社：京都府長岡京市、代表取締役社長：綾部英寿）が自社展開するナチュラル生理用品ブ…- 写真 (1/1枚)",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "判断特化型AI「Jev」のロボットへの活用事例が相次ぐ X投稿から見る実験の広がり",
-        "summary": "TypeSafe AIが2026年9月15日に発表した判断特化型のAIモデル「Jev」は、一般的なLLM（大規模言語モデル）のように文章を生成するのではなく、あらかじめ定義された選択肢やスコア、確率を高速・低コストで返すモデルとして注目を集めている。 公開以降、X（旧Twitter）上では個人開発者や研究者による多様な活用事例の投稿が相次いでおり、その中にはロボットに応用した検証も複数見られる。本記事では、その事例を匿名でご紹介する。 まず、実機のロボットアーム「SO-101」にJevで判断させる検証が確認できた。 2台のUSBカメラの映像をもとに、Jevが1秒あたり約2回のペースで次の動作を選択する構成で、投稿では動作中に一度ボールを取り落としたものの、アームがボールの位置まで戻って拾い直し、最終的にボウルへ入れる様子が動画で示されている。 実機のロボットアーム（SO-101）を使った仕分けタスクの自動検証について詳細な報告の投稿も確認できる。 投稿によれば、Claude Codeにロボットアームでの実験設計・実行・不具合修正を任せ、一晩で172回の「掴んで運ぶ」動作を自動で繰り返させた。100回連続の掴み動作では成功97回、1回あたり17.8秒、途中停止なしという結果だったという。 Jevの役割は「ピンクを含む物は左へ」「丸い物は必ず中央へ」といった言葉によるルール12種を適用し、仕分け先を判断する部分に限定されている。 俯瞰カメラで位置と色を検出し、ローカルのQwen3.5 4Bが物体の種類を約0.8秒で判定、Jevがルールを当てはめて約0.6秒で行き先を決める構成で、72回すべてが指定区画への搬送に成功し、ルールで答えが一意に決まる65回については全問正解だったとしている。 一方で、同じボールが置き場所によって「緑」「ピンク」と別の色に誤認識されるなど、Jevに情報を渡す画像認識側の精度が課題として報告されている。あわせて、ロボットが動作のたびに撮影した画像から学習データを自動生成し、一晩で2,684枚のラベル付き画像を人手を介さずに用意した点や、照明条件によって認識精度が大きく変動したという実験結果もある。 ロボット学習用シミュレーター「LIBERO」上でJevにロボットを制御させるデモも行われている。 シミュレーター内でプレビューされた候補動作の中からJevが次の一手を選択する仕組みで、実行結果はリプレイとして公開され、Jevが選んだ動作とその確率を動画と並べて確認できるようになっている。 島を舞台にした小規模なシミュレーションデモも公開されている。 6個の物体、3体のロボット、積載量7ユニットまでのフェリー1隻という設定で、ユーザーが重視する条件をテキストで入力すると、Jevが積み荷を選び、担当するロボットを割り当て、出航のタイミングを決めるという内容だ。 紹介した事例はいずれも企業の公式発表ではなく、個人開発者・研究者によるX投稿ベースの検証であるため、一般的な成功率や実用性を保証するものではないだろう。 だが、Jevをロボット制御に活用する動きはこれから広がる可能性があるため、注目していきたい。 ロボスタでは、国産のヒューマノイドや四足歩行ロボットの開発・量産を目指すHighlandersの増岡宏哉CEOをお招きし、オンラインセミナー「 国産ヒューマノイド『N』量産と知能化への挑戦 Highlandersが描くフィジカルAIと実世界データ戦略 」を10月22日（木）に開催します。 Highlandersは、三菱自動車の工場で活用するヒューマノイドロボットの共同開発と、京都製作所京都工場におけるHighlanders製品の量産化について協議を進め、2027年の早い時期の生産開始を検討しています。 また、ロボットを製造、物流、インフラなどの現場で稼働させ、視覚、力覚、触覚、遠隔操作などの実世界データを蓄積。そのデータを独自のフィジカルAI基盤モデルの学習に活用し、進化したAIを再びロボットへ展開する「データフライホイール」の構築を掲げています。 セミナーでは、国産ヒューマノイドの社会実装と量産、日本発のフィジカルAI産業の可能性などについて深掘りしていきます。ぜひご参加ください。 詳しくはこちら",
+        "summary": "TypeSafe AIが2026年9月15日に発表した判断特化型AIモデル「Jev」は、ロボット制御への応用がX（旧Twitter）上で個人開発者や研究者によって検証されている。具体的には、ロボットアーム「SO-101」を使用し、2台のUSBカメラの映像をもとにJevが1秒あたり約2回のペースで動作を選択し、ボールを掴んで運ぶタスクを実行した。成功率は172回中100回連続で97回成功、1回あたり17.8秒で完了した。また、ロボット学習用シミュレーター「LIBERO」上でのデモも行われ、Jevが候補動作を選択し、その確率と結果を公開した。Highlandersも国産ヒューマノイド「N」の量産化",
         "url": "https://robotstart.info/article/2026/09/25/382447.html",
         "date": "2026-09-25",
         "published_at": "2026-09-25T03:15:03Z",
@@ -620,7 +1142,7 @@
         "discovery_language": "ja",
         "category_id": "④",
         "category_name": "包装機・パレタイジング設備メーカー",
-        "company": "不明",
+        "company": "Highlanders",
         "confidence": "中",
         "quality_flags": [],
         "permanent_record": false,
@@ -634,12 +1156,29 @@
         "publication_date_url": "https://robotstart.info/article/2026/09/25/382447.html",
         "publication_date_version": 1,
         "source_excerpt": "TypeSafe AIが2026年9月15日に発表した判断特化型のAIモデル「Jev」は、一般的なLLM（大規模言語モデル）のように文章を生成するのではなく、あらかじめ定義された選択肢やスコア、確率を高速・低コストで返すモデルとして注目を集めている。 公開以降、X（旧Twitter）上では個人開発者や研究者による多様な活用事例の投稿が相次いでおり、その中にはロボットに応用した検証も複数見られる。本記事では、その事例を匿名でご紹介する。 まず、実機のロボットアーム「SO-101」にJevで判断させる検証が確認できた。 2台のUSBカメラの映像をもとに、Jevが1秒あたり約2回のペースで次の動作を選択する構成で、投稿では動作中に一度ボールを取り落としたものの、アームがボールの位置まで戻って拾い直し、最終的にボウルへ入れる様子が動画で示されている。 実機のロボットアーム（SO-101）を使った仕分けタスクの自動検証について詳細な報告の投稿も確認できる。 投稿によれば、Claude Codeにロボットアームでの実験設計・実行・不具合修正を任せ、一晩で172回の「掴んで運ぶ」動作を自動で繰り返させた。100回連続の掴み動作では成功97回、1回あたり17.8秒、途中停止なしという結果だったという。 Jevの役割は「ピンクを含む物は左へ」「丸い物は必ず中央へ」といった言葉によるルール12種を適用し、仕分け先を判断する部分に限定されている。 俯瞰カメラで位置と色を検出し、ローカルのQwen3.5 4Bが物体の種類を約0.8秒で判定、Jevがルールを当てはめて約0.6秒で行き先を決める構成で、72回すべてが指定区画への搬送に成功し、ルールで答えが一意に決まる65回については全問正解だったとしている。 一方で、同じボールが置き場所によって「緑」「ピンク」と別の色に誤認識されるなど、Jevに情報を渡す画像認識側の精度が課題として報告されている。あわせて、ロボットが動作のたびに撮影した画像から学習データを自動生成し、一晩で2,684枚のラベル付き画像を人手を介さずに用意した点や、照明条件によって認識精度が大きく変動したという実験結果もある。 ロボット学習用シミュレーター「LIBERO」上でJevにロボットを制御させるデモも行われている。 シミュレーター内でプレビューされた候補動作の中からJevが次の一手を選択する仕組みで、実行結果はリプレイとして公開され、Jevが選んだ動作とその確率を動画と並べて確認できるようになっている。 島を舞台にした小規模なシミュレーションデモも公開されている。 6個の物体、3体のロボット、積載量7ユニットまでのフェリー1隻という設定で、ユーザーが重視する条件をテキストで入力すると、Jevが積み荷を選び、担当するロボットを割り当て、出航のタイミングを決めるという内容だ。 紹介した事例はいずれも企業の公式発表ではなく、個人開発者・研究者によるX投稿ベースの検証であるため、一般的な成功率や実用性を保証するものではないだろう。 だが、Jevをロボット制御に活用する動きはこれから広がる可能性があるため、注目していきたい。 ロボスタでは、国産のヒューマノイドや四足歩行ロボットの開発・量産を目指すHighlandersの増岡宏哉CEOをお招きし、オンラインセミナー「 国産ヒューマノイド『N』量産と知能化への挑戦 Highlandersが描くフィジカルAIと実世界データ戦略 」を10月22日（木）に開催します。 Highlandersは、三菱自動車の工場で活用するヒューマノイドロボットの共同開発と、京都製作所京都工場におけるHighlanders製品の量産化について協議を進め、2027年の早い時期の生産開始を検討しています。 また、ロボットを製造、物流、インフラなどの現場で稼働させ、視覚、力覚、触覚、遠隔操作などの実世界データを蓄積。そのデータを独自のフィジカルAI基盤モデルの学習に活用し、進化したAIを再びロボットへ展開する「データフライホイール」の構築を掲げています。 セミナーでは、国産ヒューマノイドの社会実装と量産、日本発のフィジカルAI産業の可能性などについて深掘りしていきます。ぜひご参加ください。 詳しくはこちら",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "score": 25,
+        "impact_analysis": "判断特化型AI「Jev」のロボット制御への応用例が示されているが、大王製紙のR&D戦略への直接的インパクトは明示されていない。ただし、ロボット技術の進展が紙業界の自動化や効率化に検討余地を与える可能性はある。市場・業界構造への影響度は限定的だが、AI技術の進化が製造業全体に波及する可能性がある。情報は個人開発者・研究者によるX投稿ベースであり、信頼性は中程度。時宜性は高いが、緊急性は低い。",
+        "summary_method": "ai",
+        "score_method": "ai",
+        "ai_review": {
+          "fingerprint": "7947983642cc7840cb07009a9a4690d89fc5db2652e2283a5f6b2e7f3c2c2a53",
+          "status": "accepted",
+          "version": 5,
+          "reviewed_on": "2026-09-28",
+          "method": "ai"
+        }
       },
       {
         "title": "UR launches AI-ready Gen 7 robotics platform",
         "summary": "Universal Robots (UR) has unveiled Gen 7, a next-generation collaborative robot platform designed to simplify industrial automation and accelerate the deployment of AI-powered applications.Launched at the IMTS exhibition, the seventh-generation platform represents a complete redesign of UR's robotics offering, from the controller and teach pendant through to the tool flange. Built around the company's PolyScope X operat ...",
-        "company": "不明",
+        "company": "Universal Robots",
         "date": "2026-09-25",
         "published_at": "2026-09-25T03:00:00Z",
         "collected_at": "2026-09-26T00:34:59Z",
@@ -669,11 +1208,17 @@
         "publication_date_url": "https://www.machinery-market.co.uk/news/43500/UR-launches-AI-ready-Gen-7-robotics-platform",
         "publication_date_version": 1,
         "source_excerpt": "Universal Robots (UR) has unveiled Gen 7, a next-generation collaborative robot platform designed to simplify industrial automation and accelerate the deployment of AI-powered applications.Launched at the IMTS exhibition, the seventh-generation platform represents a complete redesign of UR's robotics offering, from the controller and teach pendant through to the tool flange. Built around the company's PolyScope X operat ...",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "住友電装とスキルドAI、ワイヤーハーネス製造向けフィジカルAIロボットを共同開発",
-        "summary": "住友電装は、米国のスキルドAI（Skild AI）と共同で、ワイヤーハーネス製造向けフィジカルAIロボットの開発を開始したと発表した。 ワイヤーハーネス製造は工程が複雑で、従来のロボット技術では代替が難しく、長らく人手作業に頼ってきた。住友電装は2026年に策定した「住友電装グループ2030ビジョン中期経営計画2028」において、AIを活用した「スマートファクトリー」構想を掲げており、あらゆる仕事における判断力とスピードの進化を目指している。 その実現に向け、最新のAI頭脳を持ち、人と協働して柔軟に作業できる次世代ロボット「フィジカルAIロボット」の開発と現場実証に取り組んでいる。",
+        "summary": "住友電装は、米国のスキルドAIと共同で、ワイヤーハーネス製造向けフィジカルAIロボットの開発を開始した。ワイヤーハーネス製造は複雑な工程が多く、従来のロボット技術では代替できず、人手作業が主流となっている。住友電装は「スマートファクトリー」構想の一環として、AIを活用した次世代ロボットの開発を進めている。2026年に策定した「2030ビジョン中期経営計画2028」に基づき、判断力とスピードの進化を目指し、現場実証を実施中。",
         "company": "不明",
         "date": "2026-09-25",
         "published_at": "2026-09-25T02:15:03Z",
@@ -702,7 +1247,24 @@
         "publication_date_url": "https://response.jp/article/2026/09/25/416974.html",
         "publication_date_version": 1,
         "source_excerpt": "住友電装は、米国のスキルドAI（Skild AI）と共同で、ワイヤーハーネス製造向けフィジカルAIロボットの開発を開始したと発表した。 ワイヤーハーネス製造は工程が複雑で、従来のロボット技術では代替が難しく、長らく人手作業に頼ってきた。住友電装は2026年に策定した「住友電装グループ2030ビジョン中期経営計画2028」において、AIを活用した「スマートファクトリー」構想を掲げており、あらゆる仕事における判断力とスピードの進化を目指している。 その実現に向け、最新のAI頭脳を持ち、人と協働して柔軟に作業できる次世代ロボット「フィジカルAIロボット」の開発と現場実証に取り組んでいる。",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "score": 25,
+        "impact_analysis": "大王製紙のR&D戦略への直接的インパクトは限定的。住友電装とスキルドAIの共同開発はワイヤーハーネス製造に特化しており、大王製紙の事業領域との直接的な関連性は低い。ただし、製造プロセスの自動化やAI活用による効率化の動向は、大王製紙にとっても同様の技術導入や研究開発を検討する余地を示唆している可能性がある。",
+        "summary_method": "ai",
+        "score_method": "ai",
+        "ai_review": {
+          "fingerprint": "b9c645ce55c1eab4897c011fb41ffd588e5ecb2f1164ad0595d39a70fcc55bfc",
+          "status": "accepted",
+          "version": 5,
+          "reviewed_on": "2026-09-28",
+          "method": "ai"
+        }
       },
       {
         "title": "廃炉研究機構、今月末解散 デブリ採取のロボット開発",
@@ -735,7 +1297,20 @@
         "publication_date_url": "https://www.47news.jp/14989323.html",
         "publication_date_version": 1,
         "source_excerpt": "東京電力福島第１原発の廃炉に関する技術開発を担う国際廃炉研究開発機構（ＩＲＩＤ）は３０日に解散する。２４日、 東京都 で開いた臨時総会で決めた。 溶融核燃料（ デブリ ）取り出しに使うロボットアームの研究 ...",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "ai_review": {
+          "fingerprint": "00b6d4ef31d4b9ab5710a4d68020ded742cccbb0a21243a59d3ab767d0c32ad3",
+          "status": "rejected",
+          "reason": "IRRELEVANT: 本文は廃炉研究機構の解散とデブリ採取のロボット開発に関する内容であり、A/B/Cのいずれにも該当しない。特に衛生用品、製造設備、または特定企業の活動とは関連がない。",
+          "reviewed_on": "2026-09-28",
+          "version": 5
+        }
       },
       {
         "title": "MW「来年は家事ロボットの自律動作を披露へ」VLAと年間5万時間の実世界データでフィジカルAI開発を加速",
@@ -767,7 +1342,15 @@
         "publication_date_url": "https://robotstart.info/article/2026/09/25/382446.html",
         "publication_date_version": 1,
         "source_excerpt": "住宅そのものとAI、ロボットを一体で開発するMWは、2026年9月10日に開催したブランド発表会「MW “Living Home” Launch」で、天井を移動して家事を支援する住宅ロボット「MW bot」の実機デモを初公開した。 ロボスタでも前回の記事で、MWが掲げる「Living Home」の構想と、MW botによる家事支援のデモを紹介した。 発表会で披露されたMW botはAIによる自律動作ではなく、すべて遠隔操縦によるものだった。では、MWはこのロボットをどのように自律化しようとしているのか。 発表会終了後、ロボスタはMW Head of AI/Roboticsの浅谷氏に単独インタビューを行った。そこで明らかになったのは、年間5万時間規模の実世界データを収集する「Data Factory」とVLA（Vision-Language-Action）を組み合わせ、2028年の販売までに約15万時間の学習データを蓄積する計画だった。 そして、その戦略の根底には「ロボットだけを賢くする」のではなく、ロボットが働きやすいように住宅そのものを設計するという、MWならではの考え方がある。 まず確認したのは、発表会で披露されたMW botのデモについて。 MW botは天井に設けられたレールを移動し、キッチンやランドリーなどで、物をつかんだり、衣類を扱ったりする動作を披露した。 浅谷氏によれば、今回のデモではAIによる自律制御は使用していないという。 「今回の発表は遠隔操作でいくと決めていました。デモはすべて遠隔操作です。AIによるサポートもまったくありません」 今回の目的は、まずMW botというハードウェアが住宅の中を移動し、実際に物を扱えることを示すことにあった。 一方で浅谷氏は、次の段階について「来年は同じようなデモを完全自動化して見せたい」と話す。 住宅の中で自律ロボットを動かす場合、部屋から部屋への移動は難しい課題のひとつ。しかし浅谷氏は、MWのシステムではそこは大きな問題ではないという。 「移動についてはルールベースでもできます。一番難しいのは、やはり物体をマニピュレーションするところです」 衣類をつかんで畳む。野菜を潰さないようにつかむ。食器を扱う。こうした、物体をつかみ、動かし、状態を変える操作が「マニピュレーション」だ。 家庭には形状も硬さも重さも異なる物体が大量に存在する。しかも、ロボットはそれらに直接触れ、状況に応じて作業しなければならない。 浅谷氏は、こうした物体との接触を伴うマニピュレーションが、MW botを自律化する上で最大の課題だとする。 そこで重要になるのがロボットの学習データだ。 MWは2026年8月、ロボット学習用の実世界データを収集する「Data Factory」を開設した。 浅谷氏によれば、インタビュー時点では20台のデータ収集用ロボットが稼働しており、毎月10台ずつ増設して最終的に50台体制とする計画だ。 稼働開始から約1カ月ですでに約1000時間のデータを収集しており、年間では5万時間の学習データ収集を目標としている。 ここで現在収集しているデータは、シミュレーションで生成した合成データではなく、人間が実際にロボットを操作して作業を行い、その動きを記録する実世界データを中心としている。 Data Factoryの写真を見ると、白いロボットアームを人間が直接動かしていることが分かる。MWが特徴としているのが、実際のMW botと同じ関節構成を持つデータ収集機を使うことだ。 「実際のロボットの関節構成と同じものを使えば、関節軸に合った情報をそのまま取ることができます」 人間がロボットの腕を直接動かす「ダイレクトティーチング」によって、実機が実際に動作可能な範囲でデータを取得する。 テレオペレーションでは操作そのものが難しくなる場合があり、別の形状のデバイスを使えば、人間が教えた動作と実機の身体構造との間に差が生じる可能性もある。 そこで最初から実際に働くロボットと同じ身体で教えるという考え方だ。 浅谷氏によれば、現在は公開されている複数のVLAを実機で検証し、自社で収集したデータを使ったファインチューニングを進めている段階だ。 VLA（Vision-Language-Action）とは、カメラから得",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "exclude",
+          "rule": "consumer_or_specialist_robot",
+          "evidence": [
+            "家事ロボット"
+          ],
+          "version": 1
+        }
       },
       {
         "title": "RobotBank、上海にフィジカルAI開発拠点",
@@ -797,7 +1380,13 @@
         "fingerprint": "0a4d95466d4b1a0bf0e45d65",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE12VFE0dDI4X2FSLWRLQ1BwdTdqVlpnVzhoRVdjeGV5YlpNNzFpcEpoclpoMkRIZ0ZoUV9iR2F2cnZoLWpxbDc5dkxB?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "国際廃炉研究開発機構、9月30日に解散 ロボットアーム開発「目的果たした」（福島民友新聞）",
@@ -998,11 +1587,17 @@
         "fingerprint": "f69d791e85478afb8a79f8ac",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTFBPVjNUNDZxZXdQdXJwaTZ4Uy1GU0NVaGlyOXZuTGJDS2s5dlJrbnZCUG50REw5c0VoS2pKT09JZFJiaXRaZjBwQmF3?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "Tutor Launches Automated Humanoid Robots for Warehouses",
-        "summary": "These next-generation robots are generally capable robot worker fleets, flexible to any physical work. Tutor launched Cassie and Sonny, next-generation robots designed to move beyond narrow automation solutions and toward a new vision of robot labor: generally capable robot worker fleets, flexible to any physical work. · Cassie is Tutor's workhorse single-armed robot embodiment, proven in production with millions of bulk picks in factories and warehouses across the United States. Powered by Tutor's Turing 200M parameter foundation model series, Cassie uses her cameras to perceive her environment and perform novel tasks without any programming, operator configuration, or vendor customization. Cassie can be used in critical operations such as de-palletization, induction, end-of-line palletization, and repackaging. · Cassie is now fully autonomously mobile through a facility, with four wheels and enough battery life to make it through more than a shift without needing a charge. For mostly stationary applications like induction and palletizing, Cassie is now even faster to implement, with onboard vacuum generation and no physical install. · Sonny is a next-generation robot built for the rigors and realities of industrial work. Sonny is generally capable of performing trillions of dollars of economic labor, while being practical to deploy and deliver large-scale customer value. · Sonny is the company‘s first deployed robot running its newest Ti0 4.5B parameter vision-language-action robot foundation model (VLA), providing a research and deployment path to unlimited task generality and dexterity. · Sonny's first job is e-commerce fulfillment, with the capability to autonomously navigate brownfield warehouses, pick arbitrary items out of racking, and deliver completed orders t",
+        "summary": "Tutorは、次世代ロボット「Cassie」と「Sonny」を開発・導入し、倉庫や工場での多様な物理作業に対応する自律型ロボットフリートを展開している。Cassieは単腕ロボットで、生産現場での大量ピッキングを実績を持ち、Turing 200Mパラメーターモデルを使用し、プログラミングなしで新たなタスクを実行可能。脱パレット化やパレット積み上げなど多岐にわたる業務に対応。Sonnyは最新のTi0 4.5Bパラメーターモデルを搭載し、Eコマース向け出荷作業を自律的に行う。どちらも施設内を自律移動可能で、大規模な顧客価値を提供することを目指している。",
         "company": "不明",
         "date": "2026-09-25",
         "published_at": "2026-09-24T15:00:00Z",
@@ -1031,7 +1626,24 @@
         "publication_date_url": "https://www.sdcexec.com/warehousing/robotics/news/22974601/tutor-tutor-launches-automated-humanoid-robots-for-warehouses",
         "publication_date_version": 1,
         "source_excerpt": "These next-generation robots are generally capable robot worker fleets, flexible to any physical work. Tutor launched Cassie and Sonny, next-generation robots designed to move beyond narrow automation solutions and toward a new vision of robot labor: generally capable robot worker fleets, flexible to any physical work. · Cassie is Tutor's workhorse single-armed robot embodiment, proven in production with millions of bulk picks in factories and warehouses across the United States. Powered by Tutor's Turing 200M parameter foundation model series, Cassie uses her cameras to perceive her environment and perform novel tasks without any programming, operator configuration, or vendor customization. Cassie can be used in critical operations such as de-palletization, induction, end-of-line palletization, and repackaging. · Cassie is now fully autonomously mobile through a facility, with four wheels and enough battery life to make it through more than a shift without needing a charge. For mostly stationary applications like induction and palletizing, Cassie is now even faster to implement, with onboard vacuum generation and no physical install. · Sonny is a next-generation robot built for the rigors and realities of industrial work. Sonny is generally capable of performing trillions of dollars of economic labor, while being practical to deploy and deliver large-scale customer value. · Sonny is the company‘s first deployed robot running its newest Ti0 4.5B parameter vision-language-action robot foundation model (VLA), providing a research and deployment path to unlimited task generality and dexterity. · Sonny's first job is e-commerce fulfillment, with the capability to autonomously navigate brownfield warehouses, pick arbitrary items out of racking, and deliver completed orders t",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "score": 35,
+        "impact_analysis": "Tutorの自律型ロボット「Cassie」と「Sonny」の登場は、倉庫や工場における自動化ソリューションの進化を示しており、大王製紙の生産プロセスや物流オペレーションにも検討余地がある可能性を示唆している。特に、脱パレット化やパレット積み上げなどの業務効率化に応用できる可能性がある。ただし、大王製紙のR&D戦略への直接的インパクトは現時点では不明であり、具体的な導入事例や業界への影響度も検証が必要である。",
+        "summary_method": "ai",
+        "score_method": "ai",
+        "ai_review": {
+          "fingerprint": "d71873acde8acc5c64181b231ff6413b9e0568315f76249203f320c7794f26fa",
+          "status": "accepted",
+          "version": 5,
+          "reviewed_on": "2026-09-28",
+          "method": "ai"
+        }
       },
       {
         "title": "中越パルプ工業、植物由来ＣＮＦ配合の３Ｄプリンター用フィラメントを開発",
@@ -1071,6 +1683,57 @@
       }
     ],
     "2026-09-24": [
+      {
+        "title": "Dime Research, KAIST, and Sky Intelligence Connect From Robots to Entire Factories… Manufacturing Physical AI Collaboration",
+        "summary": "For physical AI to enter manufacturing sites, a single smart robot is insufficient. Autonomous manufacturing can only be achieved when production facilities, logistics systems, and different types of robots are interconnected and move in alignment with the entire factory workflow. This requires synthetic data to supplement data that is difficult to obtain in the actual field, as well as AI research tailored to the ma…",
+        "company": "不明",
+        "date": "2026-09-24",
+        "published_at": "2026-09-24T13:26:18Z",
+        "collected_at": "2026-09-28T00:37:01Z",
+        "category_id": "④",
+        "rss_published_at": "2026-09-24T13:26:18Z",
+        "publication_date_status": "verified",
+        "category_name": "包装機・パレタイジング設備メーカー",
+        "info_type": "研究開発",
+        "url": "https://www.venturesquare.net/en/1116101",
+        "source_name": "벤처스퀘어",
+        "source_url": "https://www.venturesquare.net/",
+        "discovery_provider": "Google News RSS",
+        "discovery_query": "ABB Robotics",
+        "discovery_language": "en",
+        "discovery_group": "palletizer",
+        "confidence": "中",
+        "quality_flags": [
+          "ai_unsupported_numeric_claim"
+        ],
+        "fingerprint": "668bde8860c5ec0f85f97b0d",
+        "extraction_version": 2,
+        "discovery_url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1pVUpSUzZQajhmaVlWTEpoOHZOaFhfMnZ5OV96S1B6YmZZVDFsbmNvazA1RlYzQ3RSanhaUDdXSDZ0SFhqM0k4UXhyQ2hiZXNMazdz?oc=5",
+        "publisher_published_at": "2026-09-24T13:26:18Z",
+        "publisher_date": "2026-09-24",
+        "publication_date_source": "jsonld:datePublished",
+        "publication_date_raw": "2026-09-24T22:26:18+09:00",
+        "publication_date_url": "https://www.venturesquare.net/en/1116101",
+        "publication_date_version": 1,
+        "source_excerpt": "For physical AI to enter manufacturing sites, a single smart robot is insufficient. Autonomous manufacturing can only be achieved when production facilities, logistics systems, and different types of robots are interconnected and move in alignment with the entire factory workflow. This requires synthetic data to supplement data that is difficult to obtain in the actual field, as well as AI research tailored to the manufacturing environment. KAIST, Sky Intelligence, and Dime Research are embarking on a collaboration that combines research, data, and field execution technology to connect the entire process from research to demonstration and commercialization of manufacturing physical AI. Dime Research signed a tripartite Memorandum of Understanding (MOU) with Sky Intelligence and the KAIST Manufacturing Physical AI Research Institute on the 21st to collaborate on physical AI technology and expand its industrial applications. The core of this agreement is to connect the research, synthetic data, and manufacturing and logistics field technologies held by each of the three institutions into a single collaborative structure. The scope of cooperation will be expanded to include identifying joint research, business, and demonstration projects, as well as fostering specialized personnel, exchanging technology, and developing domestic and international markets. The KAIST Manufacturing Physical AI Research Institute has been responsible for advanced research and the development of core technologies for manufacturing physical AI based on AI, robotics, and manufacturing systems. Sky Intelligence is applying synthetic data technology to physical AI. It has been developing data technologies that can be utilized in manufacturing environments, such as conducting a joint proof of concept",
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "score_components": {
+          "relevance": 28,
+          "impact": 28,
+          "reliability": 12,
+          "recency": 12
+        },
+        "score": 80,
+        "score_method": "rules_v1",
+        "impact_analysis": "",
+        "summary_method": "publisher_excerpt"
+      },
       {
         "title": "ピースピッキングロボット市場の主要10社まとめ",
         "summary": "ピースピッキングロボット市場の主要10社まとめ",
@@ -1174,7 +1837,13 @@
         "publication_date_url": "https://www.automation-news.jp/2026/09/109057/",
         "publication_date_version": 1,
         "source_excerpt": "アイエイアイは、同社製ロボットやコントローラと簡単に接続・連携するビジョンシステムとなる「ROBO-Sight（ロボサイト） RS2-DC」を発売した。 同製品は、手のひらサイズの本体に認識エンジンと照明を内蔵した一体構造で、外観検査だけでなく、ロボットビジョンやコンベアトラッキングに対応した多くの機能を搭載したロボット用ビジョンシステム。形や色、距離、幅、直径の測定やコード読み取りなど多様な認識機能を搭載し、最大99個のワーク登録が可能。 同社のRSEL、XSEL2のコントローラとEthernetケーブルでつなぎ、簡単設定ツールで接続から撮像画像の表示、設定まで直感的に設定作業ができ、プログラミングや画像処理に関する高度な専門知識がなくても、短時間での立ち上げが可能だ。 ロボットビジョンとしてワークの座標データをコントローラに送信しピック＆プレイスを簡単に実行可能。高解像度撮像ズームにより縦横2倍の細かさで撮像でき、ワークからカメラを離して撮像したい時などにも対応する。 https://www.iai-robot.co.jp/download/catalog/pdf/CONTROLLER/RS2D-C(CJ0285)_N.pdf",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "国際廃炉研究開発機構が9月末で解散 ロボットアームを開発 (毎日新聞)",
@@ -1537,7 +2206,7 @@
       {
         "title": "ナチュラル生理用品『ナチュラムーン』ブランド誕生15周年×国際ガールズ・デー／周年記念の限定セットを発売",
         "summary": "株式会社G-Place（本社：京都府長岡京市、代表取締役社長：綾部英寿）が自社展開するナチュラル生理用品ブランド『NaturaMoon（ナチュラムーン）』が、今年、ブランド誕生15周年を迎えます。ナチュラムーンは誕生当初より、女性の心身の健康を第一に考え、想いのあるものづくりを続けて参りました。 この度、ブランド誕生15周年を記念した限定セットを、直営EC各店限定で発売いたします。販売期間は2026年10月1日（木）0:00〜15日（木）23:59までの2週間です。 この販売期間は、来る「国際ガールズ・デー（10月11日）」の由来が、ブランドの理念と共通することから決定いたしました。 【ナチュラムーン公式サイト】 https://naturamoon.jp/ NaturaMoon（ナチュラムーン）は、多くの女性がより幸せに満ちた日々を過ごせるように、こだわりの製品・サービスをお届けするブランドです。ブランドが誕生したのは2011年。以来、ナチュラル生理用品のパイオニアとして、女性の心身の健康を第一に考え、想いのあるものづくりを続けて参りました。 特に人気が高いのは、天然素材にこだわったナチュラル生理用品。デリケートな肌に触れるトップシートには、天然コットン100％の不織布を使用しています。また、トップシートは塩素漂白ではなく、過炭酸ナトリウムによる酸素漂白を行い、肌への負担を極力減らしました。経血を吸収するとジェル状に固まる高分子吸収材（ポリマー）を使用せず、天然由来の綿状パルプのみで経血を吸収します。燃やしてもダイオキシンが発生しないため、環境にもやさしいのが特徴です。 「国際ガールズ・デー」は、2012年10月11日に国際連合が総会において採択した記念日で、“女の子の権利”や“エンパワーメント※”を国際的に呼びかける日です。近年では広義で『女性をエンパワーメントする日』とも捉えられ、各国各地でさまざまなイベントが催されています。 ※英：empowerment。個人が本来持っている能力や決定権、勇気や自信を引き出し、社会へ主体的に参画する力をつけること ナチュラムーン生理用ナプキンは、使い捨てのナプキンとしては珍しく肌面も吸収体も天然素材でできています。肌に直接触れるトップシートは天然コットン100％で、コットンならではの柔らかな肌触りが特徴です。 “肌触りにこだわったナプキンを使うことでご自身を労わって、（生理期間中であっても）本来の自分らしく快適に過ごしてほしい”という思いから、「国際ガールズ・デー」に合わせて、ブランド誕生15周年の限定セットを発売することにしました。 セット内容：ナチュラムーン 普通の日×1+多い日昼用羽つき×1+多い日夜用羽つき×1 通常価格1,740円（税込1,914円）のところ限定セット価格1,479円（税込1,626円）＆送料無料でお届けいたします《実質：15%OFF＋送料無料！》 販売期間：2026年10月1日（木）0:00～15日（木）23:59までの2週間 https://www.naturias.jp/c/brand/nagyou/naturamoon/NS1000036 https://item.rakuten.co.jp/greenpacks/ns1000036/ https://store.shopping.yahoo.co.jp/ecomarche/ns1000036.html ナチュラムーン「オーガニックコットン ショーツ型ナプキン」9/14（月）EC先行発売 https://g-place.co.jp/news/n-746/ ナチュラムーン「オーガニックコットン フェイシャルタオル」8/1（土）EC先行発売 https://g-place.co.jp/news/n-727/ ナチュラムーンの薬用入浴剤「お米のめぐり湯」6/1（月）リニューアル発売 https://g-place.co.jp/news/n-693/ Instagram： https://www.instagram.com/naturamoon_official YouTube： https://www.youtube.com/@naturamoon TikTok： https://www.tiktok.com/@of",
-        "company": "不明",
+        "company": "P&G",
         "date": "2026-09-24",
         "published_at": "2026-09-24T04:00:02Z",
         "collected_at": "2026-09-26T00:34:54Z",
@@ -1565,7 +2234,20 @@
         "publication_date_url": "https://prtimes.jp/main/html/rd/p/000000089.000157137.html",
         "publication_date_version": 1,
         "source_excerpt": "株式会社G-Place（本社：京都府長岡京市、代表取締役社長：綾部英寿）が自社展開するナチュラル生理用品ブランド『NaturaMoon（ナチュラムーン）』が、今年、ブランド誕生15周年を迎えます。ナチュラムーンは誕生当初より、女性の心身の健康を第一に考え、想いのあるものづくりを続けて参りました。 この度、ブランド誕生15周年を記念した限定セットを、直営EC各店限定で発売いたします。販売期間は2026年10月1日（木）0:00〜15日（木）23:59までの2週間です。 この販売期間は、来る「国際ガールズ・デー（10月11日）」の由来が、ブランドの理念と共通することから決定いたしました。 【ナチュラムーン公式サイト】 https://naturamoon.jp/ NaturaMoon（ナチュラムーン）は、多くの女性がより幸せに満ちた日々を過ごせるように、こだわりの製品・サービスをお届けするブランドです。ブランドが誕生したのは2011年。以来、ナチュラル生理用品のパイオニアとして、女性の心身の健康を第一に考え、想いのあるものづくりを続けて参りました。 特に人気が高いのは、天然素材にこだわったナチュラル生理用品。デリケートな肌に触れるトップシートには、天然コットン100％の不織布を使用しています。また、トップシートは塩素漂白ではなく、過炭酸ナトリウムによる酸素漂白を行い、肌への負担を極力減らしました。経血を吸収するとジェル状に固まる高分子吸収材（ポリマー）を使用せず、天然由来の綿状パルプのみで経血を吸収します。燃やしてもダイオキシンが発生しないため、環境にもやさしいのが特徴です。 「国際ガールズ・デー」は、2012年10月11日に国際連合が総会において採択した記念日で、“女の子の権利”や“エンパワーメント※”を国際的に呼びかける日です。近年では広義で『女性をエンパワーメントする日』とも捉えられ、各国各地でさまざまなイベントが催されています。 ※英：empowerment。個人が本来持っている能力や決定権、勇気や自信を引き出し、社会へ主体的に参画する力をつけること ナチュラムーン生理用ナプキンは、使い捨てのナプキンとしては珍しく肌面も吸収体も天然素材でできています。肌に直接触れるトップシートは天然コットン100％で、コットンならではの柔らかな肌触りが特徴です。 “肌触りにこだわったナプキンを使うことでご自身を労わって、（生理期間中であっても）本来の自分らしく快適に過ごしてほしい”という思いから、「国際ガールズ・デー」に合わせて、ブランド誕生15周年の限定セットを発売することにしました。 セット内容：ナチュラムーン 普通の日×1+多い日昼用羽つき×1+多い日夜用羽つき×1 通常価格1,740円（税込1,914円）のところ限定セット価格1,479円（税込1,626円）＆送料無料でお届けいたします《実質：15%OFF＋送料無料！》 販売期間：2026年10月1日（木）0:00～15日（木）23:59までの2週間 https://www.naturias.jp/c/brand/nagyou/naturamoon/NS1000036 https://item.rakuten.co.jp/greenpacks/ns1000036/ https://store.shopping.yahoo.co.jp/ecomarche/ns1000036.html ナチュラムーン「オーガニックコットン ショーツ型ナプキン」9/14（月）EC先行発売 https://g-place.co.jp/news/n-746/ ナチュラムーン「オーガニックコットン フェイシャルタオル」8/1（土）EC先行発売 https://g-place.co.jp/news/n-727/ ナチュラムーンの薬用入浴剤「お米のめぐり湯」6/1（月）リニューアル発売 https://g-place.co.jp/news/n-693/ Instagram： https://www.instagram.com/naturamoon_official YouTube： https://www.youtube.com/@naturamoon TikTok： https://www.tiktok.com/@of",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "ai_review": {
+          "fingerprint": "ad9c7ea45b79808104a27b0c2265fb19116067afe99e89938f394249d54fb1ce",
+          "status": "rejected",
+          "reason": "IRRELEVANT: 本文は生理用品ブランドの記念限定セット発売に関する消費者向けのマーケティング情報であり、A（製品・素材・企業特許）・B（特定企業の経営・工場関連活動）・C（製造設備技術）のいずれにも該当しないため。",
+          "reviewed_on": "2026-09-28",
+          "version": 5
+        }
       },
       {
         "title": "UBTECH日本正規代理店のGA Robotics、北陸技術交流テクノフェア2026特別企画展に出展",
@@ -1573,7 +2255,7 @@
         "company": "不明",
         "date": "2026-09-24",
         "published_at": "2026-09-24T03:45:38Z",
-        "collected_at": "2026-09-27T00:30:17Z",
+        "collected_at": "2026-09-28T00:36:58Z",
         "category_id": "④",
         "rss_published_at": "2026-09-24T03:45:38Z",
         "publication_date_status": "verified",
@@ -1600,7 +2282,13 @@
         "publication_date_raw": "2026-09-24T12:45:38+09:00",
         "publication_date_url": "https://news.infoseek.co.jp/article/prtimes_000000010_000160855/",
         "publication_date_version": 1,
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "JRC、省力化機械メーカーの機電を子会社化 ロボットSI・自動化事業を強化",
@@ -1679,7 +2367,13 @@
         "fingerprint": "4d8f8010a1cb5e50fdb74f40",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMie0FVX3lxTFBIZllvaVNPcDkzWk9mOTlqRUZ6b0pvUFdEZ2dXRkdLY0VhSTRTV08wcmJ0NVZuQzRvdl96WVUzZ1pvTkk1V1loWjEtZUNHOFN5VFZQSHp3eW5yU2JEZlZIOV9JLUI4aWplUWNoVXFZdmFKRWRTVGVwU2xlSQ?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "食の現場を変える多彩なロボットソリューションを東京・札幌・大阪の展示会で披露",
@@ -1763,7 +2457,15 @@
         "publication_date_url": "https://note.com/qy_research/n/n2795cabfde50",
         "publication_date_version": 1,
         "source_excerpt": "製品定義・市場範囲 特殊綿短繊維パルプ（Special Cotton Linter Pulp）は、綿実から長繊維を除去した後に残る短いセルロース繊維であるコットンリンター（Cotton Linters）を主原料とし、前処理、蒸解、洗浄、漂白、精製、乾燥などの工程を経て製造される高純度セルロースパルプです。一般的な製紙用途を中心とする木材パルプなどと比較して、特殊綿短繊維パルプは、高いα-セルロース含有量、低い灰分・不純物含有量、リグニンおよび非セルロース成分の低減に加え、重合度、粘度、白色度、純度、化学反応性などを用途に応じて管理することが重視されます。原料選別や蒸解・漂白・精製条件を調整することにより、下流のセルロース加工プロセスに適した物性および反応特性を付与することができます。高いセルロース純度、安定したセルロース構造、化学変性への適性を有することから、特殊綿短繊維パルプは、硝化、エーテル化、エステル化、溶解、その他の化学変性工程を経て、高い原料品質が要求される特殊セルロース材料やセルロース誘導体を製造するための精製セルロース原料として利用されます。そのため、本製品の主要な価値は一般的な製紙性能ではなく、高純度かつ化学加工に適したセルロース基礎原料として、ファインケミカル、機能性材料およびその他の高付加価値セルロース用途を支える点にあります。 QYResearch調査チームの最新レポートである「2026～2032年特殊綿短繊維パルプ市場レポート」によると、グローバル特殊綿短繊維パルプ市場規模は2025年に400.00百万米ドル、2026年に443.80百万米ドルに達し、2026年から2032年の予測期間中のCAGRは約9.80％で、2032年までに777.68百万米ドルに達すると予測されている。 図. 特殊綿短繊維パルプ|市場規模と成長トレンド ソース：二次資料、専門家インタビューおよびQYResearch、2026年 産業チェーン 産業バリューチェーンの上流では、特殊綿短繊維パルプは主にコットンリンターなどのセルロース原料を基盤とし、蒸解、漂白、洗浄、精製工程で使用される化学薬品、プロセス用水、品質検査設備などによって支えられています。本製品は高純度セルロースおよびその後の加工用途を対象としているため、上流原料の品質はセルロース純度、不純物含有量、重合度、加工安定性などに直接影響します。そのため、安定したコットンリンターの調達と原料品質・均一性の管理が、最終製品の品質を確保する重要な基盤となります。 中流は特殊綿短繊維パルプの製造・精製工程であり、原料前処理、蒸解、洗浄、漂白、精製、品質管理、成形、包装などで構成されます。メーカーは下流工程の要求に応じて、α-セルロース含有量、不純物、粘度、重合度、白色度、化学反応性などを管理するとともに、ロット間の品質均一性を確保する必要があります。本市場の製品形態はシート状とロール状の2種類です。下流用途の専門化に伴い、高純度管理、安定した品質、工程の一貫性、仕様のカスタマイズ、安定供給能力が重要になっています。 下流については、本市場の統計範囲に基づき、食品、医薬品、日用化学品、建材、製紙、電子、航空宇宙、軍事、その他の9分野を対象としています。これらの一部用途では、特殊綿短繊維パルプがそのまま最終製品として使用されるのではなく、高純度セルロース基礎原料として、さらに化学変換や加工を経て各用途に適したセルロース材料・誘導体となります。このため、用途によって純度、重合度、粘度、反応性、不純物管理などへの要求が異なり、より専門化された製品グレードの開発につながっています。 図. 特殊綿短繊維パルプ|産業チェーン ソース：二次資料、専門家インタビューおよびQYResearch、2026年 市場ダイナミクス 特殊綿短繊維パルプ市場の動向 主なトレンド 説明 高純度・高品質グレードへの需要拡大 食品、医薬品、電子、航空宇宙、軍事などの用途では、セルロース純度、不純物含有量、重合度、粘度、ロット間の品質安定性などに対する要求が高まっています。このため、高純度化と品質管理の高度化が重要な市場トレンドとなっています。 用途別の専用化・カスタマイズ化 下流用途によって要求される純度、粘度、重合度、白色度、",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "exclude",
+          "rule": "existing_scope_exclusion",
+          "evidence": [
+            "market_report_spam"
+          ],
+          "version": 1
+        }
       },
       {
         "title": "【オンラインセミナー#29】国産ヒューマノイド「N」量産と知能化への挑戦 Highlandersが描くフィジカルAIと実世界データ戦略",
@@ -1888,7 +2590,13 @@
         "fingerprint": "4a251792b64b9d2e83a15b0b",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFBqWUh6dDg3a0NsWjhUc044QnJBMVFmdXJOUWdqSHBKSWQ0aDhSLV9JZUdFWm51aXJkenpVR0Y3SlFRTDFEOW81UjJvSUc3aGlXQWZlcmJ4Rm9vbjRrbjhaaHVn?oc=5",
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "SCREENグラフィックソリューションズ 「TOKYO PACK 2026」にサステナブルパッケージソリューションを出展 10月14日から",
@@ -2253,7 +2961,7 @@
       },
       {
         "title": "PAC Machinery & MSD Sales Partner to Showcase Integrated Robotic Kitting and Automatic Bagging Solution at PACK EXPO",
-        "summary": "PAC Machinery & MSD Sales Partner to Showcase Integrated Robotic Kitting and Automatic Bagging Solution at PACK EXPO BEREA, Ohio, Sept. 23, 2026 (GLOBE NEWSWIRE) -- PAC Machinery announces it will once again partner with MSD Sales to demonstrate an integrated automation solution combining robotic kitting with high-speed automatic bagging. The system will feature the KitAmatic™ All-in-One-Kit Packaging System integrated with PAC Machinery's Rollbag ® R1275 Automatic Bagger , providing an automated solution for kitting, assembly, inspection, and packaging of small parts. The integrated solution will be demonstrated at PACK EXPO International 2026, October 18–21 at McCormick Place in Chicago, IL, at the PAC Machinery booth S-2147. \"Partnering with MSD Sales allows us to demonstrate how integrated solutions can create smarter, more efficient packaging solutions for customers,\" said Greg Berguig, President, PAC Machinery. The integrated system combines intelligent robotics, flexible feeding, and automated bagging to help manufacturers improve productivity, reduce manual handling, and streamline the packaging of kits and small components. The Automated Kitting & Bagging Solution Features: Rollbag ® R1275 Automatic Bagger & Rollbag Brand Bags The R1275 auto bagger is designed for high-speed production, operating at up to 60 bags per minute , with a compact tabletop footprint and the flexibility to integrate with robotics, counters, scales, and other automated feeding devices. It will be integrated with MSD's KitAmatic system, to package O ring and/or other parts into kits using PAC Machinery's Rollbag bags —white front/clear back pre-opened bags on a roll. The bags that will be used provide a professional presentation while allowing the packaged product to remain visible on on",
+        "summary": "PAC Machinery & MSD Sales Partner to Showcase Integrated Robotic Kitting and Automatic Bagging Solution at PACK EXPO BEREA, Ohio, Sept. 23, 2026 (GLOBE NEWSWIRE) -- PAC Machinery announces it will once again partner with MSD Sales to demonstrate an integrated automation solution combining robotic kitting with high-speed automatic bagging. The system will feature the KitAmatic™ All-in-One-Kit Packaging System integrat…",
         "company": "PAC Machinery",
         "date": "2026-09-24",
         "published_at": "2026-09-23T15:19:00Z",
@@ -2271,7 +2979,9 @@
         "discovery_language": "en",
         "discovery_group": "packaging",
         "confidence": "中",
-        "quality_flags": [],
+        "quality_flags": [
+          "ai_unsupported_numeric_claim"
+        ],
         "fingerprint": "b85e8d2f6afae1c8e866ef05",
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNWFlIVmp2NFlsb0JKN1dwR0RJRzlwV1JpOHJJZUxSSDNrV3h5Ny1jQnRSUzhIdzV4bWlYbV9RaTVGamFGSjUxU28tR1ZIb1pLV0lrSzBDZnhsLXlMSDRSYmlJTzdlV2FUZFBKcXZFWV9OYnR0Y1lMVmdNVkNGTEZVMkdTaC16ZGV2ZGFKbnFRMjVKamRtVkJZ?oc=5",
@@ -2282,7 +2992,23 @@
         "publication_date_url": "https://finance.yahoo.com/technology/articles/pac-machinery-msd-sales-partner-151900154.html",
         "publication_date_version": 1,
         "source_excerpt": "PAC Machinery & MSD Sales Partner to Showcase Integrated Robotic Kitting and Automatic Bagging Solution at PACK EXPO BEREA, Ohio, Sept. 23, 2026 (GLOBE NEWSWIRE) -- PAC Machinery announces it will once again partner with MSD Sales to demonstrate an integrated automation solution combining robotic kitting with high-speed automatic bagging. The system will feature the KitAmatic™ All-in-One-Kit Packaging System integrated with PAC Machinery's Rollbag ® R1275 Automatic Bagger , providing an automated solution for kitting, assembly, inspection, and packaging of small parts. The integrated solution will be demonstrated at PACK EXPO International 2026, October 18–21 at McCormick Place in Chicago, IL, at the PAC Machinery booth S-2147. \"Partnering with MSD Sales allows us to demonstrate how integrated solutions can create smarter, more efficient packaging solutions for customers,\" said Greg Berguig, President, PAC Machinery. The integrated system combines intelligent robotics, flexible feeding, and automated bagging to help manufacturers improve productivity, reduce manual handling, and streamline the packaging of kits and small components. The Automated Kitting & Bagging Solution Features: Rollbag ® R1275 Automatic Bagger & Rollbag Brand Bags The R1275 auto bagger is designed for high-speed production, operating at up to 60 bags per minute , with a compact tabletop footprint and the flexibility to integrate with robotics, counters, scales, and other automated feeding devices. It will be integrated with MSD's KitAmatic system, to package O ring and/or other parts into kits using PAC Machinery's Rollbag bags —white front/clear back pre-opened bags on a roll. The bags that will be used provide a professional presentation while allowing the packaged product to remain visible on on",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        },
+        "score_components": {
+          "relevance": 28,
+          "impact": 28,
+          "reliability": 12,
+          "recency": 12
+        },
+        "score": 80,
+        "score_method": "rules_v1",
+        "impact_analysis": "",
+        "summary_method": "publisher_excerpt"
       },
       {
         "title": "从一朵棉花到一片卫生巾，需要过几道关？",
@@ -2290,7 +3016,7 @@
         "company": "不明",
         "date": "2026-09-24",
         "published_at": "2026-09-23T15:00:00Z",
-        "collected_at": "2026-09-27T00:30:22Z",
+        "collected_at": "2026-09-28T00:37:01Z",
         "category_id": "①",
         "rss_published_at": "2026-09-24T06:03:46Z",
         "publication_date_status": "verified",
@@ -2317,7 +3043,13 @@
         "publication_date_raw": "2026-09-24",
         "publication_date_url": "http://www.xinhuanet.com/health/20260924/eb26ee89b08449649d334dd9db117210/c.html",
         "publication_date_version": 1,
-        "fulltext_status": "unavailable"
+        "fulltext_status": "unavailable",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "insufficient_body_for_rule_admission",
+          "evidence": [],
+          "version": 1
+        }
       }
     ],
     "2026-09-23": [
@@ -2841,7 +3573,13 @@
         "publication_date_url": "https://biz.chosun.com/jp/jp-international/2026/09/22/HGUV7PWU2JDGTDQA362L76SBOI/",
         "publication_date_version": 1,
         "source_excerpt": "中国ロボット手競争が加速 価格と量産で主戦場化 ユニトリーが五本指「Dex5-S」を発売、ギャルボットの現場導入やLinkerBotの大量出荷で市場が拡大し、インスパイアロボットは内製化で価格を2万元まで圧縮 中国のヒューマノイド（人型ロボット）業界で「ロボットハンド」競争が過熱している。ロボットが",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "SPサムファが無人運搬車(AGV)·自動運転ロボット(AMR)などが作業するスマートファクトリー環境に最適化された高強度床材「エポコート高強度ライニング」を発売したと22日明らかにした。従来のエポキシ..",
@@ -3173,7 +3911,7 @@
       {
         "title": "HD Hyundai Robotics to Launch 1-Ton-Class Heavy-Duty Robot, Completing Full Lineup with Collaborative Robots",
         "summary": "HD Hyundai Robotics, the robotics arm of HD Hyundai (267250), is accelerating its product lineup expansion with the launch of a heavy-duty industrial robot capable of lifting up to 1 ton early next year. Following the July debut of its first new collaborative robot models in six years, the company is now reinforcing its portfolio with a heavy-duty model, preparing for head-to-head competition with German, Japanese, and Chinese rivals in the industrial robot market. According to industry sources on the 21st, HD Hyundai Robotics plans to officially launch the HDT1000-33 industrial robot in January next year. Currently in the performance testing phase, this product is the largest model among 14 new HDT series robots, with a working radius of 3.3 meters. It is expected to be deployed in high-load processes at large manufacturing sites such as automotive and battery plants, where existing manpower or small-to-medium robots have struggled to cope. The 1-ton-class industrial robot represents the pinnacle of technical capability. Traditional powerhouses such as Germany's KUKA and Japan's FANUC have long dominated this market, and China's ESTUN has recently entered the fray with its own products. HD Hyundai Robotics, the top industrial robot maker in South Korea, is now formally joining the global competition in the heavy-duty segment with this launch. The launch of the HDT1000-33 is a key pillar of the company's comprehensive industrial robot lineup expansion. HD Hyundai Robotics' industrial robot portfolio will grow by approximately 69% from 32 models in 2024 to 35 models last year, 39 models this year, and 54 models next year. The strategy is to complete a portfolio spanning from small and medium to large and heavy-duty models, absorbing diverse process demands across manufac",
-        "company": "不明",
+        "company": "FANUC",
         "date": "2026-09-22",
         "published_at": "2026-09-21T21:35:24Z",
         "collected_at": "2026-09-26T00:34:59Z",
@@ -3201,7 +3939,18 @@
         "publication_date_url": "https://finance.biggo.com/news/a13b8b09-53c0-454d-8ee7-c81639110943",
         "publication_date_version": 1,
         "source_excerpt": "HD Hyundai Robotics, the robotics arm of HD Hyundai (267250), is accelerating its product lineup expansion with the launch of a heavy-duty industrial robot capable of lifting up to 1 ton early next year. Following the July debut of its first new collaborative robot models in six years, the company is now reinforcing its portfolio with a heavy-duty model, preparing for head-to-head competition with German, Japanese, and Chinese rivals in the industrial robot market. According to industry sources on the 21st, HD Hyundai Robotics plans to officially launch the HDT1000-33 industrial robot in January next year. Currently in the performance testing phase, this product is the largest model among 14 new HDT series robots, with a working radius of 3.3 meters. It is expected to be deployed in high-load processes at large manufacturing sites such as automotive and battery plants, where existing manpower or small-to-medium robots have struggled to cope. The 1-ton-class industrial robot represents the pinnacle of technical capability. Traditional powerhouses such as Germany's KUKA and Japan's FANUC have long dominated this market, and China's ESTUN has recently entered the fray with its own products. HD Hyundai Robotics, the top industrial robot maker in South Korea, is now formally joining the global competition in the heavy-duty segment with this launch. The launch of the HDT1000-33 is a key pillar of the company's comprehensive industrial robot lineup expansion. HD Hyundai Robotics' industrial robot portfolio will grow by approximately 69% from 32 models in 2024 to 35 models last year, 39 models this year, and 54 models next year. The strategy is to complete a portfolio spanning from small and medium to large and heavy-duty models, absorbing diverse process demands across manufac",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "include",
+          "rule": "industrial_equipment_event",
+          "evidence": [
+            "industrial robot",
+            "manufacturing",
+            "launch",
+            "deploy"
+          ],
+          "version": 1
+        }
       },
       {
         "title": "ABB Introduces Infinitus - The Industry’s First Source-to-Rack Direct Current Portfolio for AI Data Centers... - Engineering / Artificial Intelligence - ABB Robotics / ABB Ltd",
@@ -3582,6 +4331,47 @@
         }
       },
       {
+        "title": "ヒューマノイドロボット用アクチュエーター市場環境分析2026：競争状況、需要拡大、供給動向を評価",
+        "summary": "ロボット用アクチュエーター世界総市場規模 ロボット用アクチュエーターの定義と重要性 ロボット用アクチュエーターとは、ロボットの各関節や駆動部分に動力を供給し、精密かつ迅速な動作を実現する機械的装置である。電気、油圧、空圧などの動力源を機械的エネルギーに変換し、動きを制御する役割を担うため、ロボットの性能や応用範囲を左右する中核コンポーネントとして位置づけられる。近年の産業用ロボット、自律移動ロボット、サービスロボットなど多様な分野でのロボット活用拡大に伴い、アクチュエーターの高精度化・小型化・高効率化が求められている。加えて、AIやIoTの導入によるロボットの知能化が進展し、複雑な動作制御が可能となる中で、アクチュエーターの性能はロボット全体の競争力を左右する決定的要因となる。すなわち、ロボット用アクチュエーターは、製造業の自動化、物流の効率化、医療・福祉分野での革新を支える技術的基盤である。 市場規模と成長展望 最新のYH Research調査によると、2025年から2031年にかけてロボット用アクチュエーターのグローバル市場は年平均成長率（CAGR）17.0%の高成長を示し、2031年には市場規模が98.85億米ドルに達すると予測される。この成長は、製造業における自動化投資の拡大に加え、サービスロボットや医療ロボットの需要急増が牽引している。特に中国や東南アジアを中心とした新興市場のインフラ整備と産業基盤強化が、市場の拡大を加速させる要因である。また、環境規制強化や労働力不足の深刻化により、省エネルギーで高効率なアクチュエーターへのニーズが高まっている点も注目に値する。これらの市場環境は、技術革新と相まって製品差別化の競争を激化させる一方、参入企業に大きなビジネスチャンスを提供している。 図. ロボット用アクチュエーター世界総市場規模 上記の図表／データは、YH Researchの最新レポート「2025～2031年のグローバルロボット用アクチュエーター市場調査レポート」から引用されている。 主要企業の市場ポジション YH Researchのトップ企業研究センターによれば、ロボット用アクチュエーター市場をリードする主要企業にはFanuc、Yaskawa、Mitsubishi Electric、Inovance、Panasonic、Kollmorgen、Siemens、Nidec、Tamagawa、Rockwellなどが挙げられる。これらのトップ10企業は、2024年時点で売上ベースで約26.0%の市場シェアを占めており、高い技術力とグローバルな販売ネットワークを活かし競争優位性を維持している。特にファナックや安川電機は、日本発の技術を背景に多種多様なロボット向けアクチュエーターを展開し、産業機械の自動化に強みを持つ。欧州系企業も高度な制御技術と堅牢な品質管理により、高付加価値製品の開発を推進。市場シェアの分散が続く中、新興企業の参入やスタートアップの技術革新も業界のダイナミズムを高めている。 図. 世界のロボット用アクチュエーター市場におけるトップ25企業のランキングと市場シェア（2024年の調査データに基づく；最新のデータは、当社の最新調査データに基づいている） 上記の図表／データは、YH Researchの最新レポート「2025～2031年のグローバルロボット用アクチュエーター市場調査レポート」から引用されている。ランキングは2024年のデータに基づいている。現在の最新データは、当社の最新調査データに基づいている。 産業発展の特徴と今後の展望 ロボット用アクチュエーター産業の発展にはいくつかの顕著な特徴が存在する。まず技術革新の速度が極めて速く、モーター効率の向上やセンサー一体化による高精度制御、軽量・コンパクト設計の実現が常に求められる。次に、産業用途に加え、医療・介護、農業、物流など幅広い分野への適用拡大が市場の多様化を促進している。さらに、グローバルなサプライチェーンの再構築や地政学リスクへの対応から、各企業は製造拠点の最適化とサプライヤー多様化に注力している点も特徴的である。最後に、環境配慮や省エネルギーの社会的要請が製品設計に強く反映されており、これにより持続可能な成長のための競争が一段と激化している。これらの要素が複",
+        "company": "ファナック",
+        "date": "2026-09-21",
+        "published_at": "2026-09-21T07:44:00Z",
+        "collected_at": "2026-09-28T00:36:57Z",
+        "category_id": "④",
+        "rss_published_at": "2026-09-21T07:44:00Z",
+        "publication_date_status": "verified",
+        "category_name": "包装機・パレタイジング設備メーカー",
+        "info_type": "環境",
+        "url": "https://www.atpress.ne.jp/news/9291720",
+        "source_name": "アットプレス",
+        "source_url": "https://www.atpress.ne.jp/",
+        "discovery_provider": "Google News RSS",
+        "discovery_query": "安川電機 ロボット",
+        "discovery_language": "ja",
+        "discovery_group": "palletizer",
+        "confidence": "中",
+        "quality_flags": [],
+        "fingerprint": "a7fc2861b4771adf84434a61",
+        "extraction_version": 2,
+        "discovery_url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE8xOERGYTM5QnZKMFBZWFB4VTlaTTY3OHlzanVrdVp2cXFkR3RfQURmTmtLTUlnQ2xveVJ2YzZXQWR3dGVkVWhtQkJvQlVyUlU?oc=5",
+        "publisher_published_at": "2026-09-21T07:44:00Z",
+        "publisher_date": "2026-09-21",
+        "publication_date_source": "jsonld:datePublished",
+        "publication_date_raw": "2026-09-21T07:44:00.000Z",
+        "publication_date_url": "https://www.atpress.ne.jp/news/9291720",
+        "publication_date_version": 1,
+        "source_excerpt": "ロボット用アクチュエーター世界総市場規模 ロボット用アクチュエーターの定義と重要性 ロボット用アクチュエーターとは、ロボットの各関節や駆動部分に動力を供給し、精密かつ迅速な動作を実現する機械的装置である。電気、油圧、空圧などの動力源を機械的エネルギーに変換し、動きを制御する役割を担うため、ロボットの性能や応用範囲を左右する中核コンポーネントとして位置づけられる。近年の産業用ロボット、自律移動ロボット、サービスロボットなど多様な分野でのロボット活用拡大に伴い、アクチュエーターの高精度化・小型化・高効率化が求められている。加えて、AIやIoTの導入によるロボットの知能化が進展し、複雑な動作制御が可能となる中で、アクチュエーターの性能はロボット全体の競争力を左右する決定的要因となる。すなわち、ロボット用アクチュエーターは、製造業の自動化、物流の効率化、医療・福祉分野での革新を支える技術的基盤である。 市場規模と成長展望 最新のYH Research調査によると、2025年から2031年にかけてロボット用アクチュエーターのグローバル市場は年平均成長率（CAGR）17.0%の高成長を示し、2031年には市場規模が98.85億米ドルに達すると予測される。この成長は、製造業における自動化投資の拡大に加え、サービスロボットや医療ロボットの需要急増が牽引している。特に中国や東南アジアを中心とした新興市場のインフラ整備と産業基盤強化が、市場の拡大を加速させる要因である。また、環境規制強化や労働力不足の深刻化により、省エネルギーで高効率なアクチュエーターへのニーズが高まっている点も注目に値する。これらの市場環境は、技術革新と相まって製品差別化の競争を激化させる一方、参入企業に大きなビジネスチャンスを提供している。 図. ロボット用アクチュエーター世界総市場規模 上記の図表／データは、YH Researchの最新レポート「2025～2031年のグローバルロボット用アクチュエーター市場調査レポート」から引用されている。 主要企業の市場ポジション YH Researchのトップ企業研究センターによれば、ロボット用アクチュエーター市場をリードする主要企業にはFanuc、Yaskawa、Mitsubishi Electric、Inovance、Panasonic、Kollmorgen、Siemens、Nidec、Tamagawa、Rockwellなどが挙げられる。これらのトップ10企業は、2024年時点で売上ベースで約26.0%の市場シェアを占めており、高い技術力とグローバルな販売ネットワークを活かし競争優位性を維持している。特にファナックや安川電機は、日本発の技術を背景に多種多様なロボット向けアクチュエーターを展開し、産業機械の自動化に強みを持つ。欧州系企業も高度な制御技術と堅牢な品質管理により、高付加価値製品の開発を推進。市場シェアの分散が続く中、新興企業の参入やスタートアップの技術革新も業界のダイナミズムを高めている。 図. 世界のロボット用アクチュエーター市場におけるトップ25企業のランキングと市場シェア（2024年の調査データに基づく；最新のデータは、当社の最新調査データに基づいている） 上記の図表／データは、YH Researchの最新レポート「2025～2031年のグローバルロボット用アクチュエーター市場調査レポート」から引用されている。ランキングは2024年のデータに基づいている。現在の最新データは、当社の最新調査データに基づいている。 産業発展の特徴と今後の展望 ロボット用アクチュエーター産業の発展にはいくつかの顕著な特徴が存在する。まず技術革新の速度が極めて速く、モーター効率の向上やセンサー一体化による高精度制御、軽量・コンパクト設計の実現が常に求められる。次に、産業用途に加え、医療・介護、農業、物流など幅広い分野への適用拡大が市場の多様化を促進している。さらに、グローバルなサプライチェーンの再構築や地政学リスクへの対応から、各企業は製造拠点の最適化とサプライヤー多様化に注力している点も特徴的である。最後に、環境配慮や省エネルギーの社会的要請が製品設計に強く反映されており、これにより持続可能な成長のための競争が一段と激化している。これらの要素が複",
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "exclude",
+          "rule": "existing_scope_exclusion",
+          "evidence": [
+            "market_report_spam"
+          ],
+          "version": 1
+        }
+      },
+      {
         "title": "ABB Robotics Drives Transformer Automation in China",
         "summary": "ABB Robotics provided China’s first Automatic Core Stacking System for the assembly of large, five-limb transformers, for Changzhou Sieyuan Toshiba Transformer Co. Ltd. The system enhances the efficiency and reliability of power equipment manufacturing, meeting the growing demand for advanced manufacturing techniques in the development of China’s data centers. ABB Robotics’ Automated Core Stacking handles what was previously an entirely manual task in the construction of vital power transformers, with each transformer stack traditionally taking eight to twelve workers and three to five days to be completed. The strenuous nature of this work often leads to inconsistent stacking quality, resulting in higher core losses in transformers and increased noise levels. Instead, the project at Sieyuan Toshiba employs ABB Robotics IRB 6740 robots to execute a series of operations. With its reach, payload and accuracy, the robot manages the precise stacking of 60,000 silicon steel laminations, up to 4.5 meters in length, to a tolerance of just 0.5 mm. Automation coverage has reached 90%, with minimal need for human intervention throughout the process. The complex core stacking process was designed and fully simulated using RobotStudio®, which substantially shortens on-site commissioning time. Its various stepping types and splicing methods required the rapid switching and intelligent error-correction capabilities of ABB Robotics’ OmnicoreTM controller platform. The improvements in quality and consistency enhance the operating efficiency of the final product, reducing no-load losses in the transformer by 1.5 percent. *This successful application in China's transformer industry marks another milestone in ABB Robotics' journey to more autonomous and versatile robotics (AVRTM), offerin",
         "company": "ABB",
@@ -3608,7 +4398,13 @@
         "extraction_version": 2,
         "discovery_url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPano1am1OTUdIa0JJY3hlLUJ4am5uREVNd0tOaG95dGtndlFSTWlJYnlNaDVOaGpXOUZVelR4WGpoeWRfbUZ6eC1ETnEyRzlIdkduVkxUSTZqTkdkNkdmYzVsek9CdThubTZYdC1FdW1kR2MxVzhkOXRFNXJGZTNCQjREZlN5RlJ4UVBTZHcwMUFoMEVseXp2RDZiTFA?oc=5",
         "source_excerpt": "ABB Robotics provided China’s first Automatic Core Stacking System for the assembly of large, five-limb transformers, for Changzhou Sieyuan Toshiba Transformer Co. Ltd. The system enhances the efficiency and reliability of power equipment manufacturing, meeting the growing demand for advanced manufacturing techniques in the development of China’s data centers. ABB Robotics’ Automated Core Stacking handles what was previously an entirely manual task in the construction of vital power transformers, with each transformer stack traditionally taking eight to twelve workers and three to five days to be completed. The strenuous nature of this work often leads to inconsistent stacking quality, resulting in higher core losses in transformers and increased noise levels. Instead, the project at Sieyuan Toshiba employs ABB Robotics IRB 6740 robots to execute a series of operations. With its reach, payload and accuracy, the robot manages the precise stacking of 60,000 silicon steel laminations, up to 4.5 meters in length, to a tolerance of just 0.5 mm. Automation coverage has reached 90%, with minimal need for human intervention throughout the process. The complex core stacking process was designed and fully simulated using RobotStudio®, which substantially shortens on-site commissioning time. Its various stepping types and splicing methods required the rapid switching and intelligent error-correction capabilities of ABB Robotics’ OmnicoreTM controller platform. The improvements in quality and consistency enhance the operating efficiency of the final product, reducing no-load losses in the transformer by 1.5 percent. *This successful application in China's transformer industry marks another milestone in ABB Robotics' journey to more autonomous and versatile robotics (AVRTM), offerin",
-        "fulltext_status": "excerpt_extracted"
+        "fulltext_status": "excerpt_extracted",
+        "scope_decision": {
+          "verdict": "review",
+          "rule": "requires_contextual_review",
+          "evidence": [],
+          "version": 1
+        }
       },
       {
         "title": "Universal Robots Launches Seventh-Generation Cobot Platform",
