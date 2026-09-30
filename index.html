@@ -405,7 +405,7 @@
   <div class="section" id="s-palletizer">
     <div class="section-header">
       <div class="section-title">🤖 パレタイザー</div>
-      <div class="section-desc">カテゴリー④：パレタイジング設備・ロボット自動化の最新情報（ファナック）</div>
+      <div class="section-desc">積付け・荷下ろし・パレタイズ／デパレタイズ設備。汎用AI・人型ロボットの情報は対象外です。</div>
     </div>
     <div class="filter-bar">
       <label>🔍 キーワード:</label>
@@ -925,17 +925,20 @@ function dedupeByUrl(arr) {
 // Every item in the selected daily digest belongs to exactly one news section.
 // This keeps the seven sidebar news counts additive and equal to the overview.
 function dailyNewsSection(d) {
-  if (d.summary_method === 'codex_editorial' && ['rivals','machine','packaging','palletizer','tissue','wet','toilet'].includes(d.dashboard_section)) return d.dashboard_section;
+  // Issued editions retain their recorded categories; new editions are scoped
+  // by the backend. Do not silently relabel the archived publication history.
+  if (['rivals','machine','packaging','palletizer','tissue','wet','toilet'].includes(d.dashboard_section)) return d.dashboard_section;
   var text = [d.title, d.summary, d.company, d.info_type].filter(Boolean).join(' ').toLowerCase();
   // Equipment processing wet wipes is still equipment, not a wet-wipe product.
   if (d.category_id === '③') return 'machine';
   if (d.category_id === '④') {
-    var robotKw = ['パレタイ', 'ロボット', 'robot', 'fanuc', 'ファナック', '码垛', 'palletiz', 'palletis', 'ピッキング', '机器人', '搬送'];
+    var robotKw = ['パレタイ', 'パレタイズ', 'パレタジング', 'デパレタイ', 'デパレタイズ', '積付け', '積み付け', '荷積み', '荷下ろし', '段積み', 'palletiz', 'palletis', 'depallet', '码垛', '碼垛', '拆垛', '码盘'];
     return robotKw.some(function(k) { return text.includes(k); }) ? 'palletizer' : 'packaging';
   }
   // Override legacy snapshots that stored Japanese ウエット items as tissue.
   var wetKw = [
     'ウェットティッシュ', 'ウエットティッシュ',
+    'ウェットティシュ', 'ウエットティシュ',
     'ウェットティシュー', 'ウエットティシュー',
     'ウェットワイプ', 'ウエットワイプ',
     'wet tissue', 'wet tissues', 'wet wipe', 'wet wipes'
@@ -944,7 +947,7 @@ function dailyNewsSection(d) {
   if (d.dashboard_section) return d.dashboard_section;
   var toiletKw = ['トイレットペーパー', 'toilet paper', 'トイレロール'];
   if (toiletKw.some(function(k) { return text.includes(k); })) return 'toilet';
-  var tissueKw = ['ティッシュペーパー', 'ティシュー', '箱ティッシュ', 'tissue paper', '家庭紙'];
+  var tissueKw = ['ティッシュペーパー', 'ティシュ', '箱ティッシュ', 'tissue paper', '家庭紙'];
   if (d.category_id === '⑥' || tissueKw.some(function(k) { return text.includes(k); })) return 'tissue';
   return 'rivals';
 }

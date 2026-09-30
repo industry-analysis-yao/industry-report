@@ -23,8 +23,8 @@ from news_dates import verified_news
 from news_scoring import apply_fallback
 from fetch_news import assess_relevance, extract_company, CATEGORY_NAMES
 from official_sources import official_relevance
-from source_catalog import equipment_section
-from news_scope import classify_scope
+from source_catalog import equipment_section, PALLETIZER_TERMS, robot_scope_exclusion
+from news_scope import classify_scope, SCOPE_VERSION
 
 try:
     from dotenv import load_dotenv
@@ -49,7 +49,7 @@ DAILY_DIGEST_LOOKBACK_DAYS = int(os.environ.get('DAILY_DIGEST_LOOKBACK_DAYS', '3
 DAILY_DIGEST_MAX_AGE_DAYS = 5  # Inclusive calendar window: today plus four previous JST dates.
 DAILY_DIGEST_HISTORY_DAYS = int(os.environ.get('DAILY_DIGEST_HISTORY_DAYS', '30'))
 SPECIALTY_MAX_AGE_DAYS = int(os.environ.get('SPECIALTY_MAX_AGE_DAYS', '60'))
-REVIEW_VERSION = 5
+REVIEW_VERSION = 6
 RULE_EXTRACT_PREFIX = 'RULE_EXTRACT_REQUIRED: '
 
 
@@ -189,12 +189,12 @@ def assign_daily_section(item):
     if category_id == '③':
         return 'machine'
     if category_id == '④':
-        palletizer_terms = ('パレタイ', 'ロボット', 'robot', 'fanuc', 'ファナック', '码垛', 'palletiz', 'palletis', 'ピッキング', '机器人', '搬送')
-        return 'palletizer' if any(term in text for term in palletizer_terms) else 'packaging'
+        return 'palletizer' if any(term in text for term in PALLETIZER_TERMS) else 'packaging'
     # Japanese publishers use both ウェット and ウエット.  Wet-tissue
     # phrases must be checked before the generic ティシュー/category ⑥ rule.
     wet_terms = (
         'ウェットティッシュ', 'ウエットティッシュ',
+        'ウェットティシュ', 'ウエットティシュ',
         'ウェットティシュー', 'ウエットティシュー',
         'ウェットワイプ', 'ウエットワイプ',
         'ウェットシート', 'ウエットシート', 'おしりふき',
@@ -205,7 +205,7 @@ def assign_daily_section(item):
     toilet_terms = ('トイレットペーパー', 'toilet paper', 'トイレロール')
     if any(term in text for term in toilet_terms):
         return 'toilet'
-    tissue_terms = ('ティッシュペーパー', 'ティシュー', '箱ティッシュ', 'tissue paper', '家庭紙')
+    tissue_terms = ('ティッシュペーパー', 'ティシュ', '箱ティッシュ', 'tissue paper', '家庭紙')
     if category_id == '⑥' or any(term in text for term in tissue_terms):
         return 'tissue'
     # Categories ① and ② are manufacturer/competitor news. Unknown regular
@@ -451,13 +451,15 @@ def ai_summarize(title, snippet, company, api_key=None, retry_feedback=None, len
             'A: 家庭紙、ティッシュ、トイレットペーパー、おむつ、生理用品、ウェットワイプ、不織布、吸収体の製品・素材・企業特許。\n'
             'B: 大王製紙、ユニ・チャーム、花王、P&G、日本製紙、王子、Essity、Kimberly-Clark等の競合・自社の経営、工場事故・調査、投資、原材料、GX。'
             'Bは会社名と企業活動で判断し、製品名や衛生用品の記述は不要。\n'
-            'C: 包装機、装箱機、搬送設備、工場点検、協働ロボット、産業用ロボット制御・動作シミュレーション、ピッキング、グリッパー、包装検査の開発・展示・実導入・企業投資。'
-            'Cの採用条件は製造・物流向け技術の具体性であり、使用先の業種を限定しない。食品工場、鋼球工場、他業種の工場での利用も対象。'
+            'C: 包装機、装箱機、不織布・吸収体加工機、包装検査、パレタイザー、デパレタイザーの開発・展示・実導入・企業投資。'
+            'ロボットは積付け・荷下ろし・箱詰め・袋詰めなど包装ラインでの具体的用途が原文にある場合だけ対象。'
+            'Cは使用先の業種を限定しない。食品工場等でも包装・積付け用途なら対象。'
             '衛生用品への適用が原文に書かれている必要はない。\n'
-            '採用例: 日本製紙の工場事故調査、ビール工場のSpot巡回点検、鋼球工場の協働ロボット導入シミュレーション、ABBの産業ロボットAIプログラミング。'
+            '採用例: 日本製紙の工場事故調査、段ボール箱のパレタイズ、不織布製造ライン、袋包装機の新製品。'
             'これらを「衛生用品に直接関係しない」という理由で否決してはいけない。\n'
             '除外: 消費者向け家事・掃除ロボット、食品そのものの新商品、手術・溶接専用、市場予測レポート販売広告、大学単独研究。'
-            '単なる人型ロボット一般論やタレント・生活記事でA/B/Cの具体的事実がなければ除外。\n'
+            '汎用人型ロボット、Physical AI、ロボット基盤モデル・頭脳、汎用制御、工場巡回ロボット、汎用自動倉庫は対象外。'
+            '単に「工場」「物流」「AI」と書かれているだけでは包装・積付け用途の根拠にならない。\n'
             'A/B/Cのすべてに該当しない場合だけ「IRRELEVANT: 理由（本文の根拠を含める）」の一行を出力。\n'
             '展示会の開催日や将来の発売日を記事の公開日として書き換えないこと。\n'
             'スポーツ、大学単独研究、ペットフード、一般美容商品の宣伝は対象外です。\n\n'
@@ -715,6 +717,7 @@ def select_daily_digest(
 
     regular = [item for item in items if not item.get('permanent_record') and verified_news(item)
                and item.get('fulltext_status') != 'unavailable'
+               and not robot_scope_exclusion(item.get('title'), item.get('source_excerpt') or item.get('summary'))
                and 'title_only_summary' not in item.get('quality_flags', [])]
     previous_regular = [item for item in previous_items if not item.get('permanent_record')]
     if previous_regular:
@@ -751,7 +754,8 @@ def select_daily_digest(
     fallback.sort(key=rank, reverse=True)
 
     # Reserve space for thin but strategically important categories first.
-    minimum_by_category = {'①': 4, '②': 3, '③': 1, '④': 1, '⑤': 1, '⑥': 2}
+    minimum_by_section = {'rivals': 6, 'machine': 3, 'packaging': 4,
+                          'wet': 2, 'tissue': 2, 'toilet': 1, 'palletizer': 2}
     selected = []
     selected_urls = set()
 
@@ -765,12 +769,12 @@ def select_daily_digest(
         selected_urls.add(key)
         return True
 
-    for category_id, quota in minimum_by_category.items():
+    for section, quota in minimum_by_section.items():
         count = 0
         # Soft category coverage, never an exception to the five-day cutoff.
         category_pool = recent + fallback
         for item in category_pool:
-            if item.get('category_id') == category_id and add(item):
+            if assign_daily_section(item) == section and add(item):
                 count += 1
                 if count >= quota:
                     break
@@ -926,7 +930,7 @@ def main(data_dir=None, reference_date=None, allow_weekend=False):
     # Create one balanced digest per run. Articles keep their true publication
     # date, but the snapshot date represents the day the digest was assembled.
     digest_items = [
-        {**item, 'dashboard_section': assign_daily_section(item)}
+        {**item, 'dashboard_section': assign_daily_section(item), 'scope_policy_version': SCOPE_VERSION}
         for item in select_daily_digest(
             ready,
             previous_items=previous_digest_items,

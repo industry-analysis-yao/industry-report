@@ -29,22 +29,28 @@ QUERY_GROUPS = {
         '(ゼネラルパッカー OR 静岡シブヤ精機 OR シンワ機械) (発売 OR 出展 OR 開発)',
         '(コニカミノルタ OR ダックエンジニアリング) (包装 OR フィルム OR 印字検査)',
         '"TOKYO PACK" (新製品 OR 技術 OR 包装機 OR 検査)',
+        'シリウスビジョン (検査 OR 包装 OR 開発)',
+        'ミヤコシ (軟包装 OR 加工 OR 開発)',
+        'ホリゾン (包装 OR 自動化 OR 開発)',
     ],
     ('ja', 'palletizer'): [
-        'ファナック ロボット', '安川電機 ロボット', '川崎重工 ロボット',
-        '三菱電機 ロボット', 'オムロン ロボット', 'ヤマハ発動機 産業用ロボット',
-        '不二輸送機', 'ユニバーサルロボット', 'ABB ロボット', 'オカムラ パレタイザー',
-        '(協働ロボット OR パレタイジング OR ピッキング OR ロボットハンド) (発売 OR 開発 OR 導入 OR 展示)',
-        '(物流自動化 OR AMR OR AGV) (工場 OR 出荷 OR パレット OR 包装)',
-        '"国際物流総合展" (ロボット OR 包装 OR パレタイザー)',
-        '"国際物流総合展" (仕分け OR 搬送 OR 自動倉庫)',
-        '(ロボット OR ピッキング) (ビジョン OR センサー OR 制御装置) (発売 OR 開発 OR 新製品)',
-        '(パナソニックコネクト OR ダイフク OR Mujin OR ラピュタロボティクス) (新製品 OR 開発 OR 導入 OR 出展)',
+        'ファナック (パレタイザー OR パレタイズ OR 箱詰め)',
+        '安川電機 (パレタイズ OR パレタイジング OR 積付け)',
+        '川崎重工 (パレタイザー OR デパレタイザー)',
+        '不二輸送機', 'オカムラ パレタイザー',
+        '(パレタイザー OR デパレタイザー OR パレタイズ) (発売 OR 開発 OR 導入 OR 展示)',
+        '(Mujin OR ダイフク OR ユニバーサルロボット) (積付け OR 荷積み OR パレタイズ OR 箱詰め)',
+        '(ロボットハンド OR グリッパー) (段ボール OR 包装ライン OR 袋詰め OR 積付け)',
     ],
     ('ja', 'rivals'): [
         'ユニ・チャーム 新製品', '大王製紙 エリエール', '日本製紙 クレシア',
         '花王 (メリーズ OR ロリエ OR おむつ)', '王子ネピア', 'リブドゥコーポレーション',
         '白十字 おむつ', '住友精化 吸水性樹脂', '日本触媒 吸水性樹脂',
+        'ユニ・チャーム (設備投資 OR 工場 OR 特許 OR 価格改定 OR 決算)',
+        '日本製紙 (家庭紙 OR クレシア OR パルプ OR セルロース)',
+        '王子ネピア (新製品 OR 設備 OR 価格改定 OR 生産)',
+        '王子ホールディングス (設備投資 OR パルプ OR セルロース OR リサイクル)',
+        'レンゴー (包装 OR 原紙 OR 設備投資)',
     ],
     ('ja', 'tissue'): [
         '丸富製紙', 'カミ商事', '大分製紙', '丸住製紙 家庭紙', '春日製紙',
@@ -53,6 +59,10 @@ QUERY_GROUPS = {
     ('ja', 'wet'): [
         'ユニ・チャーム おしりふき', 'レック ウェット', '大一紙工', '昭和紙工',
         '(ウエットティシュー OR ウェットシート OR ウェットワイプ) (発売 OR 工場 OR 技術)',
+        '大富士製紙 (不織布 OR ウェット OR 生産)',
+        '服部製紙 (ウエット OR ウェット OR 新製品)',
+        'コーヨー化成 (ウエット OR ウェット OR 工場)',
+        'サンジャパン (おしりふき OR ウェット OR 不織布)',
     ],
     ('en', 'machine'): [
         'GDM Coesia', 'Fameccanica', 'Curt G Joa', 'ANDRITZ (nonwoven OR tissue)',
@@ -66,9 +76,10 @@ QUERY_GROUPS = {
         '(cartoning OR case packing OR flow wrapping) (launch OR unveils OR automation)',
     ],
     ('en', 'palletizer'): [
-        'FANUC (robot OR automation)', 'Universal Robots', 'ABB Robotics',
-        'Yaskawa palletizing', 'Robotiq', 'KUKA (handling OR palletizing)',
-        '(robotic packing OR palletizing robot OR robot gripper) (launch OR unveils OR partnership)',
+        'FANUC (palletizing OR depalletizing OR case packing)',
+        'Universal Robots palletizing', 'ABB (palletizing OR depalletizing)',
+        'Yaskawa palletizing', 'Robotiq palletizing', 'KUKA palletizing',
+        '(palletizing robot OR depalletizer OR palletiser) (launch OR unveils OR installation)',
     ],
     ('en', 'rivals'): [
         'Essity (hygiene OR tissue OR investment)', 'Kimberly-Clark (diaper OR tissue OR hygiene)',
@@ -83,8 +94,8 @@ QUERY_GROUPS = {
         '(达意隆 OR 松川 OR 中亚股份) (包装 OR 机器人)',
     ],
     ('zh', 'palletizer'): [
-        '(埃斯顿 OR 新松 OR 埃夫特 OR 节卡 OR 越疆) (码垛 OR 搬运 OR 协作机器人)',
-        '(码垛机器人 OR 装箱机器人 OR 机器视觉) (发布 OR 新品 OR 投产)',
+        '(埃斯顿 OR 新松 OR 埃夫特 OR 节卡 OR 越疆) (码垛 OR 拆垛 OR 装箱)',
+        '(码垛机器人 OR 装箱机器人) (发布 OR 新品 OR 投产)',
     ],
     ('zh', 'rivals'): [
         '恒安 卫生用品', '维达 生活用纸', '中顺洁柔', '稳健医疗 全棉 湿巾',
@@ -113,6 +124,10 @@ EQUIPMENT_COMPANIES = {
     '埃斯顿': 'palletizer', '节卡': 'palletizer', '越疆': 'palletizer', '新松': 'palletizer',
 }
 
+PALLETIZER_TERMS = ('パレタイ', 'パレタイズ', 'パレタジング', 'デパレタイ', 'デパレタイズ',
+                    '積付け', '積み付け', '荷積み', '荷下ろし', '段積み',
+                    'palletiz', 'palletis', 'depallet', '码垛', '碼垛', '拆垛', '码盘')
+
 EQUIPMENT_TERMS = {
     'machine': ('不織布製造', 'コンバーティング', 'スリッター', '巻取機', '超音波接合',
                 'converting machine', 'converting line', 'diaper machine', 'tissue machine',
@@ -120,10 +135,10 @@ EQUIPMENT_TERMS = {
     'packaging': ('包装機', '包装ライン', '包装技術', '装箱', 'ピロー包装', 'ケーサー',
                   'packaging machine', 'packaging automation', 'packing system', 'cartoning',
                   'case packer', 'flow wrap', '包装机', '包装システム', 'tokyo pack', '印字検査',
-                  '重量選別機', '金属検出機', 'checkweigher', 'inspection system'),
-    'palletizer': ('ロボット', 'パレタイ', 'ピッキング', '搬送', 'ハンドリング', 'robot',
-                   'cobot', 'palletiz', 'palletis', 'gripper', 'pick-and-place', 'robotics',
-                   '机器臂', '机器人', '码垛', 'autonomous mobile robot', 'openarm', 'unitree g1'),
+                  '重量選別機', '金属検出機', 'checkweigher', '箱詰め', '袋詰め', '封函',
+                  'case packing', 'case-packing', 'robotic packing', 'automatic bagging',
+                  'carton handling', 'end-of-line', '包装検査', '包装ライン搬送'),
+    'palletizer': PALLETIZER_TERMS,
 }
 
 
@@ -143,14 +158,33 @@ def equipment_section(text):
                                      'vacuum cleaner', 'robot vacuum', 'surgical robot', '手术机器人', '掃除ロボット',
                                      'robot soccer', 'robotaxi', '掃除機', 'ロボットアニメ')):
         return None
-    if ('フィジカルai' in text or 'physical ai' in text) and any(t in text for t in ('工場', '物流', 'factory', 'manufacturing')):
-        return 'palletizer'
     for section in ('palletizer', 'packaging', 'machine'):
         if any(term in text for term in EQUIPMENT_TERMS[section]):
             return section
     for company, section in EQUIPMENT_COMPANIES.items():
-        if company in CONGLOMERATES:
+        if company in CONGLOMERATES or section == 'palletizer':
             continue
         if company_matches(company, text) and any(t in text for t in ('展示', '出展', '新製品', '製品', '開発', '発表', '受賞', 'launch', 'unveil', 'automation')):
             return section
     return None
+
+
+def robot_scope_exclusion(title, body=''):
+    """A robot brand/AI label is not proof of a packaging-line application.
+
+    Inspect the headline and lead only: navigation/footer mentions must not
+    qualify an unrelated humanoid or general robot financing announcement.
+    """
+    title = (title or '').lower()
+    if not any(t in title for t in ('ロボット', 'robot', 'cobot', '机器人', '機器人',
+                                   'ヒューマノイド', '人型', 'humanoid', 'フィジカルai', 'physical ai')):
+        return None
+    lead = (body or '')[:350].lower()
+    # A sentence explicitly saying there is no application is not evidence.
+    lead = ' '.join(s for s in re.split(r'[。!?\n]', lead)
+                    if not re.search(r'(?:用途|対応).{0,12}(?:ない|なし|未記載|不明)|no (?:packaging|palletizing) application', s))
+    application = title + ' ' + lead
+    concrete = PALLETIZER_TERMS + EQUIPMENT_TERMS['packaging'] + EQUIPMENT_TERMS['machine']
+    if any(t in application for t in concrete):
+        return None
+    return 'robot_without_packaging_line_application'

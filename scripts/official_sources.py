@@ -11,7 +11,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from news_dates import JST, DATE_VERSION, parse_date
-from source_catalog import equipment_section
+from source_catalog import equipment_section, robot_scope_exclusion
 
 KAO_INDEX = 'https://www.kao.com/content/dam/article/newsindex/v4.content.wcm_kao.sites.kao.www-kao-com.jp.ja.newsroom.news.1.json'
 NIPPON_INDEX = 'https://www.nipponpapergroup.com/data/news_data_ja.json'
@@ -51,6 +51,10 @@ def parse_index(source, content, index_url):
         'aandd': ('.newsbox', 'a[href]', '.txt', '.data'),
         'panasonic_connect': ('.newsroom_news', '.title a[href]', '.title', '.date'),
         'konica': ('.newsroom-release-list', '.newsroom-release-list__txt__ttl a[href]', '.newsroom-release-list__txt__ttl', '.newsroom-release-list__txt__date'),
+        'siriusvision': ('a[href]:has(> time):has(> h2)', None, 'h2', 'time'),
+        'miyakoshi': ('.p-article04__inner', '.p-article04__title a[href]', '.p-article04__title', 'time'),
+        'crecia': ('div.container:has(> dt time):has(> dd a[href])', 'dd a[href]', 'dd a[href]', 'dt time'),
+        'pacraft': ('.c-link-list_item', 'a[href]', '.title', '.date'),
     }
     row_selector, link_selector, title_selector, date_selector = selectors[source]
     rows = []
@@ -71,22 +75,26 @@ def parse_index(source, content, index_url):
 def official_relevance(title, company):
     """Evaluate the release subject, NOT footer/navigation or generic boilerplate."""
     text = title.lower()
+    if robot_scope_exclusion(title):
+        return False
     excluded = ('ペットフード', 'キャットフード', 'ドッグフード', '猫用フード', '犬用フード',
                 '愛犬用', '愛猫用', 'おやつ', '猫砂', 'ゴルフ', 'ゴルファー', 'カプセルトイ',
                 'スキンケア', '化粧品', 'ソフィーナ', '美容液', '乳液', 'シャンプー', '洗濯洗剤', '柔軟剤',
-                '夏季休業', '感謝祭', 'ダンス部', 'フォトコンテスト', '短歌')
+                '夏季休業', '感謝祭', 'ダンス部', 'フォトコンテスト', '短歌', '呼吸器疾患', 'x線動態', '診断基盤')
     if any(term in text for term in excluded):
         return False
     if equipment_section(title):
         return True
     signals = ('おむつ', 'オムツ', 'ナプキン', '生理', '月経', 'ソフィ', 'sofy', 'ムーニー',
                'マミーポコ', 'グーン', 'エリス', 'ロリエ', 'マスク', '失禁', '衛生',
+               'ポイズ', '吸水ケア', '尿とりパッド', '紙パンツ', 'アテント',
                'ティシュ', 'ティッシュ', 'ティシュー', 'ウエット', 'ウェット', 'おしりふき',
                '家庭紙', 'ペーパー', 'ふきん', 'ハンドタオル', '不織布', 'パルプ', '吸収',
                '加工機', '包装', 'tokyo pack', '設備', '自動化', '製造', '生産', '工場', '火災',
                '投資', '買収', '業績', '決算', '損失', '事業', '株式', '需要計画',
                '研究', '技術', '新素材', 'セルロース', 'バイオ', 'リサイクル', '再資源',
-               '環境', '脱炭素', 'esg', 'gx', '人権', 'サプライ', 'ppe', 'packplus')
+               '環境', '脱炭素', 'esg', 'gx', '人権', 'サプライ', 'ppe', 'packplus',
+               '画像検査', '印刷検査', '品質検査', '幹線輸送', '共同配送')
     return any(term in text for term in signals) or (company in {'Valmet', 'ANDRITZ'} and
         any(term in text for term in ('tissue', 'nonwoven', 'converting', 'airlay', 'spunlace', 'diaper')))
 
@@ -137,6 +145,13 @@ def collect_official_news(*, now=None, get=None, sources=None):
         ('aandd', 'エー・アンド・デイ', 'https://www.aandd.co.jp/whatsnew/'),
         ('panasonic_connect', 'パナソニックコネクト', 'https://connect.panasonic.com/jp-ja/newsroom'),
         ('konica', 'コニカミノルタ', 'https://www.konicaminolta.com/jp-ja/newsroom/'),
+        ('siriusvision', 'シリウスビジョン', 'https://siriusvision.co.jp/news/'),
+        ('miyakoshi', 'ミヤコシ', 'https://miyakoshi.co.jp/news/'),
+        ('crecia', '日本製紙クレシア', 'https://www.crecia.co.jp/'),
+        # The exhibition table contains event dates, not publication dates.
+        # Only the dated news/topics indexes are publication evidence.
+        ('pacraft', 'PACRAFT', 'https://pacraft-global.com/news/'),
+        ('pacraft', 'PACRAFT', 'https://pacraft-global.com/topics/'),
     ]
 
     def fetch(spec):
@@ -150,6 +165,11 @@ def collect_official_news(*, now=None, get=None, sources=None):
             diagnostic['parsed'] = len(rows)
             if not rows:
                 raise ValueError('No dated rows found; publisher layout may have changed')
+            dated = [parse_date(row[2]) for row in rows]
+            valid_dates = [d.astimezone(JST).date() for d in dated if d and d <= now]
+            diagnostic['latest_index_publication'] = max(valid_dates).isoformat() if valid_dates else None
+            diagnostic['recent_index_rows'] = sum(
+                0 <= (now.astimezone(JST).date() - d).days <= 4 for d in valid_dates)
             items = []
             for title, url, raw_date, excerpt in rows:
                 item = index_item(title, url, raw_date, excerpt, company=company, source=source, index_url=index_url, now=now)

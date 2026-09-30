@@ -5,8 +5,9 @@ deduplication remain mandatory gates in generate_dashboard.
 """
 import unicodedata
 from fetch_news import assess_relevance
+from source_catalog import equipment_section, robot_scope_exclusion
 
-SCOPE_VERSION = 1
+SCOPE_VERSION = 2
 
 
 def classify_scope(title, body, company=''):
@@ -25,6 +26,9 @@ def classify_scope(title, body, company=''):
         return result('exclude', 'consumer_or_specialist_robot', matched)
     if '大学単独' in text or 'university-only' in text:
         return result('exclude', 'university_only_research')
+    robot_reason = robot_scope_exclusion(title, body)
+    if robot_reason:
+        return result('exclude', robot_reason)
     relevant, flags = assess_relevance(title, body)
     hard_flags = [flag for flag in flags if flag not in {'no_industry_signal'}]
     if not relevant and hard_flags:
@@ -37,16 +41,16 @@ def classify_scope(title, body, company=''):
     subject_company = unicodedata.normalize('NFKC', company or '').lower() + ' ' + title
     makers = [name for name in companies if name in subject_company]
     business = [term for term in ('工場', '事故', '調査委員会', '操業', '投資', '決算', '買収',
-                                  '原材料', '生産', '新製品', '価格改定', 'factory', 'investment', 'acquisition')
+                                  '原材料', '生産', '新製品', '新発売', 'リニューアル', '価格改定', 'factory', 'investment', 'acquisition')
                 if term in text]
     if makers and business:
         return result('include', 'target_manufacturer_activity', makers + business)
 
     equipment = [term for term in ('包装機', '装箱機', '金属異物検査', '金属検出機', '重量チェック',
                                   'ウェイトチェッカ', '計量センサ', '搬送ロボット', '協働ロボット',
-                                  '巡回点検', 'ピッキングロボット', '産業用ロボット', '吸収体加工機',
+                                  '箱詰め', '袋詰め', 'パレタイザー', 'パレタイズ', '吸収体加工機',
                                   '不織布製造', 'checkweigher', 'case packer', 'industrial robot',
-                                  'packaging machine', 'palletizing robot') if term in body]
+                                  'packaging machine', 'palletizing', 'palletising', 'depalletizing') if term in body]
     contexts = [term for term in ('包装', '工場', '物流', '出荷', '生産ライン', '製造',
                                  'factory', 'warehouse', 'manufacturing', 'packaging') if term in body]
     # Title must describe equipment or its industrial application; footer mentions
@@ -55,6 +59,6 @@ def classify_scope(title, body, company=''):
                                  '搬送', 'robot', 'packaging', 'checkweigher', 'converting') if term in title]
     events = [term for term in ('展示', '出展', '導入', '発売', '開発', '採用', '発表', 'launch',
                                'introduc', 'deploy', 'adopt', 'unveil') if term in text]
-    if equipment and contexts and subjects and events:
+    if equipment and contexts and subjects and events and equipment_section(title + ' ' + body[:350]):
         return result('include', 'industrial_equipment_event', equipment + contexts + events)
     return result('review', 'requires_contextual_review')

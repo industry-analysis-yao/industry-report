@@ -25,8 +25,8 @@ class SourceExpansionTests(unittest.TestCase):
         self.assertTrue({'machine','packaging','palletizer','rivals','tissue','wet'} <= {q['group'] for q in queries})
 
     def test_transferable_equipment_without_diaper_keyword(self):
-        for title in ['フジキカイ 包装機を出展', 'FANUC and Palladyne announce robotic automation collaboration',
-                      'PAC Machinery unveils packaging machine', '安川電機 協働ロボットを発売',
+        for title in ['フジキカイ 包装機を出展', 'FANUC announces robotic palletizing installation',
+                      'PAC Machinery unveils packaging machine', '安川電機 パレタイズロボットを発売',
                       '节卡发布码垛机器人新品']:
             with self.subTest(title=title):
                 self.assertTrue(assess_relevance(title, '')[0])
@@ -85,12 +85,12 @@ class SourceExpansionTests(unittest.TestCase):
 
     def test_source_counts_include_raw_and_rejection_reasons(self):
         now=datetime(2026,9,9,tzinfo=timezone.utc)
-        parser=FakeParser([entry(title='FANUC robotic automation launch',published=now),
+        parser=FakeParser([entry(title='FANUC robotic palletizing launch',published=now),
                            entry(title='ロボット掃除機 新発売',published=now)])
         health={}
         items=fetch_google_news_rss('robot',language='en',group='palletizer',now=now,feed_parser=parser,diagnostics=health)
         self.assertEqual((health['raw'],health['date_eligible'],len(items)),(2,2,1))
-        self.assertEqual(health['rejected'],{'outside_supply_chain_scope':1})
+        self.assertEqual(health['rejected'],{'robot_without_packaging_line_application':1})
 
     def test_reporter_date_cannot_replace_linked_manufacturer_date(self):
         def response(url,body):

@@ -2,9 +2,9 @@ name: Update Dashboard Data
 
 on:
   schedule:
-    # Collect daily, including weekends, at 07:05 JST. The generator publishes
+    # Collect daily, including weekends, at 19:35 JST. The generator publishes
     # only Mon-Fri by the actual JST execution date (including delayed runs).
-    - cron: '5 22 * * *'
+    - cron: '35 10 * * *'
   workflow_dispatch:
 
 concurrency:

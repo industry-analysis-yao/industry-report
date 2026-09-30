@@ -27,7 +27,7 @@ from email.utils import parsedate_to_datetime
 from typing import Any, Iterable
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 from news_dates import article_url, publication_evidence, verified_news
-from source_catalog import LOCALES, EQUIPMENT_COMPANIES, CONGLOMERATES, equipment_section, company_matches, expanded_queries
+from source_catalog import LOCALES, EQUIPMENT_COMPANIES, CONGLOMERATES, equipment_section, company_matches, expanded_queries, robot_scope_exclusion
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -122,6 +122,7 @@ KNOWN_COMPANIES = [
     "维达", "Hengan", "恒安", "中顺洁柔", "Winner Medical", "稳健医疗",
     "住友精化", "G-Place", "日本製紙クレシア", "丸富製紙", "カミ商事",
     'Babycare', 'Tork', '北越パレット', 'アイオイ・システム', 'グンゼ',
+    '王子ネピア', 'リブドゥコーポレーション', 'レック', '日本触媒',
 ]
 
 CORE_TERMS = [
@@ -129,13 +130,15 @@ CORE_TERMS = [
     "ペーパータオル", "キッチンペーパー", "おむつ", "オムツ", "ナプキン",
     "生理用品", "月経", "ロリエ", "失禁", "ウェットティッシュ", "ウエットティッシュ", "ウェットティシュー", "ウエットティシュー", "ウェットワイプ", "ウエットワイプ", "不織布",
     "吸収体", "パルプ", "衛生用品", "diaper", "tissue", "hygiene",
+    "ティシュ", "おしりふき", "吸水ケア", "尿とりパッド", "紙パンツ", "ポイズ", "アテント",
+    "スコッティ", "クリネックス", "エルモア",
     "sanitary napkin", "nonwoven", "absorbent core", "wet tissue", "wet wipe",
     '纸尿裤', '卫生巾', '生活用纸', '纸巾', '湿巾', '无纺布', '吸水树脂',
 ]
 
 MACHINE_TERMS = [
     "加工機", "包装機", "パレタイザー", "製造設備", "製造機械", "包装ライン",
-    "充填機", "産業用ロボット", "自動化", "machinery", "packaging machine",
+    "充填機", "自動化", "machinery", "packaging machine",
 ]
 
 PATENT_DOMAIN_TERMS = CORE_TERMS + MACHINE_TERMS + [
@@ -287,6 +290,7 @@ def map_category(text: str, *, academic: bool = False) -> tuple[str, str]:
         category = "③"
     elif any(term in lowered for term in (
         "ウェットティッシュ", "ウエットティッシュ",
+        "ウェットティシュ", "ウエットティシュ",
         "ウェットティシュー", "ウエットティシュー",
         "ウェットワイプ", "ウエットワイプ",
         "ウェットシート", "ウエットシート", "おしりふき",
@@ -295,7 +299,7 @@ def map_category(text: str, *, academic: bool = False) -> tuple[str, str]:
         category = "⑤"
     elif any(term in lowered for term in ("パルプ", "製紙", "王子ホールディングス", "日本製紙", "大王製紙")):
         category = "②"
-    elif any(term in lowered for term in ("トイレットペーパー", "ティシュー", "ティッシュ", "家庭紙", "ペーパーふきん", "ハンドタオル")):
+    elif any(term in lowered for term in ("トイレットペーパー", "ティシュ", "ティッシュ", "家庭紙", "ペーパーふきん", "ハンドタオル")):
         category = "⑥"
     else:
         category = "①"
@@ -303,6 +307,11 @@ def map_category(text: str, *, academic: bool = False) -> tuple[str, str]:
 
 
 def assess_relevance(title: str, snippet: str, source_name: str = "", *, academic: bool = False) -> tuple[bool, list[str]]:
+    robot_reason = robot_scope_exclusion(title, snippet)
+    if robot_reason:
+        return False, [robot_reason]
+    if re.search(r'オートメーション新聞\s*No\.|今週のニュースまとめ|weekly news roundup', title, re.I):
+        return False, ['newsletter_index_not_single_event']
     text = f"{title} {snippet}"
     lowered = unicodedata.normalize("NFKC", text).lower()
     flags: list[str] = []
@@ -357,7 +366,7 @@ def assess_relevance(title: str, snippet: str, source_name: str = "", *, academi
     else:
         relevant = has_core or has_machine or (has_company and has_business_signal and extract_company(text) not in CONGLOMERATES)
         event_signals = business_signals + (
-            '発売', '発表', '新商品', '新製品', '新登場', '開発', '導入', '稼働', '実証',
+            '発売', '発表', '新商品', '新製品', '新登場', 'リニューアル', '開発', '導入', '稼働', '実証',
             'ラインナップ', '拡充', '値上げ', '寄贈', '寄付', '製造', '生産', '需要',
             'リサイクル', 'サステナ', '市場', '調査', '価格', 'launch', 'investment',
             'plant', 'technology', 'production', 'recycling', 'acquisition',

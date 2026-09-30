@@ -29,7 +29,9 @@ assert.equal(Object.values(counts).reduce((a,b) => a+b, 0), data.items.length);
 assert.deepEqual(counts, data.selection_health.section_counts);
 assert.equal(context.dailyNewsSection({title:'wet wipe packaging machine automation',category_id:'④'}),'packaging');
 assert.equal(context.dailyNewsSection({title:'wet tissue new product',category_id:'⑥'}),'wet');
-assert.equal(context.dailyNewsSection({title:'ピッキング表示器 発売',category_id:'④'}),'palletizer');
+assert.equal(context.dailyNewsSection({title:'包装ラインのピッキング表示器 発売',category_id:'④'}),'packaging');
+assert.equal(context.dailyNewsSection({title:'パレタイズロボット 発売',category_id:'④'}),'palletizer');
+assert.equal(context.dailyNewsSection({title:'AI robot controller',category_id:'④'}),'packaging');
 assert.equal(context.dailyNewsSection({title:'包装機とロボット',category_id:'④', summary_method:'codex_editorial', dashboard_section:'packaging'}),'packaging');
 for (const patent of data.new_patents || []) {
   const card = context.buildCard(patent, patent.id);
