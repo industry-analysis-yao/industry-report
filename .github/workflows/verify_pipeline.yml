@@ -1,8 +1,6 @@
 name: Verify Real AI Pipeline (no publication)
 on:
-  push:
-    branches: [main]
-    paths: ['scripts/**', 'tests/**', '.github/workflows/verify_pipeline.yml']
+  # Paid integration checks are explicit only, not triggered by each release.
   workflow_dispatch:
 permissions:
   contents: read

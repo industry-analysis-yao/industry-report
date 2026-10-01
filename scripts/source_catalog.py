@@ -132,7 +132,7 @@ EQUIPMENT_TERMS = {
     'machine': ('不織布製造', 'コンバーティング', 'スリッター', '巻取機', '超音波接合',
                 'converting machine', 'converting line', 'diaper machine', 'tissue machine',
                 'nonwoven line', 'nonwoven machinery', '卫生用品设备', '纸尿裤生产线'),
-    'packaging': ('包装機', '包装ライン', '包装技術', '装箱', 'ピロー包装', 'ケーサー',
+    'packaging': ('包装機', '包装設備', '包装ライン', '包装技術', '装箱', 'ピロー包装', 'ケーサー',
                   'packaging machine', 'packaging automation', 'packing system', 'cartoning',
                   'case packer', 'flow wrap', '包装机', '包装システム', 'tokyo pack', '印字検査',
                   '重量選別機', '金属検出機', 'checkweigher', '箱詰め', '袋詰め', '封函',

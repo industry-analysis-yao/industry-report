@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from import_codex_digest import publish, public_item
+from codex_review_gate import fingerprint, REQUIRED_CHECKS
 import generate_dashboard as g
 
 
@@ -20,6 +21,17 @@ def fixture():
                 date_evidence='原文の署期を確認', verification_level='本文を照合',
                 caution='展示会予告', priority='重点', region='日本', relationship='供給元',
                 evidence_file='C:/private/not-for-publication.txt')
+
+
+def reviewed_payload(items):
+    payload = dict(date='2026-09-18', items=items)
+    payload['review'] = dict(reviewer='codex', status='approved',
+                            draft_sources=['codex'],
+                            content_sha256=fingerprint(payload), reviewed_at='2026-09-18T20:00:00+09:00',
+                            reviewed_item_ids=[it['id'] for it in items],
+                            checks={key: True for key in REQUIRED_CHECKS},
+                            shortfall_reason_ja='各分野の公式情報を追加確認しましたが、条件を満たす未掲載の記事が不足しています。')
+    return payload
 
 
 class CodexImportTests(unittest.TestCase):
@@ -56,7 +68,7 @@ class CodexImportTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
             source = directory/'review.json'
-            source.write_text(json.dumps(dict(date='2026-09-18', items=[fixture()])), encoding='utf-8')
+            source.write_text(json.dumps(reviewed_payload([fixture()])), encoding='utf-8')
             old = directory/'2026-09-10.json'
             old.write_text('{"items": []}', encoding='utf-8')
             with patch.object(g, 'process_item_with_retry', side_effect=AssertionError('API forbidden')):
@@ -71,11 +83,11 @@ class CodexImportTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
             source = directory/'review.json'
-            source.write_text(json.dumps(dict(date='2026-09-18', items=[fixture(), fixture()])), encoding='utf-8')
+            source.write_text(json.dumps(reviewed_payload([fixture(), fixture()])), encoding='utf-8')
             with self.assertRaises(ValueError):
                 publish(source, directory)
             self.assertFalse((directory/'2026-09-18.json').exists())
-            source.write_text(json.dumps(dict(date='2026-09-18', items=[fixture()])), encoding='utf-8')
+            source.write_text(json.dumps(reviewed_payload([fixture()])), encoding='utf-8')
             previous = copy.deepcopy(fixture())
             previous['url'] = 'https://example.com/syndication'
             (directory/'2026-09-17.json').write_text(json.dumps(dict(items=[previous])), encoding='utf-8')

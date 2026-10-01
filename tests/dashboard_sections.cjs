@@ -10,8 +10,9 @@ const names = ['dailyNewsSection', 'getTypeBadgeClass', 'getCatColor', 'buildCar
 const extracted = names.map(name => code.match(new RegExp('function ' + name + '\\([^]*?\\n\\}'))[0]).join('\n');
 const context = vm.createContext({});
 vm.runInContext(extracted, context);
-const date = process.argv[2] || JSON.parse(fs.readFileSync('data/dates_index.json', 'utf8'))[0];
-const data = JSON.parse(fs.readFileSync(`data/${date}.json`, 'utf8'));
+const dataDir = process.argv[3] || 'data';
+const date = process.argv[2] || JSON.parse(fs.readFileSync(`${dataDir}/dates_index.json`, 'utf8'))[0];
+const data = JSON.parse(fs.readFileSync(`${dataDir}/${date}.json`, 'utf8'));
 const counts = {};
 data.items.forEach((item, i) => {
   const section = context.dailyNewsSection(item);

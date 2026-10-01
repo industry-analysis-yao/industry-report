@@ -5,21 +5,26 @@ review the generated diff, test, then commit/push to publish via GitHub Pages.
 """
 import argparse
 import json
+import re
 from collections import Counter
 from datetime import date, datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from generate_dashboard import load_previous_digest_items, same_news_story
+from generate_dashboard import load_previous_digest_items, same_news_story, assign_daily_section
 from editorial_language import validate_japanese_item
+from codex_review_gate import validate_review
+from source_catalog import robot_scope_exclusion, PALLETIZER_TERMS
 
 SECTIONS = {
     '卫生用品・吸收护理': ('rivals', '①', '日用品・衛生用品メーカー'),
     '竞争厂家经营・物流': ('rivals', '②', '競合・物流・経営'),
     'Tissue・干式生活用纸': ('tissue', '⑥', 'ティッシュペーパー・家庭紙'),
+    'Wet Tissue・湿巾': ('wet', '⑤', 'ウェットティッシュ・ワイプ'),
+    'Toilet Paper・卫生纸': ('toilet', '⑥', 'トイレットペーパー'),
     '包装设备・包装材料': ('packaging', '④', '包装設備・包装材料'),
     '加工・制浆设备': ('machine', '③', '加工・パルプ設備'),
-    '机器人・生产自动化': ('palletizer', '④', 'ロボット・生産自動化'),
+    '机器人・生产自动化': ('palletizer', '④', 'パレタイザー・積付け設備'),
     '材料・无纺布': ('rivals', '②', '材料・不織布'),
     '企业专利': ('patent', '⑦', '企業特許'),
 }
@@ -77,6 +82,16 @@ def public_item(raw, issue_date):
         result.update(patent_number=raw['publication_number'], grant_date=raw.get('grant_date'),
                       legal_status='未確認（公開公報を確認。登録・有効性は未確認）')
     validate_japanese_item(result)
+    if not re.search(r'[ぁ-ゖァ-ヺ一-龯]', result['title']):
+        raise ValueError('Translate the headline into Japanese before publication')
+    automatic_section = assign_daily_section({**result, 'summary_method': ''})
+    if section == 'tissue' and automatic_section == 'wet':
+        raise ValueError('Wet tissue must not be classified as dry tissue')
+    if not patent and robot_scope_exclusion(result['title'], result['summary']):
+        raise ValueError('Robot article has no concrete packaging/converting/palletizing application')
+    if section == 'palletizer' and not any(
+            term in (result['title'] + ' ' + result['summary']).lower() for term in PALLETIZER_TERMS):
+        raise ValueError('Palletizer section requires concrete palletizing evidence')
     return result
 
 
@@ -89,10 +104,12 @@ def merge_records(existing, incoming):
 
 def publish(source, data_dir):
     raw = read(Path(source), {})
+    review = validate_review(raw)
     issue_date = date.fromisoformat(raw['date'])
     converted = [public_item(it, issue_date) for it in raw['items']]
-    if not converted or len(converted) > 20:
-        raise ValueError('Edition must contain 1–20 reviewed records')
+    news_count = sum(not it['permanent_record'] for it in converted)
+    if not 1 <= news_count <= 20 or len(converted) - news_count > 30:
+        raise ValueError('Edition requires 1–20 reviewed NEWS; patents are a separate quota (max 30)')
     directory = Path(data_dir)
     previous = load_previous_digest_items(str(directory), issue_date)
     seen_ids, seen_urls, seen_numbers = set(), set(), set()
@@ -122,6 +139,7 @@ def publish(source, data_dir):
     snapshot = dict(
         date=raw['date'], digest_window_days=5, target_count=20,
         publication_mode='codex_editorial',
+        editorial_review=review,
         publication_note='Codex編集版：ニュース18件＋企業特許2件。原文公開日を確認。展示会予告・観察情報を含みます。'
                          if len(news) == 18 and len(patents) == 2 else
                          f'Codex編集版：ニュース{len(news)}件＋企業特許{len(patents)}件。原文公開日を確認。',
@@ -155,5 +173,9 @@ if __name__ == '__main__':
     parser.add_argument('source', type=Path)
     parser.add_argument('--data-dir', type=Path, default=Path(__file__).resolve().parents[1]/'data')
     args = parser.parse_args()
+    if args.data_dir.resolve() == (Path(__file__).resolve().parents[1]/'data').resolve():
+        from news_dates import JST
+        if read(args.source, {}).get('date') != datetime.now(JST).date().isoformat():
+            parser.error('Public release must be for today in JST; use an isolated directory for historical tests')
     result = publish(args.source, args.data_dir)
     print(json.dumps(result['edition_counts'], ensure_ascii=False))

@@ -1,11 +1,15 @@
-name: Update Dashboard Data
+name: Prepare Candidates for Codex Review (no publication)
 
 on:
   schedule:
-    # Collect daily, including weekends, at 19:35 JST. The generator publishes
-    # only Mon-Fri by the actual JST execution date (including delayed runs).
+    # Collect at 19:35 JST. API output is a draft, never a public release.
     - cron: '35 10 * * *'
   workflow_dispatch:
+    inputs:
+      use_api:
+        description: 'Use paid OpenRouter for a draft (never publishes)'
+        type: boolean
+        default: false
 
 concurrency:
   group: industry-report-daily-update
@@ -15,13 +19,14 @@ jobs:
   update:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -34,6 +39,9 @@ jobs:
       - name: Run collector tests
         run: python -m unittest discover -s tests -v
 
+      - name: Prepare isolated review workspace
+        run: python scripts/prepare_review_workspace.py --output "$RUNNER_TEMP/industry-review"
+
       - name: Fetch news and patents
         env:
           NEWS_MAX_ITEMS_PER_QUERY: '60'
@@ -42,12 +50,12 @@ jobs:
           ACADEMIC_MAX_AGE_DAYS: '90'
           PATENT_MAX_AGE_DAYS: '365'
           MAX_PATENTS_TOTAL: '30'
-        run: python scripts/fetch_news.py
+        run: python scripts/fetch_news.py --data-dir "$RUNNER_TEMP/industry-review"
 
-      - name: Generate summaries and highlights
+      - name: Generate optional API draft (Codex approval still required)
         id: digest
         env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_API_KEY: ${{ (github.event_name == 'schedule' || inputs.use_api) && secrets.OPENROUTER_API_KEY || '' }}
           PATENT_MAX_AGE_DAYS: '365'
           DAILY_DIGEST_MIN: '15'
           DAILY_DIGEST_TARGET: '20'
@@ -56,35 +64,13 @@ jobs:
           DAILY_DIGEST_HISTORY_DAYS: '30'
           SPECIALTY_MAX_AGE_DAYS: '60'
           MAX_AI_ITEMS_PER_RUN: '80'
-        run: python scripts/generate_dashboard.py
+        run: python scripts/generate_dashboard.py --data-dir "$RUNNER_TEMP/industry-review"
 
-      - name: Validate publication dates and 30-day deduplication
-        if: steps.digest.outputs.published == 'true'
-        run: |
-          python scripts/validate_digest.py
-          node tests/dashboard_sections.cjs
-
-      - name: Upload selection evidence
+      - name: Upload candidates for Codex review
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: collection-and-selection-evidence
-          path: |
-            data/collection_health.json
-            data/selection_audit.json
-          retention-days: 30
-
-      - name: Cleanup data older than 90 days
-        run: python scripts/cleanup_old_data.py
-
-      - name: Commit and push changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/news_data.json data/search_config.json data/dates_index.json data/permanent_vault.json data/*.json
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-          else
-            git commit -m "chore: update dashboard data [skip ci]"
-            git push
-          fi
+          name: codex-review-candidates
+          path: ${{ runner.temp }}/industry-review
+          retention-days: 7
+          if-no-files-found: error

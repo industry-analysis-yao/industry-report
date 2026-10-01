@@ -8,6 +8,7 @@
 import json
 import argparse
 import hashlib
+from pathlib import Path
 from collections import Counter
 import os
 import re
@@ -834,12 +835,16 @@ def save_data(path, items, highlights=None, last_updated=None):
 # Main Entry Point (修复：添加每日快照、日期索引、永久保险库)
 # ============================================================
 def main(data_dir=None, reference_date=None, allow_weekend=False):
+    public_dir = Path(__file__).resolve().parents[1] / 'data'
+    if data_dir is None or Path(data_dir).resolve() == public_dir.resolve():
+        raise ValueError('API generation is draft-only. Use an isolated --data-dir; '
+                         'publish only through import_codex_digest.py after Codex review.')
     jst_now = datetime.now(pytz.timezone('Asia/Tokyo'))
     reference_date = reference_date or jst_now.date()
     publish = publication_day(reference_date) or allow_weekend
     if os.environ.get('GITHUB_OUTPUT'):
         with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as handle:
-            handle.write(f'published={str(publish).lower()}\n')
+            handle.write('published=false\n')
     if not publish:
         print('[WEEKEND] Collection only. No digest, AI calls or publication-history consumption.')
         return
@@ -973,6 +978,7 @@ def main(data_dir=None, reference_date=None, allow_weekend=False):
         json.dump(
             {
                 'date': digest_date,
+                'publication_mode': 'pending_codex_review',
                 'digest_window_days': DAILY_DIGEST_MAX_AGE_DAYS,
                 'target_count': DAILY_DIGEST_TARGET,
                 'selection_health': selection_health,
@@ -1043,7 +1049,7 @@ def main(data_dir=None, reference_date=None, allow_weekend=False):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data-dir', help='Isolated data directory for non-publishing integration tests')
+    parser.add_argument('--data-dir', required=True, help='Isolated draft directory, never the public data directory')
     parser.add_argument('--allow-weekend-preview', action='store_true')
     args = parser.parse_args()
     if args.allow_weekend_preview and not args.data_dir:

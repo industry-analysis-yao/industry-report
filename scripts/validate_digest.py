@@ -50,5 +50,7 @@ def validate_digest(data_dir, reference_date):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data-dir', default=str(Path(__file__).resolve().parent.parent / 'data'))
+    parser.add_argument('--date', type=lambda value: datetime.strptime(value, '%Y-%m-%d').date(),
+                        default=datetime.now(JST).date())
     args = parser.parse_args()
-    validate_digest(args.data_dir, datetime.now(JST).date())
+    validate_digest(args.data_dir, args.date)
