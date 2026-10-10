@@ -1,5 +1,8 @@
 requests
-beautifulsoup4
+# Keep the tested HTML parser pair together. SoupSieve 3.0 breaks the Crecia
+# index selector regression; upgrade only after the collector suite passes.
+beautifulsoup4==4.15.0
+soupsieve==2.10
 python-dotenv
 feedparser
 pytz
