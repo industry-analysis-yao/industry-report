@@ -78,6 +78,11 @@ class CodexImportTests(unittest.TestCase):
             self.assertEqual(old.read_text(), '{"items": []}')
             main = json.loads((directory/'news_data.json').read_text(encoding='utf-8'))
             self.assertEqual(len(main['dates']['2026-09-18']), 1)
+            edition = json.loads((directory/'2026-09-18.json').read_text(encoding='utf-8'))
+            self.assertEqual(edition['publication_note'], 'AI生成版：ニュース1件＋企業特許0件。原文公開日を確認。')
+            self.assertEqual(edition['editorial_review']['reviewer'], 'codex')
+            self.assertEqual(edition['editorial_review']['status'], 'approved')
+            self.assertEqual(edition['items'][0]['summary_method'], 'codex_editorial')
 
     def test_duplicate_in_history_and_current_issue_fails_before_write(self):
         with tempfile.TemporaryDirectory() as tmp:

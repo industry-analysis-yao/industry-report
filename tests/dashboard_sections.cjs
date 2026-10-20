@@ -6,7 +6,7 @@ const html = fs.readFileSync('index.html', 'utf8');
 const scripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m => m[1]);
 scripts.forEach(code => new vm.Script(code));
 const code = scripts.join('\n');
-const names = ['dailyNewsSection', 'getTypeBadgeClass', 'getCatColor', 'buildCard'];
+const names = ['dailyNewsSection', 'getTypeBadgeClass', 'getCatColor', 'buildCard', 'displayPublicationNote'];
 const extracted = names.map(name => code.match(new RegExp('function ' + name + '\\([^]*?\\n\\}'))[0]).join('\n');
 const context = vm.createContext({});
 vm.runInContext(extracted, context);
@@ -22,7 +22,9 @@ data.items.forEach((item, i) => {
   assert(card.includes('原文公開日: ' + item.date));
   if (item.summary_method === 'publisher_excerpt') assert(card.includes('AI要約ではありません'));
   if (item.summary_method === 'codex_editorial') {
-    assert(card.includes('Codex編集要約（原文照合）'));
+    assert(card.includes('AI生成要約（原文照合）'));
+    assert(card.includes('AI生成・'));
+    assert(!card.includes('Codex'));
     assert(card.includes('出典確認・日付・注意事項'));
   }
 });
@@ -48,4 +50,20 @@ if (data.edition_counts) {
 }
 assert(!context.buildCard({title:'<img src=x onerror=alert(1)>', url:'javascript:alert(1)'}, 0).includes('<img'));
 assert(!context.buildCard({url:'javascript:alert(1)'}, 0).includes('href="javascript:'));
+assert.equal(context.displayPublicationNote('Codex編集版：ニュース7件＋企業特許0件。原文公開日を確認。'), 'AI生成版：ニュース7件＋企業特許0件。原文公開日を確認。');
+assert.equal(context.displayPublicationNote('AI生成版：ニュース1件。'), 'AI生成版：ニュース1件。');
+assert.equal(context.displayPublicationNote('公式・原文抜粋'), '公式・原文抜粋');
+assert.equal(context.displayPublicationNote(undefined), '');
+assert(context.buildCard({summary_method:'publisher_excerpt'}, 0).includes('AI要約ではありません'));
+// Check old editions and archived patents too, without migrating their data.
+for (const filename of fs.readdirSync(dataDir).filter(name => /^\d{4}-\d{2}-\d{2}\.json$/.test(name))) {
+  const historical = JSON.parse(fs.readFileSync(`${dataDir}/${filename}`, 'utf8'));
+  assert(!context.displayPublicationNote(historical.publication_note).includes('Codex'));
+  for (const item of [...(historical.items || []), ...(historical.new_patents || [])]) {
+    if (item.summary_method !== 'codex_editorial') continue;
+    const card = context.buildCard(item, item.id);
+    assert(!card.includes('Codex'), `${filename}: ${item.id}`);
+    assert(card.includes('AI生成要約（原文照合）'));
+  }
+}
 console.log(`Frontend syntax, ${data.items.length} card strings and exclusive counts OK`, counts);

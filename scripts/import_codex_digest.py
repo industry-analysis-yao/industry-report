@@ -140,9 +140,9 @@ def publish(source, data_dir):
         date=raw['date'], digest_window_days=5, target_count=20,
         publication_mode='codex_editorial',
         editorial_review=review,
-        publication_note='Codex編集版：ニュース18件＋企業特許2件。原文公開日を確認。展示会予告・観察情報を含みます。'
+        publication_note='AI生成版：ニュース18件＋企業特許2件。原文公開日を確認。展示会予告・観察情報を含みます。'
                          if len(news) == 18 and len(patents) == 2 else
-                         f'Codex編集版：ニュース{len(news)}件＋企業特許{len(patents)}件。原文公開日を確認。',
+                         f'AI生成版：ニュース{len(news)}件＋企業特許{len(patents)}件。原文公開日を確認。',
         edition_counts=dict(news=len(news), new_patents=len(patents), total=len(converted)),
         selection_health=dict(target=20, selected=len(news), shortfall=max(0, 20-len(news)),
                               history_records_checked=len(previous), section_counts=counts),

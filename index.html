@@ -550,7 +550,7 @@ function buildCard(item, idx) {
   const permanentBadge = item.permanent_record ? '<span class="badge badge-patent">📌 永久保存</span>' : '';
   const cardId = 'card-' + idx;
   const editorialBadge = item.summary_method === 'codex_editorial'
-    ? `<span class="badge badge-company">Codex編集・${item.priority === '重点' ? '重点' : '観察'}</span>` : '';
+    ? `<span class="badge badge-company">AI生成・${item.priority === '重点' ? '重点' : '観察'}</span>` : '';
   const evidenceSection = item.summary_method === 'codex_editorial'
     ? `<details style="margin-top:12px"><summary>出典確認・日付・注意事項</summary><p>${item.date_evidence}</p><p>${item.verification_level}</p><p>${item.caution}</p>${item.info_type === '特許' ? `<p>公開番号: ${item.publication_number}<br>出願日: ${item.application_date}<br>登録日: ${item.grant_date || '未確認'}<br>${item.legal_status}<br>${item.patent_family_status}</p>` : ''}</details>` : '';
 
@@ -589,7 +589,7 @@ function buildCard(item, idx) {
       <div class="card-body">
         <div class="card-title">${item.title}</div>
         <div class="card-source">🔗 ソース: <a href="${item.url}" target="_blank" rel="noopener">${item.source_name}</a></div>
-        <div class="card-summary-label">${item.summary_method === 'codex_editorial' ? '📄 Codex編集要約（原文照合）' : item.summary_method === 'publisher_excerpt' ? '📄 公式・原文抜粋（AI要約ではありません）' : '🤖 AI要約'}</div>
+        <div class="card-summary-label">${item.summary_method === 'codex_editorial' ? '📄 AI生成要約（原文照合）' : item.summary_method === 'publisher_excerpt' ? '📄 公式・原文抜粋（AI要約ではありません）' : '🤖 AI要約'}</div>
         <div class="card-summary">${item.summary}</div>
         ${impactSection}
         ${evidenceSection}
@@ -716,6 +716,11 @@ function filterCards(gridId, kw, cat, type) {
 // DATE NAVIGATION
 // ============================================================
 
+function displayPublicationNote(note) {
+  // Keep archived receipts/data intact; only normalize the presentation label.
+  return String(note || '').replace(/^Codex編集版：/, 'AI生成版：');
+}
+
 // Fetch a per-date JSON file on demand; calls callback(items) when ready.
 // Also loads and caches the date's highlights, updating the highlight block.
 // Uses cached DATES[dateStr] if already loaded.
@@ -724,7 +729,7 @@ function loadDateData(dateStr, callback) {
   if (status) status.textContent = '平日版は20件を目標に配信。土日は収集のみ継続。表示中の発行日: ' + dateStr;
   if (DATES[dateStr] && DATES[dateStr] !== null) {
     if (status) status.textContent += ' ／ ' + DATES[dateStr].length + '件' + (DATES[dateStr].length < 20 ? '（目標20件に未達）' : '');
-    if (status && DATE_NOTES[dateStr]) status.textContent = dateStr + ' ／ ' + DATE_NOTES[dateStr];
+    if (status && DATE_NOTES[dateStr]) status.textContent = dateStr + ' ／ ' + displayPublicationNote(DATE_NOTES[dateStr]);
     renderHighlights(DATE_HIGHLIGHTS[dateStr] || []);
     callback(DATES[dateStr]);
     return;
@@ -735,7 +740,7 @@ function loadDateData(dateStr, callback) {
       var items = dateData.items || [];
       DATE_NOTES[dateStr] = dateData.publication_note || '';
       if (status) status.textContent += ' ／ ' + items.length + '件' + (items.length < (dateData.target_count || 20) ? '（目標20件に未達。古い記事・重複で補充しません）' : '');
-      if (status && DATE_NOTES[dateStr]) status.textContent = dateStr + ' ／ ' + DATE_NOTES[dateStr];
+      if (status && DATE_NOTES[dateStr]) status.textContent = dateStr + ' ／ ' + displayPublicationNote(DATE_NOTES[dateStr]);
       items.sort(function(a, b) {
         var priority = Number(b.priority === '重点') - Number(a.priority === '重点');
         if (priority) return priority;
