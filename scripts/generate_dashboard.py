@@ -920,8 +920,9 @@ def main(data_dir=None, reference_date=None, allow_weekend=False):
 
     # Keep low-frequency equipment/specialty records for balancing, while the
     # Daily selection is separately limited to five JST calendar dates.
-    cutoff = datetime.now(timezone.utc) - timedelta(days=SPECIALTY_MAX_AGE_DAYS)
-    cutoff_str = cutoff.strftime('%Y-%m-%d')
+    # Selection and retention must share the requested issue date. Using the
+    # wall clock here silently drops candidates when replaying an older issue.
+    cutoff_str = (reference_date - timedelta(days=SPECIALTY_MAX_AGE_DAYS)).isoformat()
     kept = []
     for item in data:
         if item.get('permanent_record'):
@@ -1005,14 +1006,14 @@ def main(data_dir=None, reference_date=None, allow_weekend=False):
         if os.path.exists(index_path):
             with open(index_path, 'r', encoding='utf-8') as f:
                 existing_dates = json.load(f)
-        history_cutoff = jst_now.date() - timedelta(days=90)
+        history_cutoff = reference_date - timedelta(days=90)
         merged_dates = []
         for date_str in [digest_date] + list(existing_dates):
             try:
                 date_value = datetime.strptime(date_str, '%Y-%m-%d').date()
             except (TypeError, ValueError):
                 continue
-            if history_cutoff <= date_value <= jst_now.date() and date_str not in merged_dates:
+            if history_cutoff <= date_value <= reference_date and date_str not in merged_dates:
                 merged_dates.append(date_str)
         merged_dates.sort(reverse=True)
         with open(index_path, 'w', encoding='utf-8') as f:

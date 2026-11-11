@@ -100,6 +100,31 @@ class PublicationPipelineTests(unittest.TestCase):
             audit=json.loads((Path(d)/'selection_audit.json').read_text(encoding='utf-8'))
             self.assertEqual(audit['counts']['ai_rejected'],1)
 
+    def test_replay_retention_and_index_use_issue_date_not_wall_clock(self):
+        issue = date(2026, 9, 11)
+        boundary = item(20, (issue - timedelta(days=60)).isoformat())
+        expired = item(21, (issue - timedelta(days=61)).isoformat())
+        fresh = item(22, issue.isoformat())
+        index_boundary = (issue - timedelta(days=90)).isoformat()
+        with tempfile.TemporaryDirectory() as d:
+            data_path = Path(d) / 'news_data.json'
+            index_path = Path(d) / 'dates_index.json'
+            g.save_data(str(data_path), [fresh, boundary, expired])
+            index_path.write_text(json.dumps([
+                index_boundary, (issue - timedelta(days=91)).isoformat(),
+                (issue + timedelta(days=1)).isoformat(), 'invalid',
+            ]), encoding='utf-8')
+            with patch.dict(os.environ, {'OPENROUTER_API_KEY': 'test'}), \
+                    patch.object(g, 'process_item_with_retry', return_value=False), \
+                    patch.object(g, 'SPECIALTY_MAX_AGE_DAYS', 60), \
+                    patch.object(g, 'datetime', wraps=datetime) as clock:
+                clock.now.return_value = datetime(2030, 1, 1, tzinfo=JST)
+                g.main(d, issue)
+            kept = g.load_data(str(data_path))[0]
+            self.assertEqual({it['url'] for it in kept}, {fresh['url'], boundary['url']})
+            self.assertEqual(json.loads(index_path.read_text(encoding='utf-8')),
+                             [issue.isoformat(), index_boundary])
+
     def test_packaging_inspection_official_index(self):
         html='<div class="newsbox"><a href="/whatsnew/event/7094/"><div class="data">2026年09月11日</div><div class="txt">TOKYO PACK 出展のご案内</div></a></div>'
         rows=parse_index('aandd',html,'https://www.aandd.co.jp/whatsnew/')
